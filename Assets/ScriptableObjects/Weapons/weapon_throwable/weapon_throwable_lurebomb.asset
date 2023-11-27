@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cf11955b37c02c41b433a0e5bec8825, type: 3}
+  m_Name: weapon_throwable_lurebomb
+  m_EditorClassIdentifier: 
+  weaponId: 6
+  weaponName: Lure Bomb
+  weaponIcon: {fileID: 21300000, guid: 81f72ad297c3fec449ce66ef7e6bde86, type: 3}
+  weaponCategory: 2
+  deployTime: 1
+  craftingCost: 40
+  projectile: {fileID: 413074944437298884, guid: 114279c1f79d2b24b809fa9c6834211c, type: 3}
+  damage: 100
+  explosionRadius: 5
+  explosionForce: 1000
+  fuseTime: 4

@@ -1,0 +1,111 @@
+// using System.Collections;
+// using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class PlayerMovement : MonoBehaviour
+{
+    public Vector2 movementInput { get; set; }
+    PlayerManager playerManager;
+
+    [SerializeField] CharacterController controller;
+
+    private float currentSpeed;
+    private const float NORMAL_SPEED = 5f;
+    private const float SPRINT_SPEED = 10f;
+    private const float CROUCH_SPEED = 2f;
+
+    // [SerializeField] Text staminaText;
+    private float stamina;
+    private const float JUMP_STAMINA = 20f;
+    private const float SPRINT_STAMINA = 15f;
+                
+    [SerializeField] float gravity;
+    Vector3 velocity;
+    [SerializeField] Transform groundCheck;
+    [SerializeField] LayerMask groundMask;
+    private bool isGrounded;
+    private const float GROUND_HEIGHT = 0.1f;
+
+    [SerializeField] float jumpHeight;
+    private bool isJumping;
+    private bool isSprinting;
+    bool isCrouching;
+    // [SerializeField] Transform cam;
+
+    void Update(){
+        stamina = playerManager.stamina;
+
+        // player movement
+        Vector3 movement = transform.right * movementInput.x + transform.forward * movementInput.y;
+        controller.Move(movement * currentSpeed * Time.deltaTime);
+
+        // player gravity
+        velocity.y = velocity.y + gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
+
+        // ground check
+        isGrounded = Physics.CheckSphere(groundCheck.position, GROUND_HEIGHT, groundMask);
+        if (isGrounded && velocity.y < 0f){
+            velocity.y = 0;
+        }
+
+        // player jumping
+        if (isJumping){
+            if (CanJump){
+                velocity.y = Mathf.Sqrt(jumpHeight * -1f * gravity);
+                playerManager.StaminaDrain(JUMP_STAMINA);
+            }
+            isJumping = false;
+        }
+
+        // player sprinting
+        if (isSprinting && CanSprint && movementInput.y > 0){
+            currentSpeed = SPRINT_SPEED;
+            playerManager.StaminaDrain(SPRINT_STAMINA * Time.deltaTime);
+        } else {
+            StopSprint();
+            currentSpeed = NORMAL_SPEED;
+            playerManager.StaminaRegen();
+        }
+
+        // crouching
+        // if (isCrouching)
+        // {
+        //     Debug.Log("crouching");
+        //     controller.height = 0.4f;
+        // }
+        // else controller.height = 2f;
+    }
+    
+    public void Jump(){
+        isJumping = true;
+    }
+    
+    public void StartSprint(){
+        isSprinting = true;
+    }
+
+    public void StopSprint(){
+        isSprinting = false;
+    }
+
+    public void Crouch(){
+        isCrouching = !isCrouching;
+    }
+
+    public bool IsGrounded => isGrounded;
+    public bool IsSprinting => isSprinting;
+    public bool IsJumping => isJumping;
+    public bool CanSprint => isGrounded && stamina > 0;
+    public bool CanJump => isGrounded && stamina >= JUMP_STAMINA;
+    
+    public void ReceiveInput(Vector2 horizontalValue)
+    {
+        movementInput = horizontalValue;
+    }
+    
+    void Start(){
+        playerManager = GetComponent<PlayerManager>();
+    }
+}

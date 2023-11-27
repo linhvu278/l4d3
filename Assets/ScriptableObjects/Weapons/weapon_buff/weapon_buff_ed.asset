@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c5451401cbcfed48ab7b52b309dc9d2, type: 3}
+  m_Name: weapon_buff_ed
+  m_EditorClassIdentifier: 
+  weaponPickup: {fileID: 4162315522348796325, guid: a883dfde049ab4f4e895d9301a72ce71, type: 3}
+  weaponPrefab: {fileID: 6361973769110160351, guid: 60e897b3efc112f4481f6f304368407c, type: 3}
+  weaponName: Energy Drink
+  weaponIcon: {fileID: 21300000, guid: 60c3f9fa69f5a0048987168151e3293d, type: 3}
+  weaponCategory: 5
+  deployTime: 0.75
+  craftingCost: 40
+  buffType: 0
+  buffTime: 1.5
+  buffDuration: 15
