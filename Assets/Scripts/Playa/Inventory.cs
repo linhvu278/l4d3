@@ -98,21 +98,28 @@ public class Inventory : MonoBehaviour
 
     #region Add weapons
 
-    public void AddWeapon(Weapon weapon){
+    public void AddWeapon(Weapon weapon, int amount){
         // PickUpWeapon puwp = weaponToAdd.GetComponent<PickUpWeapon>();
         // Weapon weapon = puwp.GetWeapon();
+        GameObject weaponToAdd;
         int weaponIndex = (int)weapon.weaponCategory;
+        weaponToAdd = Instantiate(db.weaponPrefabs[weapon.weaponId], weaponSlot[weaponIndex].position, weaponSlot[weaponIndex].rotation);
+        weaponToAdd.transform.SetParent(weaponSlot[weaponIndex]);
+        weaponObjects[weaponIndex] = weaponToAdd;
+        weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = amount;
+
         if (weaponInventory[weaponIndex] != null) DropWeapon(weaponInventory[weaponIndex]);
         weaponInventory[weaponIndex] = weapon;
         weaponSwitch.SelectNewWeapon(weaponIndex);
 
-        GameObject weaponObject;
-        weaponObject = Instantiate(db.weaponPrefabs[weapon.weaponId], weaponSlot[weaponIndex].position, weaponSlot[weaponIndex].rotation);
-        weaponObject.transform.SetParent(weaponSlot[weaponIndex]);
-        weaponObjects[weaponIndex] = weaponObject;
-
         loadoutUI.GetHUDIcon(weapon.weaponIcon, (int)weapon.weaponCategory);
         playerInventory.UpdateWeapons(weapon, true);
+    }
+    public void AddWeaponUpgrade(int index, bool upgradeAcc, bool upgradeDmg, bool upgradeRng){
+        IWeaponUpgrade upgrade = weaponObjects[index].GetComponent<IWeaponUpgrade>();
+        upgrade.UpgradeAccuracy = upgradeAcc;
+        upgrade.UpgradeDamage = upgradeDmg;
+        upgrade.UpgradeRange = upgradeRng;
     }
 
     #endregion
@@ -124,6 +131,16 @@ public class Inventory : MonoBehaviour
         // GameObject weaponToDrop = weaponObjects[weaponIndex];
         // weaponToDrop.GetComponent<PickUpWeapon>().SetWeapon(weaponObjects[weaponIndex]);
         GameObject weaponToDrop = db.weaponPickups[weapon.weaponId];
+
+        GameObject equippedWeapon = weaponObjects[(int)weapon.weaponCategory];
+        IWeaponAmount wa = equippedWeapon.GetComponent<IWeaponAmount>();
+        weaponToDrop.GetComponent<IWeaponAmount>().WeaponAmount = wa.WeaponAmount;
+        if (equippedWeapon.TryGetComponent(out IWeaponUpgrade upgrade)){
+            WeaponStats ws = weaponToDrop.GetComponent<WeaponStats>();
+            ws.UpgradeAccuracy = upgrade.UpgradeAccuracy;
+            ws.UpgradeDamage = upgrade.UpgradeDamage;
+            ws.UpgradeRange = upgrade.UpgradeRange;
+        }
 
         Vector3 camPos = Camera.main.transform.position;
         Vector3 dropPosition = new Vector3(camPos.x, camPos.y - 0.5f, camPos.z);

@@ -4,4 +4,5 @@ using UnityEngine;
 public class Weapon_Health : Weapon
 {
     public float healAmount, healTime;
+    public bool canHealWhileMoving;
 }

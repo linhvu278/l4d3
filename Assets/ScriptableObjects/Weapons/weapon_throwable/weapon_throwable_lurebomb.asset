@@ -17,6 +17,7 @@ MonoBehaviour:
   weaponIcon: {fileID: 21300000, guid: 81f72ad297c3fec449ce66ef7e6bde86, type: 3}
   weaponCategory: 2
   deployTime: 1
+  weaponAmount: 1
   craftingCost: 40
   projectile: {fileID: 413074944437298884, guid: 114279c1f79d2b24b809fa9c6834211c, type: 3}
   damage: 100

@@ -11,6 +11,7 @@ public class Weapon : ScriptableObject
     public WeaponCategory weaponCategory; // assign weapon to correcet weapon slot
     // public WeaponType weaponType;
     public float deployTime;
+    public int weaponAmount;
     public int craftingCost;
 }
 

@@ -1,15 +1,20 @@
 using UnityEngine;
 
-public class PickUpWeapon : MonoBehaviour, IInteractable, IOutline
+public class PickUpWeapon : MonoBehaviour, IInteractable, IOutline, IWeaponAmount
 {
     [SerializeField] private Weapon weapon;
+    [SerializeField] private int weaponAmount;
+    public Weapon Weapon => weapon;
 
     private Inventory inventory;
+    // private WeaponStats weaponStats;
     private Outline outline;
+    // private WeaponStats stats;
     // private ItemDatabase db;
 
     void Start(){
         inventory = Inventory.instance;
+        // if (TryGetComponent(out WeaponStats ws)) weaponStats = GetComponent<WeaponStats>();
 
         outline = GetComponent<Outline>();
         outline.OutlineColor = Color.red;
@@ -17,11 +22,19 @@ public class PickUpWeapon : MonoBehaviour, IInteractable, IOutline
         // db = ItemDatabase.instance;
     }
     void WeaponPickUp(){
-        inventory.AddWeapon(weapon);
+        inventory.AddWeapon(weapon, weaponAmount);
         Destroy(gameObject);
     }
-    public Weapon GetWeapon(){ return weapon; }
-    public void OnInteractStart() { WeaponPickUp(); }
+
+    public int WeaponAmount{
+        get { return weaponAmount;}
+        set { weaponAmount = value; }
+    }
+    public void SpawnWeaponAmount(){
+        weaponAmount = weapon.weaponAmount;
+    }
+
+    public void OnInteractStart() => WeaponPickUp();
     public void OnInteractEnd() {}
     public void EnableOutline(){ outline.OutlineWidth = 10f; }
     public void DisableOutline(){ outline.OutlineWidth = 0f; }

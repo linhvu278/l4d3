@@ -83,7 +83,7 @@ public class PlayerOverlay : MonoBehaviour
     }
     void WeaponPickupOverlay(PickUpWeapon pickUpWeapon){
         // add more info about weapon here later
-        Weapon weapon = pickUpWeapon.GetWeapon();
+        Weapon weapon = pickUpWeapon.Weapon;
         interactText.text = "Press E to pick up " + weapon.weaponName;
     }
     void ItemPickupOverlay(PickUpItem pickUpItem){

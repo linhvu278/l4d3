@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Throwable : MonoBehaviour, IPrimaryInput
+public class Throwable : MonoBehaviour, IPrimaryInput, IWeaponAmount
 {
     [SerializeField] protected Weapon_Throwable throwable;
+    private int throwAmount;
 
     private bool canThrow;
     private float throwForce = 20f;
@@ -13,23 +14,11 @@ public class Throwable : MonoBehaviour, IPrimaryInput
     Animator animator;
     Inventory inventory;
     Transform cam;
-
-    void Start(){
-        inventory = Inventory.instance;
-        animator = GetComponent<Animator>();
-        cam = Camera.main.transform;
-    }
-
-    void OnEnable(){
-        StartCoroutine(Equip(throwable.deployTime));
-    }
-
     IEnumerator Equip(float deployTime){
         canThrow = false;
         yield return new WaitForSeconds(deployTime);
         canThrow = true;
     }
-
     void Throw(){
         if (canThrow){
             // canThrow = false;
@@ -47,12 +36,26 @@ public class Throwable : MonoBehaviour, IPrimaryInput
 
             projectileRb.AddForce(cam.forward * throwForce, ForceMode.VelocityChange);
 
-            inventory.RemoveWeapon(throwable);
+            throwAmount--;
+            if (throwAmount == 0) inventory.RemoveWeapon(throwable);
         }
     }
 
-    public void OnPrimaryStart(){
-        Throw();
+    public int WeaponAmount{
+        get { return throwAmount; }
+        set { throwAmount = value; }
     }
-    public void OnPrimaryEnd(){}
+
+    void OnEnable(){
+        StartCoroutine(Equip(throwable.deployTime));
+    }
+
+    public void OnPrimaryStart() { Throw(); }
+    public void OnPrimaryEnd() {}
+
+    void Start(){
+        inventory = Inventory.instance;
+        animator = GetComponent<Animator>();
+        cam = Camera.main.transform;
+    }
 }

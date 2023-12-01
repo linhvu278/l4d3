@@ -130,6 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: {fileID: 11400000, guid: cbaa99b7e5a99ee479b6219d23f3c1d8, type: 2}
+  weaponAmount: 1
 --- !u!114 &8290013437113536562
 MonoBehaviour:
   m_ObjectHideFlags: 0

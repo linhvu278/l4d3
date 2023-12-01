@@ -7,7 +7,7 @@ public class InventoryMenu : MonoBehaviour
     [SerializeField] private Button equipButton;
     [SerializeField] private Button dropButton;
     [SerializeField] private Button unloadButton;
-    [SerializeField] private Button repairButton;
+    // [SerializeField] private Button repairButton;
     [SerializeField] private Button upgradeButton;
 
     [Header("item slot")]
@@ -34,30 +34,6 @@ public class InventoryMenu : MonoBehaviour
     private IWeaponUpgrade weaponToUpgrade;
     private Item item;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        // weapons
-        equipButton.onClick.AddListener(EquipWeapon);
-        dropButton.onClick.AddListener(DropWeapon);
-        unloadButton.onClick.AddListener(UnloadWeapon);
-        repairButton.onClick.AddListener(RepairWeapon);
-        // upgradeButton.onClick.AddListener(UpgradeWeapon);
-        // upgradeBarrelButton.onClick.AddListener(UpgradeBarrel);
-        // upgradeLaserButton.onClick.AddListener(UpgradeLaser);
-        // upgradeSightButton.onClick.AddListener(UpgradeSight);
-        // items
-        drop1Button.onClick.AddListener(Drop1);
-        drop25Button.onClick.AddListener(Drop25);
-        dropAllButton.onClick.AddListener(DropAll);
-        addCraftingItemButton.onClick.AddListener(AddCraftingItem);
-        exitButton.onClick.AddListener(ExitMenu);
-
-        upgradeBarrelButton.gameObject.SetActive(false);
-        upgradeLaserButton.gameObject.SetActive(false);
-        upgradeSightButton.gameObject.SetActive(false);
-    }
-
     #region GetWeapon
 
     public void GetWeapon(Weapon newWeapon){
@@ -67,8 +43,8 @@ public class InventoryMenu : MonoBehaviour
         bool isWeaponAlreadyEquipped = weaponSwitch.selectedWeapon != (int)weaponInfo.weaponCategory;
         weaponObj = inventory.weaponObjects[(int)weaponInfo.weaponCategory];
         bool isWeaponAGun = weaponObj.TryGetComponent(out Gun gun);
+        // bool isWeaponRepairable = weaponObj.TryGetComponent(out IRepairWeapon repair);
         // bool isWeaponUpgradable = weaponObj.TryGetComponent(out IWeaponUpgrade upgrade);
-        bool isWeaponRepairable = weaponObj.TryGetComponent(out IRepairWeapon repair);
 
         drop1Button.gameObject.SetActive(false);
         drop25Button.gameObject.SetActive(false);
@@ -76,10 +52,10 @@ public class InventoryMenu : MonoBehaviour
         addCraftingItemButton.gameObject.SetActive(false);
 
         equipButton.gameObject.SetActive(isWeaponAlreadyEquipped && !playerInventory.isWorkshopOpen);
-        dropButton.gameObject.SetActive(!playerInventory.isWorkshopOpen);
-        unloadButton.gameObject.SetActive(isWeaponAGun && gun.ammo > 0);
-        repairButton.gameObject.SetActive(playerInventory.isWorkshopOpen && repair.CanRepair());
-        // upgradeButton.gameObject.SetActive(playerInventory.isWorkshopOpen && isWeaponUpgradable);
+        dropButton.gameObject.SetActive(true);
+        unloadButton.gameObject.SetActive(isWeaponAGun && gun.WeaponAmount > 0);
+        // repairButton.gameObject.SetActive(playerInventory.isWorkshopOpen && repair.CanRepair);
+        upgradeButton.gameObject.SetActive(playerInventory.isWorkshopOpen);
     }
 
     #endregion
@@ -93,8 +69,8 @@ public class InventoryMenu : MonoBehaviour
         equipButton.gameObject.SetActive(false);
         dropButton.gameObject.SetActive(false);
         unloadButton.gameObject.SetActive(false);
-        repairButton.gameObject.SetActive(false);
-        upgradeButton.gameObject.SetActive(false);
+        // repairButton.gameObject.SetActive(false);
+        // upgradeButton.gameObject.SetActive(false);
 
         dropAllButton.gameObject.SetActive(itemAmount > 0);
         drop1Button.gameObject.SetActive(itemAmount > 1);
@@ -122,13 +98,14 @@ public class InventoryMenu : MonoBehaviour
         gun.Unload();
         ExitMenu();
     }
-    private void RepairWeapon(){
-        inventory.weaponObjects[(int)weaponInfo.weaponCategory].GetComponent<IRepairWeapon>().OnRepair();
-        ExitMenu();
-    }
+    // private void RepairWeapon(){
+    //     inventory.weaponObjects[(int)weaponInfo.weaponCategory].GetComponent<IRepairWeapon>().OnRepair();
+    //     ExitMenu();
+    // }
     private void UpgradeWeapon(){
+        dropButton.gameObject.SetActive(false);
         unloadButton.gameObject.SetActive(false);
-        repairButton.gameObject.SetActive(false);
+        // repairButton.gameObject.SetActive(false);
         upgradeButton.gameObject.SetActive(false);
         GetUpgrades(weaponObj);
         // ExitMenu();
@@ -142,25 +119,28 @@ public class InventoryMenu : MonoBehaviour
         weaponToUpgrade = wp.GetComponent<IWeaponUpgrade>();
         
         if (!weaponToUpgrade.IsFullyUpgraded){
-            upgradeBarrelButton.gameObject.SetActive(weaponToUpgrade.IsBarrelUpgraded);
-            upgradeLaserButton.gameObject.SetActive(weaponToUpgrade.IsLaserUpgraded);
-            upgradeSightButton.gameObject.SetActive(weaponToUpgrade.IsSightUpgraded);
-        } else ExitMenu();
+            upgradeBarrelButton.gameObject.SetActive(!weaponToUpgrade.UpgradeDamage);
+            upgradeLaserButton.gameObject.SetActive(!weaponToUpgrade.UpgradeAccuracy);
+            upgradeSightButton.gameObject.SetActive(!weaponToUpgrade.UpgradeRange);
+        } else {
+            playerInventory.EnableInventoryStatusText("No upgrade required");
+            ExitMenu();
+        }
     }
     private void UpgradeSight(){
-        weaponToUpgrade.OnUpgradeSight();
+        weaponToUpgrade.UpgradeRange = true;
         // upgradeSightButton.gameObject.SetActive(weaponToUpgrade.IsSightUpgraded);
         ResetUpgradeMenu();
         ExitMenu();
     }
     private void UpgradeBarrel(){
-        weaponToUpgrade.OnUpgradeBarrel();
+        weaponToUpgrade.UpgradeDamage = true;
         // upgradeBarrelButton.gameObject.SetActive(weaponToUpgrade.IsBarrelUpgraded);
         ResetUpgradeMenu();
         ExitMenu();
     }
     private void UpgradeLaser(){
-        weaponToUpgrade.OnUpgradeLaser();
+        weaponToUpgrade.UpgradeAccuracy = true;
         // upgradeLaserButton.gameObject.SetActive(weaponToUpgrade.IsLaserUpgraded);
         ResetUpgradeMenu();
         ExitMenu();
@@ -201,5 +181,29 @@ public class InventoryMenu : MonoBehaviour
         inventory = Inventory.instance;
         weaponSwitch = WeaponSwitch.instance;
         playerInventory = PlayerInventory.instance;
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        // weapons
+        equipButton.onClick.AddListener(EquipWeapon);
+        dropButton.onClick.AddListener(DropWeapon);
+        unloadButton.onClick.AddListener(UnloadWeapon);
+        // repairButton.onClick.AddListener(RepairWeapon);
+        upgradeButton.onClick.AddListener(UpgradeWeapon);
+        upgradeBarrelButton.onClick.AddListener(UpgradeBarrel);
+        upgradeLaserButton.onClick.AddListener(UpgradeLaser);
+        upgradeSightButton.onClick.AddListener(UpgradeSight);
+        // items
+        drop1Button.onClick.AddListener(Drop1);
+        drop25Button.onClick.AddListener(Drop25);
+        dropAllButton.onClick.AddListener(DropAll);
+        addCraftingItemButton.onClick.AddListener(AddCraftingItem);
+        exitButton.onClick.AddListener(ExitMenu);
+
+        upgradeBarrelButton.gameObject.SetActive(false);
+        upgradeLaserButton.gameObject.SetActive(false);
+        upgradeSightButton.gameObject.SetActive(false);
     }
 }

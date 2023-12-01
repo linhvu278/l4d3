@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: {fileID: 11400000, guid: f878871314a83ed49818cef2d7d09798, type: 2}
+  weaponAmount: 1
 --- !u!64 &8515246276160050685
 MeshCollider:
   m_ObjectHideFlags: 0

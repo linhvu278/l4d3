@@ -24,7 +24,7 @@ public class AmmoBoxObject : MonoBehaviour, IInteractable
         canRefillAmmo = true;
         delayTime = 1f;
 
-        AudioSource.PlayClipAtPoint(deploySound, transform.position);
+        // AudioSource.PlayClipAtPoint(deploySound, transform.position);
     }
 
     void RefillAmmo(){

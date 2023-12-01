@@ -8,9 +8,9 @@ public class WeaponSlot : MonoBehaviour
     private Button weaponButton;
 
     [SerializeField] Transform inventoryMenu;
-    Button equipButton;
-    Button dropButton;
-    Button unloadButton;
+    // Button equipButton;
+    // Button dropButton;
+    // Button unloadButton;
 
     private Weapon weapon;
 

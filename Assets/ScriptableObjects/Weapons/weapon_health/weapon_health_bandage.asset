@@ -17,6 +17,8 @@ MonoBehaviour:
   weaponIcon: {fileID: 21300000, guid: cd6b2df9f00795040b2775445d8b5945, type: 3}
   weaponCategory: 3
   deployTime: 1
+  weaponAmount: 1
   craftingCost: 20
   healAmount: 20
   healTime: 1.5
+  canHealWhileMoving: 1

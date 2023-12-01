@@ -1,5 +1,5 @@
 public interface IRepairWeapon
 {
     void OnRepair();
-    bool CanRepair();
+    bool CanRepair { get; }
 }

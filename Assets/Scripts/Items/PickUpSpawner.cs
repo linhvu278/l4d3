@@ -11,12 +11,11 @@ public class PickUpSpawner : MonoBehaviour
     void Start(){
         // gun spawns
         for (int i = 0; i < gunSpawnPositions.Length; i++){
-            // WeaponStats weaponToSpawnStats = weaponToSpawn.GetComponent<WeaponStats>();
-            // weaponToSpawnStats.ammo = db.gunList[i].clipAmmo;
+            GameObject weaponToSpawn = Instantiate(db.weaponPickups[i+1], gunSpawnPositions[i].position, gunSpawnPositions[i].rotation);
+            weaponToSpawn.GetComponent<PickUpWeapon>().SpawnWeaponAmount();
+            if (weaponToSpawn.TryGetComponent(out WeaponStats ws)) ws.SetWeaponUpgrades(false, false, false);
             // weaponToSpawnStats.durability = db.gunList[i].maxDurability;
             // weaponToSpawnStats.SetWeaponUpgrades(false, false, false);
-
-            GameObject weaponToSpawn = Instantiate(db.weaponPickups[i+1], gunSpawnPositions[i].position, gunSpawnPositions[i].rotation);
             spawnedWeapons.Add(weaponToSpawn);
         }
         // item spawns

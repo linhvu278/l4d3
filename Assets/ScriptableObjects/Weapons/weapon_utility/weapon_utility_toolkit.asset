@@ -17,5 +17,6 @@ MonoBehaviour:
   weaponIcon: {fileID: 21300000, guid: fea69899ddbc72642a773c2decc00f1a, type: 3}
   weaponCategory: 4
   deployTime: 1
+  weaponAmount: 1
   craftingCost: 60
   useTime: 4

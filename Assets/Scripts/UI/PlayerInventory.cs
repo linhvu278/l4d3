@@ -7,25 +7,27 @@ using UnityEngine.InputSystem;
 public class PlayerInventory : MonoBehaviour
 {
     public static PlayerInventory instance;
-
-    Inventory inventory;
+    private Inventory inventory;
     PlayerInput playerInput;
     CombineItems combineItems;
     // ItemDatabase db;
     // UpgradeWeaponUI upgradeWeaponUI;
     
     [SerializeField] Transform inventoryPanel, loadoutParent, itemParent;
-    WeaponSlot[] weaponSlots;
-    ItemSlot[] itemSlots;
+    private WeaponSlot[] weaponSlots;
+    private ItemSlot[] itemSlots;
+
     [SerializeField] private Button craftWeaponButton, clearItemsButton, closeInventoryButton;
-    [SerializeField] private TextMeshProUGUI craftButtonText, craftStatusText;
+    [SerializeField] private TextMeshProUGUI craftButtonText, inventoryStatusText;
     [SerializeField] private Image firstCraftingItemIcon, secondCraftingItemIcon, craftedWeaponIcon;
     private Weapon weaponToCraft;
     public Item firstCraftingItem, secondCraftingItem;
+    private int newCraftingCost;
+
+    // [SerializeField] private Button primaryRepairButton, primaryUpgradeButton, secondaryRepairButton, secondaryUpgradeButton;
 
     private bool isInventoryOpen;
     public bool isWorkshopOpen;
-    private int newCraftingCost;
 
     void Awake(){
         if (instance != null){
@@ -58,6 +60,22 @@ public class PlayerInventory : MonoBehaviour
                 weaponSlots[i].ClearWeaponSlot();
             }
         }
+        
+        // primaryRepairButton.gameObject.SetActive(isWorkshopOpen);
+        // primaryUpgradeButton.gameObject.SetActive(isWorkshopOpen);
+        // secondaryRepairButton.gameObject.SetActive(isWorkshopOpen);
+        // secondaryUpgradeButton.gameObject.SetActive(isWorkshopOpen);
+
+        // // primary weapon repair & upgrade
+        // bool canRepairPrimary = inventory.weaponObjects[0].GetComponent<IRepairWeapon>().CanRepair;
+        // primaryRepairButton.enabled = canRepairPrimary;
+        // bool canUpgradePrimary = inventory.weaponObjects[0].GetComponent<IWeaponUpgrade>().IsFullyUpgraded;
+        // primaryUpgradeButton.enabled = !canUpgradePrimary;
+        // // secondary weapon repair & upgrade
+        // bool canRepairSecondary = inventory.weaponObjects[1].GetComponent<IRepairWeapon>().CanRepair;
+        // secondaryRepairButton.enabled = canRepairSecondary;
+        // bool canUpgradeSecondary = inventory.weaponObjects[1].GetComponent<IWeaponUpgrade>().IsFullyUpgraded;
+        // secondaryUpgradeButton.enabled = !canUpgradeSecondary;
 
         UpdateItems();
         inventory.onItemChangedCallback += UpdateItems;
@@ -66,7 +84,7 @@ public class PlayerInventory : MonoBehaviour
         craftWeaponButton.onClick.AddListener(CraftWeapon);
         clearItemsButton.onClick.AddListener(ClearCraftingItems);
         craftButtonText.GetComponent<TextMeshProUGUI>();
-        craftStatusText.GetComponent<TextMeshProUGUI>();
+        inventoryStatusText.GetComponent<TextMeshProUGUI>();
         DisableCraftStatusText();
         // ClearCraftingUI();
         // ClearCraftingItems();
@@ -117,9 +135,9 @@ public class PlayerInventory : MonoBehaviour
         // inventory.CraftWeapon();
         if (inventory.GetItemAmount(ItemType.item_glue) < weaponToCraft.craftingCost){
             // Debug.Log("not enough glue");
-            EnableCraftStatusText("Not enough glue");
+            EnableInventoryStatusText("Not enough glue");
         } else {
-            inventory.AddWeapon(weaponToCraft);
+            inventory.AddWeapon(weaponToCraft, weaponToCraft.weaponAmount);
             inventory.SetItemAmount(firstCraftingItem.itemType, -1);
             inventory.SetItemAmount(secondCraftingItem.itemType, -1);
             inventory.SetItemAmount(ItemType.item_glue, -newCraftingCost);
@@ -152,15 +170,15 @@ public class PlayerInventory : MonoBehaviour
         craftWeaponButton.gameObject.SetActive(false);
         clearItemsButton.gameObject.SetActive(false);
     }
-    private void EnableCraftStatusText(string text){
-        craftStatusText.text = text;
-        // craftStatusText.gameObject.SetActive(true);
-        craftStatusText.enabled = true;
+    public void EnableInventoryStatusText(string text){
+        inventoryStatusText.text = text;
+        // inventoryStatusText.gameObject.SetActive(true);
+        inventoryStatusText.enabled = true;
         Invoke(nameof(DisableCraftStatusText), 3f);
     }
     private void DisableCraftStatusText(){
-        // craftStatusText.gameObject.SetActive(false);
-        craftStatusText.enabled = false;
+        // inventoryStatusText.gameObject.SetActive(false);
+        inventoryStatusText.enabled = false;
     }
     public void OnToggleInventory(InputAction.CallbackContext value){
         if (value.performed) ToggleInventory(false);

@@ -17,28 +17,31 @@ public class PlayerMovement : MonoBehaviour
 
     // [SerializeField] Text staminaText;
     private float stamina;
-    private const float JUMP_STAMINA = 20f;
-    private const float SPRINT_STAMINA = 15f;
+    private const float JUMP_STAMINA = 15f;
+    private const float SPRINT_STAMINA = 12f;
                 
-    [SerializeField] float gravity;
-    Vector3 velocity;
+    private const float gravity = -9.81f;
+    private Vector3 velocity;
     [SerializeField] Transform groundCheck;
     [SerializeField] LayerMask groundMask;
     private bool isGrounded;
     private const float GROUND_HEIGHT = 0.1f;
 
     [SerializeField] float jumpHeight;
-    private bool isJumping;
-    private bool isSprinting;
-    bool isCrouching;
+    private bool isJumping, isSprinting, isCrouching;
+    private bool canMove, canJump, canSprint;
+    private bool canMove1;
+
     // [SerializeField] Transform cam;
 
     void Update(){
         stamina = playerManager.stamina;
 
         // player movement
-        Vector3 movement = transform.right * movementInput.x + transform.forward * movementInput.y;
-        controller.Move(movement * currentSpeed * Time.deltaTime);
+        if (canMove){
+            Vector3 movement = transform.right * movementInput.x + transform.forward * movementInput.y;
+            controller.Move(movement * currentSpeed * Time.deltaTime);
+        }
 
         // player gravity
         velocity.y = velocity.y + gravity * Time.deltaTime;
@@ -51,6 +54,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // player jumping
+        // canJump = isGrounded && stamina >= JUMP_STAMINA;
         if (isJumping){
             if (CanJump){
                 velocity.y = Mathf.Sqrt(jumpHeight * -1f * gravity);
@@ -77,29 +81,19 @@ public class PlayerMovement : MonoBehaviour
         // }
         // else controller.height = 2f;
     }
-    
-    public void Jump(){
-        isJumping = true;
-    }
-    
-    public void StartSprint(){
-        isSprinting = true;
-    }
 
-    public void StopSprint(){
-        isSprinting = false;
-    }
-
-    public void Crouch(){
-        isCrouching = !isCrouching;
-    }
+    public void Jump() => isJumping = true;
+    public void StartSprint() => isSprinting = true;
+    public void StopSprint() => isSprinting = false;
+    public void Crouch() => isCrouching = !isCrouching;
 
     public bool IsGrounded => isGrounded;
     public bool IsSprinting => isSprinting;
     public bool IsJumping => isJumping;
-    public bool CanSprint => isGrounded && stamina > 0;
-    public bool CanJump => isGrounded && stamina >= JUMP_STAMINA;
-    
+    public bool CanMove { get => canMove; set => canMove = value; }
+    public bool CanSprint => CanMove && isGrounded && stamina > 0;
+    public bool CanJump { get => isGrounded && stamina >= JUMP_STAMINA; set => canJump = value; }
+
     public void ReceiveInput(Vector2 horizontalValue)
     {
         movementInput = horizontalValue;
@@ -107,5 +101,7 @@ public class PlayerMovement : MonoBehaviour
     
     void Start(){
         playerManager = GetComponent<PlayerManager>();
+
+        CanMove = true;
     }
 }

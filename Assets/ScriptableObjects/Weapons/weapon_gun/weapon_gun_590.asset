@@ -17,15 +17,15 @@ MonoBehaviour:
   weaponIcon: {fileID: 21300000, guid: 144ed20a5c1ec4a4a8c48d980e70768c, type: 3}
   weaponCategory: 0
   deployTime: 1
+  weaponAmount: 8
   craftingCost: 0
   gunType: 1
   ammoType: 2
   fireMode: 0
-  clipAmmo: 8
   damage: 13
   fireRate: 0.9
   inaccuracy: 2.5
-  range: 45
+  range: 60
   reloadTime: 0.63
   maxDurability: 250
   slowReload: 1

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, IRepairWeapon, IWeaponUpgrade
+public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, /*IRepairWeapon, */IWeaponUpgrade, IWeaponAmount
 {
     [SerializeField] private Weapon_Gun gun; // where the gun gets its stats from
 
@@ -32,11 +32,11 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     public float maxDurability { get; set; }
     public string gunName { get; set; }
     
-    public int ammo { get; set; }
-    public int clipAmmo { get; set; }
+    private int ammo;
+    private int clipAmmo;
     private int maxAmmo;
 
-    public bool isSightUpgraded, isBarrelUpgraded, isLaserUpgraded;
+    private bool isSightUpgraded, isBarrelUpgraded, isLaserUpgraded;
 
     private Coroutine autoFireCoroutine, reloadCoroutine;
 
@@ -45,29 +45,19 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     
     private Transform parentTransform;
     private Vector3 defaultPosition, aimPosition, aimSightPosition;
+    private const float ADS_SPEED = 2f;
 
     void Awake(){
         crosshair = GameObject.FindGameObjectWithTag("Crosshair").GetComponent<SimpleCrosshair>();
     }
-    
-    void OnEnable()
-    {
-        isReloading = false;
-        isAiming = false;
-        // isUnloading = false;
-        StartCoroutine(Equip(gun.deployTime));
-        // animator.SetBool("isEquiping", true);
-        crosshair.SetGap((int)(Inaccuracy() * 10f), true);
-    }
 
-    void Start()
-    {
+    void Start(){
         inventory = Inventory.instance;
         loadoutUI = LoadoutUI.instance;
 
         inventory.onItemChangedCallback += GetMaxAmmo;
 
-        clipAmmo = gun.clipAmmo;
+        clipAmmo = gun.weaponAmount;
         range = gun.range;
         damage = isBarrelUpgraded ? gun.damage * 1.25f : gun.damage;
         fireRate = gun.fireRate;
@@ -101,7 +91,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         aimPosition = gun.aimPosition;
         aimSightPosition = gun.aimSightPosition;
 
-        ammo = clipAmmo;
+        // ammo = clipAmmo;
         // ammoType = gun.ammoType;
         GetMaxAmmo();
         loadoutUI.GetHUDAmmo(ammo, weaponCategory);
@@ -115,8 +105,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         UpgradeSight(isSightUpgraded);
     }
 
-    void Update()
-    {
+    void Update(){
         if (autoFireCoroutine != null && durability == 0) StopCoroutine(autoFireCoroutine);
         AimDownSight(isAiming);
         // inaccuracy = Inaccuracy();
@@ -131,12 +120,12 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
 
         // animator.SetFloat("speed", Mathf.Abs(x) + Mathf.Abs(y));
     }
-    void Shoot(){
+    private void Shoot(){
         if (ammo > 0){
             StartCoroutine(ShootCooldown());
             ammo--;
             loadoutUI.GetHUDAmmo(ammo, weaponCategory);
-            durability--;
+            // durability--;
             if (isReloading) isReloading = false; // stop reloading for single round reload
             animator.Play("shoot");
             shootSound.Play();
@@ -169,7 +158,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         } else StartCoroutine(Reload()); // auto reload when no ammo left
     }
     // reload
-    IEnumerator Reload(){
+    private IEnumerator Reload(){
         // magazine ammo is the same and/or no reserve ammo left
         if (ammo == clipAmmo || maxAmmo == 0) yield return null;
 
@@ -224,20 +213,20 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         }
     }
     // ADS
-    void AimDownSight(bool isADS){
+    private void AimDownSight(bool isADS){
         //animator.SetBool("isAiming", isAiming);
 
         if (isADS){
             crosshair.SetColor(Color.clear, true); // hide crosshair when ads
             if (isSightUpgraded) parentTransform.localPosition = Vector3.MoveTowards(parentTransform.localPosition, aimSightPosition, 1f * Time.deltaTime);
-            else parentTransform.localPosition = Vector3.MoveTowards(parentTransform.localPosition, aimPosition, 1f * Time.deltaTime);
+            else parentTransform.localPosition = Vector3.MoveTowards(parentTransform.localPosition, aimPosition, ADS_SPEED * Time.deltaTime);
         } else {
             crosshair.SetColor(Color.green, true);
-            parentTransform.localPosition = Vector3.MoveTowards(parentTransform.localPosition, defaultPosition, 1f * Time.deltaTime);
+            parentTransform.localPosition = Vector3.MoveTowards(parentTransform.localPosition, defaultPosition, ADS_SPEED * Time.deltaTime);
         }
     }
     // calculate initial weapon inaccuracy NEEDS REWORK
-    float Inaccuracy(){
+    private float Inaccuracy(){
         // inaccuracyMove = gun.inaccuracy * 2f;
         // inaccuracyJump = inaccuracyMove * 2f;
         inaccuracyNormal = isLaserUpgraded ? Mathf.Round(gun.inaccuracy / 1.25f * 1000.0f) / 1000.0f : gun.inaccuracy;
@@ -287,16 +276,13 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         } else return false;
     }
     bool CanReload(){
-        if (durability > 0 && !isReloading && !isShooting && !isEquiping) return true;
-        else return false;
+        return durability > 0 && !isReloading && !isShooting && !isEquiping;
     }
     bool CanAim(){
-        if (!isReloading && !isEquiping) return true;
-        else return false;
+        return !isReloading && !isEquiping && !isShooting;
     }
     bool CanUnload(){
-        if (ammo > 0 && !isReloading) return true;
-        else return false;
+        return ammo > 0 && !isReloading;
     }
     // equiping weapon when active
     IEnumerator Equip(float deployTime){
@@ -380,20 +366,31 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     }
 
     // repair gun
-    public void OnRepair(){
-        durability = maxDurability;
-        // maybe play some sfx here
-    }
-    public bool CanRepair(){ return durability < maxDurability; }
-
+    // public void OnRepair(){
+    //     durability = maxDurability;
+    //     // maybe play some sfx here
+    // }
+    public bool CanRepair => durability < maxDurability;
     // upgrade gun
-    public void OnUpgradeSight(){ UpgradeSight(true); }
-    public bool IsSightUpgraded => gunUpgrades.Find("sight") && !isSightUpgraded;
-    public void OnUpgradeBarrel(){ UpgradeBarrel(true); }
-    public bool IsBarrelUpgraded => gunUpgrades.Find("barrel") && !isBarrelUpgraded;
-    public void OnUpgradeLaser(){ UpgradeLaser(true); }
-    public bool IsLaserUpgraded => gunUpgrades.Find("laser") && !isLaserUpgraded;
+    public bool UpgradeRange{
+        get { return isSightUpgraded; }
+        set { UpgradeSight(value); }
+    } //=> gunUpgrades.Find("sight") && !isSightUpgraded;
+    public bool UpgradeDamage{
+        get { return isBarrelUpgraded; }
+        set { UpgradeBarrel(value); }
+    }
+    public bool UpgradeAccuracy{
+        get { return isLaserUpgraded; }
+        set { UpgradeLaser(value); }
+    }
     public bool IsFullyUpgraded => isSightUpgraded && isLaserUpgraded && isBarrelUpgraded;
+    
+    // set gun ammo on pickup
+    public int WeaponAmount{
+        get { return ammo; }
+        set { ammo = value; }
+    }
     
     // get the correct ammo pool from inventory here
     private void GetMaxAmmo(){
@@ -413,6 +410,15 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
             AmmoType.ammo_magnum => ItemType.item_ammo_magnum,
             _ => ItemType.item_ammo_762,
         };
+    }
+    
+    void OnEnable(){
+        isReloading = false;
+        isAiming = false;
+        // isUnloading = false;
+        StartCoroutine(Equip(gun.deployTime));
+        // animator.SetBool("isEquiping", true);
+        crosshair.SetGap((int)(Inaccuracy() * 10f), true);
     }
     void OnDisable(){
         isShooting = false;

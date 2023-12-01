@@ -18,4 +18,4 @@ MonoBehaviour:
   itemCategory: 0
   itemType: 2
   minimumAmount: 10
-  maximumAmount: 30
+  maximumAmount: 40

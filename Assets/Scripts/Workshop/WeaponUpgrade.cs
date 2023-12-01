@@ -1,10 +1,7 @@
 public interface IWeaponUpgrade
 {
-    void OnUpgradeSight();
-    void OnUpgradeBarrel();
-    void OnUpgradeLaser();
-    bool IsSightUpgraded { get; }
-    bool IsBarrelUpgraded { get; }
-    bool IsLaserUpgraded { get; }
+    bool UpgradeRange { get; set; }
+    bool UpgradeDamage { get; set; }
+    bool UpgradeAccuracy { get; set; }
     bool IsFullyUpgraded { get; }
 }
