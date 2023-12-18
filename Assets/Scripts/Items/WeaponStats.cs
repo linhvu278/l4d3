@@ -2,14 +2,14 @@
 // using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponStats : MonoBehaviour, IWeaponUpgrade, IInteractable
+public class WeaponStats : MonoBehaviour, IWeaponUpgrade//, IInteractable
 {
     [SerializeField] private GameObject sight, barrel, laser;
     [SerializeField] private bool isSightUpgraded, isBarrelUpgraded, isLaserUpgraded;
 
-    private Inventory inventory;
-    private PickUpWeapon pickUpWeapon;
-    private int weaponCategory;
+    // private Inventory inventory;
+    // private PickUpWeapon pickUpWeapon;
+    // private int weaponCategory;
         
     // public int ammo { get;set; }
     // public float durability {get;set;}
@@ -44,14 +44,17 @@ public class WeaponStats : MonoBehaviour, IWeaponUpgrade, IInteractable
         isBarrelUpgraded = barrelValue;
         isLaserUpgraded = laserValue;
     }
-    private void WeaponUpgrade(){
-        inventory.AddWeaponUpgrade(weaponCategory, isSightUpgraded, isBarrelUpgraded, isLaserUpgraded);
-    }
+    // public void WeaponUpgrade(){
+    //     inventory.AddWeaponUpgrade(weaponCategory, isSightUpgraded, isBarrelUpgraded, isLaserUpgraded);
+    // }
     void Start(){
-        inventory = Inventory.instance;
-        pickUpWeapon = GetComponent<PickUpWeapon>();
-        weaponCategory = (int)pickUpWeapon.Weapon.weaponCategory;
+        // inventory = Inventory.instance;
+        // pickUpWeapon = GetComponent<PickUpWeapon>();
+        // weaponCategory = (int)pickUpWeapon.Weapon.weaponCategory;
     }
-    public void OnInteractStart() => WeaponUpgrade();
-    public void OnInteractEnd() {}
+    // public void OnInteractStart() => WeaponUpgrade();
+    // public void OnInteractEnd() {}
+    // void OnDestroy(){
+    //     WeaponUpgrade();
+    // }
 }
