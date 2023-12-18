@@ -105,22 +105,43 @@ public class Inventory : MonoBehaviour
         int weaponIndex = (int)weapon.weaponCategory;
         weaponToAdd = Instantiate(db.weaponPrefabs[weapon.weaponId], weaponSlot[weaponIndex].position, weaponSlot[weaponIndex].rotation);
         weaponToAdd.transform.SetParent(weaponSlot[weaponIndex]);
-        weaponObjects[weaponIndex] = weaponToAdd;
         weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = amount;
 
         if (weaponInventory[weaponIndex] != null) DropWeapon(weaponInventory[weaponIndex]);
         weaponInventory[weaponIndex] = weapon;
+        weaponObjects[weaponIndex] = weaponToAdd;
+        // weaponSwitch.SelectNewWeapon(weaponIndex);
+        weaponSlot[weaponIndex].gameObject.SetActive(false);
+
+        loadoutUI.GetHUDIcon(weapon.weaponIcon, (int)weapon.weaponCategory);
+        playerInventory.UpdateWeapons(weapon, true);
+    }
+    public void AddWeaponWithUpgrades(Weapon weapon, int amount, bool upgradeAcc, bool upgradeDmg, bool upgradeRng){
+        GameObject weaponToAdd;
+        int weaponIndex = (int)weapon.weaponCategory;
+        weaponToAdd = Instantiate(db.weaponPrefabs[weapon.weaponId], weaponSlot[weaponIndex].position, weaponSlot[weaponIndex].rotation);
+        weaponToAdd.transform.SetParent(weaponSlot[weaponIndex]);
+        weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = amount;
+
+        IWeaponUpgrade upgrade = weaponToAdd.GetComponent<IWeaponUpgrade>();
+        upgrade.UpgradeAccuracy = upgradeAcc;
+        upgrade.UpgradeDamage = upgradeDmg;
+        upgrade.UpgradeRange = upgradeRng;
+
+        if (weaponInventory[weaponIndex] != null) DropWeapon(weaponInventory[weaponIndex]);
+        weaponInventory[weaponIndex] = weapon;
+        weaponObjects[weaponIndex] = weaponToAdd;
         weaponSwitch.SelectNewWeapon(weaponIndex);
 
         loadoutUI.GetHUDIcon(weapon.weaponIcon, (int)weapon.weaponCategory);
         playerInventory.UpdateWeapons(weapon, true);
     }
-    public void AddWeaponUpgrade(int index, bool upgradeAcc, bool upgradeDmg, bool upgradeRng){
-        IWeaponUpgrade upgrade = weaponObjects[index].GetComponent<IWeaponUpgrade>();
-        upgrade.UpgradeAccuracy = upgradeAcc;
-        upgrade.UpgradeDamage = upgradeDmg;
-        upgrade.UpgradeRange = upgradeRng;
-    }
+    // public void AddWeaponUpgrade(int index, bool upgradeAcc, bool upgradeDmg, bool upgradeRng){
+    //     IWeaponUpgrade upgrade = weaponObjects[index].GetComponent<IWeaponUpgrade>();
+    //     upgrade.UpgradeAccuracy = upgradeAcc;
+    //     upgrade.UpgradeDamage = upgradeDmg;
+    //     upgrade.UpgradeRange = upgradeRng;
+    // }
 
     #endregion
 
