@@ -9,7 +9,7 @@ public class Item : ScriptableObject
     public Sprite itemIcon = null;
     public ItemCategory itemCategory;
     public ItemType itemType;
-    public int minimumAmount, maximumAmount;
+    public int /*minimumAmount,*/ itemAmount;
 }
 
 public enum ItemCategory { ammo, material, glue }

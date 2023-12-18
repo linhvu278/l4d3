@@ -34,7 +34,7 @@ public class AmmoBoxObject : MonoBehaviour, IInteractable
             if (gunInInventory != null && gunInInventory.TryGetComponent(out Gun gun)){
                 // Item itemToAdd = db.itemList.Find(x => x.itemType == gun.GetItemType());
                 Item itemToAdd = db.GetItem(gun.GetItemType());
-                if (inventory.AddItem(itemToAdd, itemToAdd.maximumAmount)){
+                if (inventory.AddItem(itemToAdd, itemToAdd.itemAmount)){
                     AudioSource.PlayClipAtPoint(refillSound, transform.position);
                     CanRefillAmmo();
                     Invoke("CanRefillAmmo", delayTime);

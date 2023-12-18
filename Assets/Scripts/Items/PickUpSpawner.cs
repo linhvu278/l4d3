@@ -24,12 +24,11 @@ public class PickUpSpawner : MonoBehaviour
             int randomIndex = Random.Range(1, db.itemList.Count);
 
             // select a random amount of item to spawn
-            int minAmount = db.itemList[randomIndex].minimumAmount;
-            int maxAmount = db.itemList[randomIndex].maximumAmount;
+            // int minAmount = db.itemList[randomIndex].minimumAmount;
+            int itemAmount = db.itemList[randomIndex].itemAmount;
 
             GameObject itemToSpawn = Instantiate(db.itemPickupsList[randomIndex], itemSpawnPositions[i].position, itemSpawnPositions[i].rotation);
-            PickUpItem pickUpItem = itemToSpawn.GetComponent<PickUpItem>();
-            pickUpItem.itemAmount = Random.Range(minAmount, maxAmount+1);
+            itemToSpawn.GetComponent<PickUpItem>().itemAmount = itemAmount;
             spawnedItems.Add(itemToSpawn);
         }
     }
