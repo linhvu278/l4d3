@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: item_ammo_9mm
   m_EditorClassIdentifier: 
   itemId: 2
-  itemName: 9mm ammo
+  itemName: 9mm rounds
   itemIcon: {fileID: 21300000, guid: 9f9b3dc399b14174a957f79856c7b8b7, type: 3}
   itemCategory: 0
   itemType: 4
-  minimumAmount: 10
-  maximumAmount: 50
+  itemAmount: 60

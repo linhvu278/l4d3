@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: item_ammo_556
   m_EditorClassIdentifier: 
   itemId: 6
-  itemName: 5.56 ammo
+  itemName: 5.56 rounds
   itemIcon: {fileID: 21300000, guid: bd275d0f2b2965541bb5ed9da60deee6, type: 3}
   itemCategory: 0
   itemType: 1
-  minimumAmount: 10
-  maximumAmount: 40
+  itemAmount: 40

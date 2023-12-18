@@ -18,16 +18,16 @@ MonoBehaviour:
   weaponCategory: 1
   deployTime: 1
   weaponAmount: 12
-  craftingCost: 0
+  craftingCost: 125
   gunType: 4
   ammoType: 3
   fireMode: 0
   damage: 36
-  fireRate: 6.25
+  fireRate: 6.75
   inaccuracy: 1.1
   range: 60
   reloadTime: 1.5
   maxDurability: 250
   slowReload: 0
   aimPosition: {x: 0, y: -0.078, z: 0.2}
-  aimSightPosition: {x: 0, y: 0, z: 0}
+  aimSightPosition: {x: 0, y: -0.11, z: 0.1}

@@ -18,7 +18,7 @@ MonoBehaviour:
   weaponCategory: 0
   deployTime: 1
   weaponAmount: 8
-  craftingCost: 0
+  craftingCost: 125
   gunType: 1
   ammoType: 2
   fireMode: 0
