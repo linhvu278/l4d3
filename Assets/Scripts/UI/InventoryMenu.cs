@@ -130,19 +130,19 @@ public class InventoryMenu : MonoBehaviour
     private void UpgradeSight(){
         weaponToUpgrade.UpgradeRange = true;
         // upgradeSightButton.gameObject.SetActive(weaponToUpgrade.IsSightUpgraded);
-        ResetUpgradeMenu();
+        // ResetUpgradeMenu();
         ExitMenu();
     }
     private void UpgradeBarrel(){
         weaponToUpgrade.UpgradeDamage = true;
         // upgradeBarrelButton.gameObject.SetActive(weaponToUpgrade.IsBarrelUpgraded);
-        ResetUpgradeMenu();
+        // ResetUpgradeMenu();
         ExitMenu();
     }
     private void UpgradeLaser(){
         weaponToUpgrade.UpgradeAccuracy = true;
         // upgradeLaserButton.gameObject.SetActive(weaponToUpgrade.IsLaserUpgraded);
-        ResetUpgradeMenu();
+        // ResetUpgradeMenu();
         ExitMenu();
     }
     private void ResetUpgradeMenu(){
@@ -175,6 +175,7 @@ public class InventoryMenu : MonoBehaviour
     #endregion
 
     private void ExitMenu(){
+        ResetUpgradeMenu();
         gameObject.SetActive(false);
     }
     void OnEnable(){

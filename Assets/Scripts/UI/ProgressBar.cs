@@ -11,25 +11,6 @@ public class ProgressBar : MonoBehaviour
 
     private bool isProgressBarOn;
 
-    void Awake(){
-        if (instance != null){
-            Debug.Log("More than one instances of ProgressBar found");
-            return;
-        }
-        instance = this;
-    }
-
-    void Start(){
-        // progressBarSlider.value = progressValue;
-
-        isProgressBarOn = false;
-        gameObject.SetActive(isProgressBarOn);
-    }
-
-    void OnEnable(){
-        progressBarSlider.value = 0;
-    }
-
     void Update(){
         if (isProgressBarOn){
             progressBarSlider.value += Time.deltaTime;
@@ -48,8 +29,27 @@ public class ProgressBar : MonoBehaviour
         isProgressBarOn = value;
         if (gameObject != null) gameObject.SetActive(isProgressBarOn);
     }
+
+    void OnEnable(){
+        progressBarSlider.value = 0;
+    }
     
     private void OnDestroy(){
         ToggleProgressBar(false);
+    }
+
+    void Start(){
+        // progressBarSlider.value = progressValue;
+
+        isProgressBarOn = false;
+        gameObject.SetActive(isProgressBarOn);
+    }
+
+    void Awake(){
+        if (instance != null){
+            Debug.Log("More than one instances of ProgressBar found");
+            return;
+        }
+        instance = this;
     }
 }
