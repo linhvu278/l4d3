@@ -22,23 +22,6 @@ public class UtilityAmmoBox : MonoBehaviour, IPrimaryInput, IWeaponAmount
 
     private Vector3 deployPosition;
 
-    void OnEnable(){
-        StartCoroutine(Equip(ammoBox.deployTime));
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        playa = GameObject.FindGameObjectWithTag("Player");
-        playerManager = playa.GetComponent<PlayerMovement>();
-        animator = GetComponent<Animator>();
-
-        inventory = Inventory.instance;
-        progressBar = ProgressBar.instance;
-
-        useTime = ammoBox.useTime;
-    }
-
     IEnumerator Deploy(){
         if (CanDeploy){
             IsDeploying(true);
@@ -67,7 +50,7 @@ public class UtilityAmmoBox : MonoBehaviour, IPrimaryInput, IWeaponAmount
     public void OnPrimaryStart(){ deployCoroutine = StartCoroutine(Deploy()); }
     public void OnPrimaryEnd(){ CancelDeploy(); }
     void IsDeploying(bool value){
-        isDeploying = value;
+        // isDeploying = value;
         animator.SetBool("isReloading", value);
         progressBar.ToggleProgressBar(value);
         playerManager.CanMove = !value;
@@ -78,11 +61,30 @@ public class UtilityAmmoBox : MonoBehaviour, IPrimaryInput, IWeaponAmount
         get { return ammoboxAmount; }
         set { ammoboxAmount = value; }
     }
-    private bool CanDeploy => !isEquiping && !isDeploying && playerManager.IsGrounded;
+    private bool CanDeploy => !isEquiping /*&& !isDeploying*/ && playerManager.IsGrounded;
     // void OnDestroy(){
     //     IsDeploying(false);
     // }
+    void OnEnable(){
+        StartCoroutine(Equip(ammoBox.deployTime));
+    }
     void OnDisable(){
-        IsDeploying(false);
+        // IsDeploying(false);
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        playa = GameObject.FindGameObjectWithTag("Player");
+        playerManager = playa.GetComponent<PlayerMovement>();
+        animator = GetComponent<Animator>();
+        // Debug.Log(animator);
+        // Debug.Log(progressBar);
+        // Debug.Log(playerManager);
+
+        inventory = Inventory.instance;
+        progressBar = ProgressBar.instance;
+
+        useTime = ammoBox.useTime;
     }
 }

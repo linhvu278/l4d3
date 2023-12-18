@@ -68,7 +68,7 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
         StartCoroutine(Equip(health.deployTime));
     }
     void OnDisable(){
-        IsHealing(false);
+        // IsHealing(false);
     }
 
     public void OnPrimaryStart(){ healCoroutine = StartCoroutine(Heal()); }
