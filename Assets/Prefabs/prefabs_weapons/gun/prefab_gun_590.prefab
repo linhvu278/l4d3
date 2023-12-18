@@ -15156,16 +15156,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gun: {fileID: 11400000, guid: 9a915d05bf04687478a656f9ac968dad, type: 2}
-  gunUpgrades: {fileID: 7651012958381614795}
+  sightUpgrade: {fileID: 1355040092576169313}
+  barrelUpgrade: {fileID: 973527007419824407}
+  laserUpgrade: {fileID: 2844574218174597}
   shootSound: {fileID: 4184495915095936303}
   cockSound: {fileID: 1290574356805483917}
   reloadSound: {fileID: 7056035941903492768}
   emptyClipSound: {fileID: 9195974405053680984}
   hitEffect: {fileID: 100002, guid: ba261927bb2ae4244b20b0eb77a96415, type: 3}
   muzzleFlash: {fileID: 2491714438210027536}
-  isSightUpgraded: 0
-  isBarrelUpgraded: 0
-  isLaserUpgraded: 0
 --- !u!82 &4184495915095936303
 AudioSource:
   m_ObjectHideFlags: 0

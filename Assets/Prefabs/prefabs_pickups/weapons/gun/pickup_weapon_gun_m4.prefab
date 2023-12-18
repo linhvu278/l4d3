@@ -169,6 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: {fileID: 11400000, guid: 7fad09a2fa4204749a65c65404010cf3, type: 2}
+  weaponAmount: 40
 --- !u!114 &172804024861640728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,8 +188,6 @@ MonoBehaviour:
   isSightUpgraded: 0
   isBarrelUpgraded: 0
   isLaserUpgraded: 0
-  ammo: 30
-  durability: 250
 --- !u!114 &2153039912798362066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,8 +201,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineMode: 0
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 2
+  outlineColor: {r: 1, g: 0, b: 0, a: 1}
+  outlineWidth: 10
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -8401218714792031518, guid: 70089153aa5c52845b2485e505207de3, type: 3}

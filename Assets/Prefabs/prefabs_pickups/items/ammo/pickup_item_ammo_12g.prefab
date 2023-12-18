@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 12abed5b8908b894ab2b2cf158178bc8, type: 2}
-  itemAmount: 9
+  itemAmount: 40
 --- !u!64 &2742452114567044592
 MeshCollider:
   m_ObjectHideFlags: 0
