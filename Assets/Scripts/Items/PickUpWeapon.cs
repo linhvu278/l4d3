@@ -16,13 +16,14 @@ public class PickUpWeapon : MonoBehaviour, IInteractable, IOutline, IWeaponAmoun
         inventory = Inventory.instance;
         // if (TryGetComponent(out WeaponStats ws)) weaponStats = GetComponent<WeaponStats>();
 
-        outline = GetComponent<Outline>();
-        outline.OutlineColor = Color.red;
-        DisableOutline();
         // db = ItemDatabase.instance;
     }
     void WeaponPickUp(){
-        inventory.AddWeapon(weapon, weaponAmount);
+        if (TryGetComponent(out WeaponStats ws)){
+            inventory.AddWeaponWithUpgrades(weapon, weaponAmount, ws.UpgradeAccuracy, ws.UpgradeDamage, ws.UpgradeRange);
+        } else {
+            inventory.AddWeapon(weapon, weaponAmount);
+        }
         Destroy(gameObject);
     }
 
@@ -32,6 +33,11 @@ public class PickUpWeapon : MonoBehaviour, IInteractable, IOutline, IWeaponAmoun
     }
     public void SpawnWeaponAmount(){
         weaponAmount = weapon.weaponAmount;
+    }
+    void OnEnable(){
+        outline = GetComponent<Outline>();
+        outline.OutlineColor = Color.red;
+        DisableOutline();
     }
 
     public void OnInteractStart() => WeaponPickUp();

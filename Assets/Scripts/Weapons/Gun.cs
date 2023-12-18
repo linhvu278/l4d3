@@ -5,8 +5,8 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
 {
     [SerializeField] private Weapon_Gun gun; // where the gun gets its stats from
 
-    [SerializeField] private Transform gunUpgrades;
-    private GameObject sightUpgrade, barrelUpgrade, laserUpgrade;
+    // [SerializeField] private Transform gunUpgrades;
+    [SerializeField] private GameObject sightUpgrade, barrelUpgrade, laserUpgrade;
     
     // GameObject playa;
     SimpleCrosshair crosshair;
@@ -55,8 +55,6 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         inventory = Inventory.instance;
         loadoutUI = LoadoutUI.instance;
 
-        inventory.onItemChangedCallback += GetMaxAmmo;
-
         clipAmmo = gun.weaponAmount;
         range = gun.range;
         damage = isBarrelUpgraded ? gun.damage * 1.25f : gun.damage;
@@ -96,13 +94,11 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         GetMaxAmmo();
         loadoutUI.GetHUDAmmo(ammo, weaponCategory);
         loadoutUI.GetHUDAmmoIcon(GetItemType(), weaponCategory);
+        inventory.onItemChangedCallback += GetMaxAmmo;
 
-        sightUpgrade = gunUpgrades.Find("sight") ? gunUpgrades.Find("sight").gameObject : null;
-        barrelUpgrade = gunUpgrades.Find("barrel") ? gunUpgrades.Find("barrel").gameObject : null;
-        laserUpgrade = gunUpgrades.Find("laser") ? gunUpgrades.Find("laser").gameObject : null;
-        UpgradeBarrel(isBarrelUpgraded);
-        UpgradeLaser(isLaserUpgraded);
-        UpgradeSight(isSightUpgraded);
+        // sightUpgrade = gunUpgrades.Find("sight") ? gunUpgrades.Find("sight").gameObject : null;
+        // barrelUpgrade = gunUpgrades.Find("barrel") ? gunUpgrades.Find("barrel").gameObject : null;
+        // laserUpgrade = gunUpgrades.Find("laser") ? gunUpgrades.Find("laser").gameObject : null;
     }
 
     void Update(){
@@ -338,22 +334,16 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         if (CanAim()) isAiming = !isAiming;
     }
     public void UpgradeSight(bool value){
-        if (sightUpgrade != null){
-            isSightUpgraded = value;
-            sightUpgrade.SetActive(value);
-        }
+        isSightUpgraded = value;
+        sightUpgrade.SetActive(value);
     }
     public void UpgradeBarrel(bool value){
-        if (barrelUpgrade != null){
-            isBarrelUpgraded = value;
-            barrelUpgrade.SetActive(value);
-        }
+        isBarrelUpgraded = value;
+        barrelUpgrade.SetActive(value);
     }
     public void UpgradeLaser(bool value){
-        if (laserUpgrade != null){
-            isLaserUpgraded = value;
-            laserUpgrade.SetActive(value);
-        }
+        isLaserUpgraded = value;
+        laserUpgrade.SetActive(value);
     }
 
     // get keyboard input here
@@ -374,15 +364,24 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     // upgrade gun
     public bool UpgradeRange{
         get { return isSightUpgraded; }
-        set { UpgradeSight(value); }
+        set {
+            isSightUpgraded = value;
+            UpgradeSight(isSightUpgraded);
+        }
     } //=> gunUpgrades.Find("sight") && !isSightUpgraded;
     public bool UpgradeDamage{
         get { return isBarrelUpgraded; }
-        set { UpgradeBarrel(value); }
+        set {
+            isBarrelUpgraded = value;
+            UpgradeBarrel(isBarrelUpgraded);
+        }
     }
     public bool UpgradeAccuracy{
         get { return isLaserUpgraded; }
-        set { UpgradeLaser(value); }
+        set {
+            isLaserUpgraded = value;
+            UpgradeLaser(isLaserUpgraded);
+        }
     }
     public bool IsFullyUpgraded => isSightUpgraded && isLaserUpgraded && isBarrelUpgraded;
     
@@ -419,6 +418,9 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         StartCoroutine(Equip(gun.deployTime));
         // animator.SetBool("isEquiping", true);
         crosshair.SetGap((int)(Inaccuracy() * 10f), true);
+        UpgradeBarrel(isBarrelUpgraded);
+        UpgradeLaser(isLaserUpgraded);
+        UpgradeSight(isSightUpgraded);
     }
     void OnDisable(){
         isShooting = false;
@@ -426,6 +428,6 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     }
     void OnDestroy(){
         isShooting = false;
-        inventory.onItemChangedCallback -= GetMaxAmmo;
+        // inventory.onItemChangedCallback -= GetMaxAmmo;
     }
 }
