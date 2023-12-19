@@ -17,5 +17,4 @@ MonoBehaviour:
   itemIcon: {fileID: 21300000, guid: 7411bd130e0ace9449ee85dee89c7516, type: 3}
   itemCategory: 2
   itemType: 15
-  minimumAmount: 1
-  maximumAmount: 20
+  itemAmount: 15
