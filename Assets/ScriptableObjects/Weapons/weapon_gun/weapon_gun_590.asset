@@ -29,5 +29,5 @@ MonoBehaviour:
   reloadTime: 0.63
   maxDurability: 250
   slowReload: 1
-  aimPosition: {x: 0, y: -0.111, z: 0.3}
-  aimSightPosition: {x: 0, y: -0.111, z: 0.3}
+  aimPosition: {x: 0, y: -0.06, z: 0.34}
+  aimSightPosition: {x: 0, y: -0.105, z: 0.34}
