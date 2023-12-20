@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ecc46638c061d4fb437cc00b6b9243, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sight: {fileID: 0}
+  sight: {fileID: 2790779747418782858}
   barrel: {fileID: 8636308029821177928}
   laser: {fileID: 172720346458759895}
   isSightUpgraded: 0
