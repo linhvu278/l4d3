@@ -2,10 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using TMPro;
+using UnityEngine.EventSystems;
 
-public class ItemSlot : MonoBehaviour
+public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image itemIcon;
+    [SerializeField] private TextMeshProUGUI itemName;
     [SerializeField] private TextMeshProUGUI itemAmount;
     private Button itemButton;
 
@@ -13,20 +15,24 @@ public class ItemSlot : MonoBehaviour
 
     private Item item;
     Inventory inventory;
+    PlayerInventory playerInventory;
 
-    void Awake(){
-        itemButton = GetComponent<Button>();
+    private const string drop1String = "Drop 1", 
+                        drop25String = "Drop 25", 
+                        dropAllString = "Drop all", 
+                        craftString = "Add to crafting table";
 
-    }
-    
     void Start()
     {
+        itemButton = GetComponent<Button>();
         inventory = Inventory.instance;
+        playerInventory = PlayerInventory.instance;
         
         itemIcon.enabled = false;
         itemAmount.enabled = false;
 
-        itemButton.onClick.AddListener(ToggleMenu);
+        // itemButton.onClick.AddListener(ToggleMenu);
+        // itemButton.OnPointerEnter()
     }
 
     public void AddItemSlot(Item newItem){
@@ -34,6 +40,8 @@ public class ItemSlot : MonoBehaviour
 
         itemIcon.sprite = item.itemIcon;
         itemIcon.enabled = true;
+        itemName.text = item.itemName;
+        itemName.enabled = true;
         itemAmount.text = inventory.GetItemAmount(item.itemType).ToString();
         itemAmount.enabled = true;
         
@@ -45,14 +53,73 @@ public class ItemSlot : MonoBehaviour
 
         itemIcon.sprite = null;
         itemIcon.enabled = false;
+        itemName.text = null;
+        itemName.enabled = false;
         itemAmount.text = null;
         itemAmount.enabled = false;
 
         itemButton.enabled = false;
     }
+    public void OnPointerClick(PointerEventData eventData){
+        // if (item != null){
+        if (itemButton.enabled == true){
+            if (eventData.button == PointerEventData.InputButton.Left){
+                // Debug.Log("left");
+                switch (item.itemCategory){
+                    case ItemCategory.ammo:
+                        inventory.DropItem(item, 25);
+                        break;
+                    case ItemCategory.material:
+                        playerInventory.AddCraftingItem(item);
+                        itemButton.enabled = false;
+                        break;
+                    case ItemCategory.glue:
+                        inventory.DropItem(item, 25);
+                        playerInventory.EnableCraftButton();
+                        break;
+                }
+            }
+            else if (eventData.button == PointerEventData.InputButton.Right){
+                // Debug.Log("right");
+                switch (item.itemCategory){
+                    case ItemCategory.ammo:
+                        inventory.DropItem(item, inventory.GetItemAmount(item.itemType));
+                        break;
+                    case ItemCategory.material:
+                        inventory.DropItem(item, 1);
+                        break;
+                    case ItemCategory.glue:
+                        inventory.DropItem(item, inventory.GetItemAmount(item.itemType));
+                        playerInventory.EnableCraftButton();
+                        break;
+                }
+            }
+        }
+    }
+    public void OnPointerEnter(PointerEventData eventData){
+        // if (item != null){
+        if (itemButton.enabled == true){
+            switch (item.itemCategory){
+                case ItemCategory.ammo:
+                    playerInventory.EnableInputGuide(drop25String, dropAllString);
+                    break;
+                case ItemCategory.material:
+                    playerInventory.EnableInputGuide(craftString, drop1String);
+                    break;
+                case ItemCategory.glue:
+                    playerInventory.EnableInputGuide(drop25String, dropAllString);
+                    break;
+            }
+        }
+    }
+    public void OnPointerExit(PointerEventData eventData) { playerInventory.DisableInputGuide(); }
 
     public void ToggleMenu(){
         inventoryMenu.GetComponent<InventoryMenu>().GetItem(item, inventory.GetItemAmount(item.itemType));
         inventoryMenu.GetComponent<RectTransform>().position = Mouse.current.position.ReadValue();
+    }
+
+    void Awake(){
+        // itemButton = GetComponent<Button>();
     }
 }

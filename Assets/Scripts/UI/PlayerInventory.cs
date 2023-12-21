@@ -18,7 +18,7 @@ public class PlayerInventory : MonoBehaviour
     private ItemSlot[] itemSlots;
 
     [SerializeField] private Button craftWeaponButton, clearItemsButton, closeInventoryButton;
-    [SerializeField] private TextMeshProUGUI craftButtonText, inventoryStatusText;
+    [SerializeField] private TextMeshProUGUI craftButtonText, inputGuideLMB, inputGuideRMB, inventoryStatusText;
     [SerializeField] private Image firstCraftingItemIcon, secondCraftingItemIcon, craftedWeaponIcon;
     private Weapon weaponToCraft;
     public Item firstCraftingItem, secondCraftingItem;
@@ -27,7 +27,9 @@ public class PlayerInventory : MonoBehaviour
     // [SerializeField] private Button primaryRepairButton, primaryUpgradeButton, secondaryRepairButton, secondaryUpgradeButton;
 
     private bool isInventoryOpen;
-    public bool isWorkshopOpen;
+    private bool isWorkshopOpen;
+
+    public bool IsWorkshopOpen { get => isWorkshopOpen; }
 
     void Awake(){
         if (instance != null){
@@ -85,6 +87,9 @@ public class PlayerInventory : MonoBehaviour
         clearItemsButton.onClick.AddListener(ClearCraftingItems);
         craftButtonText.GetComponent<TextMeshProUGUI>();
         inventoryStatusText.GetComponent<TextMeshProUGUI>();
+        inputGuideLMB.GetComponent<TextMeshProUGUI>();
+        inputGuideRMB.GetComponent<TextMeshProUGUI>();
+        DisableInputGuide();
         DisableCraftStatusText();
         // ClearCraftingUI();
         // ClearCraftingItems();
@@ -118,36 +123,42 @@ public class PlayerInventory : MonoBehaviour
                 secondCraftingItem = itemToAdd;
                 UpdateCraftingUI(itemToAdd.itemIcon, 2);
                 weaponToCraft = combineItems.GetCraftingItems(firstCraftingItem, secondCraftingItem);
-                EnableCraftButton(weaponToCraft);
+                SetCraftButton(weaponToCraft);
             }
         } else return;
     }
-    private void EnableCraftButton(Weapon craftedWeapon){
+    private void SetCraftButton(Weapon craftedWeapon){
         if (craftedWeapon != null){
             craftWeaponButton.gameObject.SetActive(true);
-            newCraftingCost = isWorkshopOpen ? craftedWeapon.craftingCost / 4 : craftedWeapon.craftingCost;
-            craftButtonText.text = string.Format("Craft {0} (Cost: {1} glue)", craftedWeapon.weaponName, newCraftingCost);
+            newCraftingCost = isWorkshopOpen ? craftedWeapon.craftingCost / 5 : craftedWeapon.craftingCost;
+            craftButtonText.text = string.Format("Craft {0} (Cost {1} glue)", craftedWeapon.weaponName, newCraftingCost);
+            // craftWeaponButton.enabled = inventory.GetItemAmount(ItemType.item_glue) >= newCraftingCost;
+            EnableCraftButton();
             craftedWeaponIcon.enabled = true;
             craftedWeaponIcon.sprite = craftedWeapon.weaponIcon;
         }
     }
+    public void EnableCraftButton(){
+        craftWeaponButton.enabled = inventory.GetItemAmount(ItemType.item_glue) >= newCraftingCost;
+    }
     private void CraftWeapon(){
         // inventory.CraftWeapon();
-        if (inventory.GetItemAmount(ItemType.item_glue) < weaponToCraft.craftingCost){
-            // Debug.Log("not enough glue");
-            EnableInventoryStatusText("Not enough glue");
-        } else {
+        // if (inventory.GetItemAmount(ItemType.item_glue) < weaponToCraft.craftingCost){
+        //     // Debug.Log("not enough glue");
+        //     EnableInventoryStatusText("Not enough glue");
+        // } else {
             inventory.AddWeapon(weaponToCraft, weaponToCraft.weaponAmount);
             inventory.SetItemAmount(firstCraftingItem.itemType, -1);
             inventory.SetItemAmount(secondCraftingItem.itemType, -1);
             inventory.SetItemAmount(ItemType.item_glue, -newCraftingCost);
             ClearCraftingItems();
-        }
+        // }
     }
     private void ClearCraftingItems(){
         // inventory.ClearCraftingItems();
         firstCraftingItem = null;
         secondCraftingItem = null;
+        UpdateItems();
         ClearCraftingUI();
     }
     private void UpdateCraftingUI(Sprite icon, int value){
@@ -170,15 +181,17 @@ public class PlayerInventory : MonoBehaviour
         craftWeaponButton.gameObject.SetActive(false);
         clearItemsButton.gameObject.SetActive(false);
     }
-    public void EnableInventoryStatusText(string text){
-        inventoryStatusText.text = text;
-        // inventoryStatusText.gameObject.SetActive(true);
-        inventoryStatusText.enabled = true;
-        Invoke(nameof(DisableCraftStatusText), 3f);
+    public void EnableInputGuide(string inputLMB, string inputRMB){
+        // Debug.Log("enter");
+        inputGuideLMB.text = "LMB: " + inputLMB;
+        inputGuideLMB.enabled = true;
+        inputGuideRMB.text = "RMB: " + inputRMB;
+        inputGuideRMB.enabled = true;
     }
-    private void DisableCraftStatusText(){
-        // inventoryStatusText.gameObject.SetActive(false);
-        inventoryStatusText.enabled = false;
+    public void DisableInputGuide(){
+        // Debug.Log("exit");
+        inputGuideLMB.enabled = false;
+        inputGuideRMB.enabled = false;
     }
     public void OnToggleInventory(InputAction.CallbackContext value){
         if (value.performed) ToggleInventory(false);
@@ -203,6 +216,16 @@ public class PlayerInventory : MonoBehaviour
         // upgradeWeaponUI.CloseMenu();
     }
 
+    public void EnableInventoryStatusText(string text){
+        inventoryStatusText.text = text;
+        // inventoryStatusText.gameObject.SetActive(true);
+        inventoryStatusText.enabled = true;
+        Invoke(nameof(DisableCraftStatusText), 3f);
+    }
+    private void DisableCraftStatusText(){
+        // inventoryStatusText.gameObject.SetActive(false);
+        inventoryStatusText.enabled = false;
+    }
     private void OnDestroy(){
         // inventory.onItemChangedCallback -= UpdateItems;
         // inventory.onClearItemsCallback -= ClearCraftingUI;
