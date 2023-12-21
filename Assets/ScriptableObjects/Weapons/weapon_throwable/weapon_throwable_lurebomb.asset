@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: weapon_throwable_lurebomb
   m_EditorClassIdentifier: 
   weaponId: 6
-  weaponName: Lure Bomb
+  weaponName: C4
   weaponIcon: {fileID: 21300000, guid: 81f72ad297c3fec449ce66ef7e6bde86, type: 3}
   weaponCategory: 2
   deployTime: 1
