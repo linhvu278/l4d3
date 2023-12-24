@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, /*IRepairWeapon, */IWeaponUpgrade, IWeaponAmount
+public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, IUnloadWeapon, /*IRepairWeapon, */IWeaponUpgrade, IWeaponAmount
 {
     [SerializeField] private Weapon_Gun gun; // where the gun gets its stats from
 
