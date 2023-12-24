@@ -16,5 +16,5 @@ MonoBehaviour:
   itemName: Glue
   itemIcon: {fileID: 21300000, guid: 7411bd130e0ace9449ee85dee89c7516, type: 3}
   itemCategory: 2
-  itemType: 15
+  itemType: 13
   itemAmount: 15

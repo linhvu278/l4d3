@@ -18,7 +18,8 @@ MonoBehaviour:
   weaponCategory: 2
   deployTime: 1
   weaponAmount: 1
-  craftingCost: 20
+  craftingCost: 25
+  weaponUpgradeType: {fileID: 0}
   projectile: {fileID: 5675703634220382981, guid: a8f78386078a7b0439fa28d2e8464e08, type: 3}
   damage: 25
   explosionRadius: 5

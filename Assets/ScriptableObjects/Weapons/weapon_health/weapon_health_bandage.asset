@@ -18,7 +18,8 @@ MonoBehaviour:
   weaponCategory: 3
   deployTime: 1
   weaponAmount: 1
-  craftingCost: 20
+  craftingCost: 25
+  weaponUpgradeType: {fileID: 0}
   healAmount: 20
   healTime: 1.5
   canHealWhileMoving: 1

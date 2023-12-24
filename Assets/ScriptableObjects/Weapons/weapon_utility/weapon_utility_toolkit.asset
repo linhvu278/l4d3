@@ -18,5 +18,6 @@ MonoBehaviour:
   weaponCategory: 4
   deployTime: 1
   weaponAmount: 1
-  craftingCost: 60
+  craftingCost: 50
+  weaponUpgradeType: {fileID: 0}
   useTime: 4
