@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 8515246276160050687}
   - component: {fileID: 1233414737316227624}
   - component: {fileID: 2227260883947992478}
-  - component: {fileID: 8515246276160050626}
   - component: {fileID: 8515246276160050685}
   - component: {fileID: 8515246276160050684}
+  - component: {fileID: 8515246276160050626}
   - component: {fileID: 2056726573039179606}
   m_Layer: 8
   m_Name: pickup_weapon_health_medkit
@@ -29,14 +29,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6881094403390449000}
-  m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: -10.767, y: 1.05, z: 12.016}
-  m_LocalScale: {x: 12, y: 6, z: 12}
-  m_ConstrainProportionsScale: 0
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 10, y: 5, z: 10}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1233414737316227624
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -89,20 +89,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &8515246276160050626
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6881094403390449000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13f6a0ada1745c24fa806fc61ecde64b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weapon: {fileID: 11400000, guid: f878871314a83ed49818cef2d7d09798, type: 2}
-  weaponAmount: 1
 --- !u!64 &8515246276160050685
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -133,6 +119,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &8515246276160050626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6881094403390449000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13f6a0ada1745c24fa806fc61ecde64b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weapon: {fileID: 11400000, guid: f878871314a83ed49818cef2d7d09798, type: 2}
+  weaponAmount: 1
 --- !u!114 &2056726573039179606
 MonoBehaviour:
   m_ObjectHideFlags: 0
