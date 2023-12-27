@@ -17,8 +17,8 @@ MonoBehaviour:
   weaponIcon: {fileID: 21300000, guid: 6034a323c70f0f241a6e92eb92d64c3a, type: 3}
   weaponCategory: 0
   deployTime: 1
-  weaponAmount: 30
-  craftingCost: 125
+  weaponAmount: 32
+  craftingCost: 0
   gunType: 0
   ammoType: 1
   fireMode: 1
@@ -27,7 +27,6 @@ MonoBehaviour:
   inaccuracy: 1.8
   range: 80
   reloadTime: 2
-  maxDurability: 250
   slowReload: 0
   aimPosition: {x: 0, y: -0.111, z: 0.32}
   aimSightPosition: {x: 0, y: -0.111, z: 0.32}

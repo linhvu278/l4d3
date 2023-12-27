@@ -20,6 +20,6 @@ MonoBehaviour:
   weaponAmount: 1
   craftingCost: 75
   weaponUpgradeType: {fileID: 0}
-  healAmount: 60
+  healAmount: 75
   healTime: 5
   canHealWhileMoving: 0
