@@ -18,3 +18,4 @@ MonoBehaviour:
   itemCategory: 1
   itemType: 10
   itemAmount: 1
+  itemRotation: {x: 0, y: -180, z: 0}
