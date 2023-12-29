@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 3708724325122295555}
   - component: {fileID: 348978988553390246}
   - component: {fileID: 2536412536414944364}
-  - component: {fileID: 6971787420576568042}
-  - component: {fileID: 2742452114567044592}
+  - component: {fileID: 8069311753356078798}
   - component: {fileID: 6985720201588136692}
+  - component: {fileID: 6971787420576568042}
   - component: {fileID: 1318765152553158266}
   m_Layer: 8
   m_Name: pickup_item_ammo_12g
@@ -87,22 +87,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &6971787420576568042
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4049819854276107705}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52c34ac1776bc8741bedc9ed0d516bd0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item: {fileID: 11400000, guid: 12abed5b8908b894ab2b2cf158178bc8, type: 2}
-  itemAmount: 40
---- !u!64 &2742452114567044592
-MeshCollider:
+--- !u!65 &8069311753356078798
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -111,10 +97,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 2627054763745052571, guid: 6c2a935068877104dbb01488331ff916, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.002, y: 0.00112, z: 0.00056}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &6985720201588136692
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -131,6 +116,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6971787420576568042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4049819854276107705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52c34ac1776bc8741bedc9ed0d516bd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 11400000, guid: 12abed5b8908b894ab2b2cf158178bc8, type: 2}
+  itemAmount: 0
+  destroyItemOnPickUp: 1
 --- !u!114 &1318765152553158266
 MonoBehaviour:
   m_ObjectHideFlags: 0

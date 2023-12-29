@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 53e5b7c4f41215242a3221ebf5347684, type: 2}
-  itemAmount: 1
+  destroyItemOnPickUp: 1
 --- !u!114 &3908260392861102400
 MonoBehaviour:
   m_ObjectHideFlags: 0
