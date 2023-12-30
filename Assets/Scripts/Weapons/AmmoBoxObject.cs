@@ -29,9 +29,9 @@ public class AmmoBoxObject : MonoBehaviour, IInteractable
 
     void RefillAmmo(){
         if (canRefillAmmo){
-            int selectedWeapon = weaponSwitch.selectedWeapon;
-            GameObject gunInInventory = inventory.weaponObjects[selectedWeapon];
-            if (gunInInventory != null && gunInInventory.TryGetComponent(out Gun gun)){
+            int selectedWeapon = weaponSwitch.SelectedWeapon;
+            GameObject selectedGun = inventory.weaponObjects[selectedWeapon];
+            if (selectedGun != null && selectedGun.TryGetComponent(out Gun gun)){
                 // Item itemToAdd = db.itemList.Find(x => x.itemType == gun.GetItemType());
                 Item itemToAdd = db.GetItem(gun.GetItemType());
                 if (inventory.AddItem(itemToAdd, itemToAdd.itemAmount)){
@@ -45,15 +45,7 @@ public class AmmoBoxObject : MonoBehaviour, IInteractable
         } else return; //playerOverlay.EnableWarningText("You must have a firearm equipped to use the ammo box");
     }
 
-    void CanRefillAmmo(){
-        canRefillAmmo = !canRefillAmmo;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    void CanRefillAmmo() => canRefillAmmo = !canRefillAmmo;
 
     public void OnInteractStart() { RefillAmmo(); }
     public void OnInteractEnd(){}
