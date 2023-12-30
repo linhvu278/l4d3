@@ -55,26 +55,39 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
         if (weaponButton.enabled == true){
             switch (eventData.button){
                 case PointerEventData.InputButton.Left:
-                    // Debug.Log("left");
-                    if (IsWeaponUpgradable) Debug.Log("weapon upgrade");
-                    else Debug.Log("unload weapon");
-                    break;
-                case PointerEventData.InputButton.Right:
                     // Debug.Log("right");
                     inventory.DropWeapon(weapon);
+                    break;
+                case PointerEventData.InputButton.Right:
+                    // Debug.Log("left");
+                    int weaponIndex = (int)weapon.weaponCategory;
+                    if (weaponIndex < 2){
+                        // if (playerInventory.IsWorkshopOpen){
+                        //     playerInventory.AddWeaponUpgrade(inventory.weaponInventory[weaponIndex].weaponUpgradeType);
+                        //     weaponButton.enabled = false;
+                        // } else {
+                            inventory.weaponObjects[weaponIndex].GetComponent<IUnloadWeapon>().Unload();
+                        // }
+                    } else return;
                     break;
             }
         }
     }
     public void OnPointerEnter(PointerEventData eventData){
-        // if (weapon != null){
         if (weaponButton.enabled == true){
-            if (IsWeaponUpgradable) playerInventory.EnableInputGuide(upgradeWeaponString, dropWeaponString);
-            else playerInventory.EnableInputGuide(unloadWeaponString, dropWeaponString);
+            // if (IsWeaponUpgradable) playerInventory.EnableInputGuide(upgradeWeaponString, dropWeaponString);
+            // else playerInventory.EnableInputGuide(unloadWeaponString, dropWeaponString);
+            int weaponIndex = (int)weapon.weaponCategory;
+            if (weaponIndex < 2){
+                // if (playerInventory.IsWorkshopOpen) playerInventory.EnableInputGuide(upgradeWeaponString, dropWeaponString);
+                /*else*/ playerInventory.EnableInputGuide(dropWeaponString, unloadWeaponString);
+            } else {
+                playerInventory.EnableInputGuide(dropWeaponString, null);
+            }
         }
     }
     public void OnPointerExit(PointerEventData eventData) { playerInventory.DisableInputGuide(); }
-    private bool IsWeaponUpgradable => playerInventory.IsWorkshopOpen && (int)weapon.weaponCategory < 2;
+    // private bool IsWeaponUpgradable => playerInventory.IsWorkshopOpen && (int)weapon.weaponCategory < 2;
     void Start(){
         inventory = Inventory.instance;
         playerInventory = PlayerInventory.instance;

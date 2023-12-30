@@ -68,15 +68,23 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                 switch (item.itemCategory){
                     case ItemCategory.ammo:
                         inventory.DropItem(item, 25);
+                        if (item == null) playerInventory.DisableInputGuide();
                         break;
                     case ItemCategory.material:
-                        playerInventory.AddCraftingItem(item);
-                        itemButton.enabled = false;
+                        inventory.DropItem(item, 1);
+                        if (item == null) playerInventory.DisableInputGuide();
                         break;
                     case ItemCategory.glue:
                         inventory.DropItem(item, 25);
+                        if (item == null) playerInventory.DisableInputGuide();
                         playerInventory.EnableCraftButton();
+                        // playerInventory.EnableUpgradeButton();
                         break;
+                    // case ItemCategory.upgrade:
+                    //     if (playerInventory.IsWorkshopOpen) playerInventory.AddWeaponUpgrade(item);
+                    //     playerInventory.DisableInputGuide();
+                    //     itemButton.enabled = false;
+                    //     break;
                 }
             }
             else if (eventData.button == PointerEventData.InputButton.Right){
@@ -84,14 +92,23 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                 switch (item.itemCategory){
                     case ItemCategory.ammo:
                         inventory.DropItem(item, inventory.GetItemAmount(item.itemType));
+                        playerInventory.DisableInputGuide();
                         break;
                     case ItemCategory.material:
-                        inventory.DropItem(item, 1);
+                        playerInventory.AddCraftingItem(item);
+                        playerInventory.DisableInputGuide();
+                        itemButton.enabled = false;
                         break;
                     case ItemCategory.glue:
                         inventory.DropItem(item, inventory.GetItemAmount(item.itemType));
+                        playerInventory.DisableInputGuide();
                         playerInventory.EnableCraftButton();
+                        // playerInventory.EnableUpgradeButton();
                         break;
+                    // case ItemCategory.upgrade:
+                    //     inventory.DropItem(item, 1);
+                    //     if (item == null) playerInventory.DisableInputGuide();
+                    //     break;
                 }
             }
         }
@@ -104,22 +121,26 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                     playerInventory.EnableInputGuide(drop25String, dropAllString);
                     break;
                 case ItemCategory.material:
-                    playerInventory.EnableInputGuide(craftString, drop1String);
+                    playerInventory.EnableInputGuide(drop1String, craftString);
                     break;
                 case ItemCategory.glue:
                     playerInventory.EnableInputGuide(drop25String, dropAllString);
                     break;
+                // case ItemCategory.upgrade:
+                //     if (playerInventory.IsWorkshopOpen) playerInventory.EnableInputGuide(craftString, drop1String);
+                //     else playerInventory.EnableInputGuide(null, drop1String);
+                //     break;
             }
         }
     }
     public void OnPointerExit(PointerEventData eventData) { playerInventory.DisableInputGuide(); }
 
-    public void ToggleMenu(){
-        inventoryMenu.GetComponent<InventoryMenu>().GetItem(item, inventory.GetItemAmount(item.itemType));
-        inventoryMenu.GetComponent<RectTransform>().position = Mouse.current.position.ReadValue();
-    }
+    // public void ToggleMenu(){
+    //     inventoryMenu.GetComponent<InventoryMenu>().GetItem(item, inventory.GetItemAmount(item.itemType));
+    //     inventoryMenu.GetComponent<RectTransform>().position = Mouse.current.position.ReadValue();
+    // }
 
-    void Awake(){
+    // void Awake(){
         // itemButton = GetComponent<Button>();
-    }
+    // }
 }
