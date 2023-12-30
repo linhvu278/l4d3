@@ -13,9 +13,11 @@ public class Weapon : ScriptableObject
     public float deployTime;
     public int weaponAmount;
     public int craftingCost;
+    public Vector3 weaponRotation; // for non-fucky weapon spawns
+    // public Item weaponUpgradeType;
 }
 
-public enum WeaponCategory{ primary, secondary, throwable, health, utility/*, buff*/}
+public enum WeaponCategory{ primary, secondary, throwable, health, utility, buff}
 
 // differentiate between many types of weapons
 // public enum WeaponType{
