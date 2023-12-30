@@ -7,11 +7,15 @@ public class WeaponSwitch : MonoBehaviour
 
     Inventory inventory;
 
-    public int selectedWeapon { get; set; }
+    private int selectedWeapon;
+    public int SelectedWeapon{
+        get { return selectedWeapon; }
+        set { selectedWeapon = value; }
+    }
     private int previousSelectedWeapon, lastSelectedWeapon;
     private float scrollInput;
     [SerializeField] Transform weaponHolder;
-    public GameObject currentWeapon;
+    // public GameObject currentWeapon;
 
     public void ReceiveInput(float scrollValue)
     {
@@ -66,6 +70,7 @@ public class WeaponSwitch : MonoBehaviour
             weapon.gameObject.SetActive(false);
         }
         weaponHolder.GetChild(newSelectedWeapon).gameObject.SetActive(true);
+        // currentWeapon = inventory.weaponObjects[selectedWeapon];
         LoadoutUI.instance.ChangeHUDColor(selectedWeapon);
     }
     //switch to a new weapon directly
@@ -88,6 +93,7 @@ public class WeaponSwitch : MonoBehaviour
             }
             weaponHolder.GetChild(directlySelectedWeapon).gameObject.SetActive(true);
             selectedWeapon = directlySelectedWeapon;
+            // currentWeapon = inventory.weaponObjects[selectedWeapon];
             LoadoutUI.instance.ChangeHUDColor(directlySelectedWeapon);
         }
         else return;
@@ -96,6 +102,7 @@ public class WeaponSwitch : MonoBehaviour
         if (selectedWeapon != lastSelectedWeapon){
             if (inventory.weaponInventory[lastSelectedWeapon] != null) SelectNewWeapon(lastSelectedWeapon);
         }
+        // currentWeapon = inventory.weaponObjects[selectedWeapon];
     }
     void Awake()
     {
@@ -109,9 +116,9 @@ public class WeaponSwitch : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        selectedWeapon = 0;
-        // SelectNewWeapon(selectedWeapon);
         inventory = Inventory.instance;
+        // selectedWeapon = -1;
+        // SelectNewWeapon(selectedWeapon);
     }
     // Update is called once per frame
     void Update()
@@ -131,6 +138,6 @@ public class WeaponSwitch : MonoBehaviour
         {
             SelectWeapon(selectedWeapon);
         }
-        currentWeapon = inventory.weaponObjects[selectedWeapon];
+        // currentWeapon = inventory.weaponObjects[selectedWeapon];
     }
 }
