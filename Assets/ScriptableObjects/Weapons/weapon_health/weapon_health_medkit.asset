@@ -19,7 +19,7 @@ MonoBehaviour:
   deployTime: 1
   weaponAmount: 1
   craftingCost: 75
-  weaponUpgradeType: {fileID: 0}
+  weaponRotation: {x: -90, y: 0, z: 90}
   healAmount: 75
   healTime: 5
   canHealWhileMoving: 0

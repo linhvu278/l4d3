@@ -19,5 +19,5 @@ MonoBehaviour:
   deployTime: 1
   weaponAmount: 1
   craftingCost: 50
-  weaponUpgradeType: {fileID: 0}
+  weaponRotation: {x: 0, y: 90, z: 0}
   useTime: 4

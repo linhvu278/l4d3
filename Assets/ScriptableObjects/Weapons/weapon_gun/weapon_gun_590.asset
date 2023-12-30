@@ -19,12 +19,13 @@ MonoBehaviour:
   deployTime: 1
   weaponAmount: 8
   craftingCost: 0
+  weaponRotation: {x: 0, y: 0, z: 90}
   gunType: 1
   ammoType: 2
   fireMode: 0
   damage: 13
   fireRate: 0.9
-  inaccuracy: 2.5
+  inaccuracy: 2.25
   range: 60
   reloadTime: 0.63
   slowReload: 1

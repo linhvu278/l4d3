@@ -19,6 +19,7 @@ MonoBehaviour:
   deployTime: 1
   weaponAmount: 32
   craftingCost: 0
+  weaponRotation: {x: 0, y: 0, z: 90}
   gunType: 0
   ammoType: 1
   fireMode: 1
