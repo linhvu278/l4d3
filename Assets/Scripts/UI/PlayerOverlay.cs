@@ -35,7 +35,7 @@ public class PlayerOverlay : MonoBehaviour
     void Start()
     {
         cam = Camera.main.transform;
-        interactRange = GameObject.FindGameObjectWithTag("Player").GetComponent<InputManager>().interactRange;
+        interactRange = GameObject.FindGameObjectWithTag("Player").GetComponent<InputManager>().InteractRange;
 
         interactText = interactOverlay.Find("InteractText").GetComponent<TextMeshProUGUI>();
         warningText = transform.Find("WarningText").GetComponent<TextMeshProUGUI>();
@@ -87,7 +87,7 @@ public class PlayerOverlay : MonoBehaviour
         interactText.text = "Press E to pick up " + weapon.weaponName;
     }
     void ItemPickupOverlay(PickUpItem pickUpItem){
-        interactText.text = "Press E to pick up " + pickUpItem.item.itemName + " (" + pickUpItem.itemAmount + ")";
+        interactText.text = "Press E to pick up " + pickUpItem.Item.itemName + " (" + pickUpItem.ItemAmount + ")";
     }
     void EnemySpawnerOverlay(EnemySpawner enemySpawner){
         interactText.text = "Press E to spawn an enemy.";
