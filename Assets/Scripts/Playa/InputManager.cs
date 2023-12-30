@@ -6,21 +6,13 @@ public class InputManager : MonoBehaviour
     PlayerMovement playerMovement;
     MouseMovement mouseMovement;
     WeaponSwitch weaponSwitch;
+    Inventory inventory;
 
-    Vector2 horizontalValue;
-    private float mouseValueX,
-                mouseValueY,
-                scrollValue, 
-                middleMouseValue;
+    private Vector2 horizontalValue;
+    private float mouseValueX, mouseValueY, scrollValue, middleMouseValue;
 
-    public float interactRange = 2.4f;
-    
-    void Start()
-    {
-        playerMovement = GetComponent<PlayerMovement>();
-        mouseMovement = GetComponent<MouseMovement>();
-        weaponSwitch = GetComponent<WeaponSwitch>();
-    }
+    private const float INTERACT_RANGE = 2.5f;
+    public float InteractRange => INTERACT_RANGE;
 
     public void OnPlayerMovement(InputAction.CallbackContext value){
         horizontalValue = value.ReadValue<Vector2>();
@@ -44,7 +36,7 @@ public class InputManager : MonoBehaviour
     public void OnInteract(InputAction.CallbackContext value){
         RaycastHit hit;
         Transform cam = Camera.main.transform;
-        if (Physics.Raycast(cam.position, cam.forward, out hit, interactRange)){
+        if (Physics.Raycast(cam.position, cam.forward, out hit, INTERACT_RANGE)){
             IInteractable interactable = hit.collider.GetComponent<IInteractable>();
             if (interactable != null) {
                 if (value.started) interactable.OnInteractStart();
@@ -53,26 +45,26 @@ public class InputManager : MonoBehaviour
         }
     }
     public void OnAttack1(InputAction.CallbackContext value){
-        GameObject currentWeapon = weaponSwitch.currentWeapon;
+        GameObject currentWeapon = inventory.weaponObjects[weaponSwitch.SelectedWeapon];
         if (currentWeapon != null && currentWeapon.TryGetComponent(out IPrimaryInput pm)){
-            if (value.performed) currentWeapon.GetComponent<IPrimaryInput>().OnPrimaryStart();
-            else if (value.canceled) currentWeapon.GetComponent<IPrimaryInput>().OnPrimaryEnd();
+            if (value.performed) pm.OnPrimaryStart();
+            else if (value.canceled) pm.OnPrimaryEnd();
         }
     }
     public void OnAttack2(InputAction.CallbackContext value){
-        GameObject currentWeapon = weaponSwitch.currentWeapon;
+        GameObject currentWeapon = inventory.weaponObjects[weaponSwitch.SelectedWeapon];
         if (currentWeapon != null && currentWeapon.TryGetComponent(out ISecondaryInput sc)){
-            if (value.started) currentWeapon.GetComponent<ISecondaryInput>().OnSecondaryStart();
-            else if (value.canceled) currentWeapon.GetComponent<ISecondaryInput>().OnSecondaryEnd();
+            if (value.started) sc.OnSecondaryStart();
+            else if (value.canceled) sc.OnSecondaryEnd();
         }
     }
-    public void OnKick(InputAction.CallbackContext value){
+    public void OnAttack3(InputAction.CallbackContext value){
         middleMouseValue = value.ReadValue<float>();
     }
     public void OnReload(InputAction.CallbackContext value){
-        GameObject currentWeapon = weaponSwitch.currentWeapon;
-        if (currentWeapon != null && currentWeapon.TryGetComponent(out Gun gun)){
-            if (value.performed) gun.GetComponent<IReloadInput>().OnReload();
+        GameObject currentWeapon = inventory.weaponObjects[weaponSwitch.SelectedWeapon];
+        if (currentWeapon != null && currentWeapon.TryGetComponent(out IReloadInput reload)){
+            if (value.performed) reload.OnReload();
         }
     }
     public void OnSwitch(InputAction.CallbackContext value){
@@ -80,24 +72,32 @@ public class InputManager : MonoBehaviour
         weaponSwitch.ReceiveInput(scrollValue);
     }
     public void OnLastWeapon(InputAction.CallbackContext value){
-        if (value.performed) GetComponent<WeaponSwitch>().SelectLastWeapon();
+        if (value.performed) weaponSwitch.SelectLastWeapon();
     }
     public void OnPrimary(InputAction.CallbackContext value){
-        if (value.performed) GetComponent<WeaponSwitch>().SelectNewWeapon(0);
+        if (value.performed) weaponSwitch.SelectNewWeapon(0);
     }
     public void OnSecondary(InputAction.CallbackContext value){
-        if (value.performed) GetComponent<WeaponSwitch>().SelectNewWeapon(1);
+        if (value.performed) weaponSwitch.SelectNewWeapon(1);
     }
     public void OnThrowable(InputAction.CallbackContext value){
-        if (value.performed) GetComponent<WeaponSwitch>().SelectNewWeapon(2);
+        if (value.performed) weaponSwitch.SelectNewWeapon(2);
     }
     public void OnHealth(InputAction.CallbackContext value){
-        if (value.performed) GetComponent<WeaponSwitch>().SelectNewWeapon(3);
+        if (value.performed) weaponSwitch.SelectNewWeapon(3);
     }
     public void OnUtility(InputAction.CallbackContext value){
-        if (value.performed) GetComponent<WeaponSwitch>().SelectNewWeapon(4);
+        if (value.performed) weaponSwitch.SelectNewWeapon(4);
     }
-    public void OnBuff(InputAction.CallbackContext value){
-        if (value.performed) GetComponent<WeaponSwitch>().SelectNewWeapon(5);
+    // public void OnBuff(InputAction.CallbackContext value){
+    //     if (value.performed) weaponSwitch.SelectNewWeapon(5);
+    // }
+    
+    void Awake()
+    {
+        playerMovement = GetComponent<PlayerMovement>();
+        mouseMovement = GetComponent<MouseMovement>();
+        weaponSwitch = GetComponent<WeaponSwitch>();
+        inventory = GetComponent<Inventory>();
     }
 }
