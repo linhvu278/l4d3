@@ -26,11 +26,12 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
 
     private float range, damage, fireRate, inaccuracy, reloadTime;
     private float inaccuracyNormal, inaccuracyMove, inaccuracyJump, inaccuracyAim;
+    private const float scopeRangeMultiplier = 1.1f;
     private int weaponCategory; // 0: primary, 1: secondary
     private bool slowReload;
-    public float durability { get; set; }
-    public float maxDurability { get; set; }
-    public string gunName { get; set; }
+    // public float durability { get; set; }
+    // public float maxDurability { get; set; }
+    // public string gunName { get; set; }
     
     private int ammo;
     private int clipAmmo;
@@ -38,10 +39,10 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
 
     private bool isSightUpgraded, isBarrelUpgraded, isLaserUpgraded;
 
-    private Coroutine autoFireCoroutine, reloadCoroutine;
+    private Coroutine autoFireCoroutine, burstFireCoroutine, reloadCoroutine;
 
     private bool isShooting, isReloading, isEquiping, isAiming;//, isUnloading;
-    // bool canShoot, canAim, canReload;
+    bool canShoot, canAim, canReload;
     
     private Transform parentTransform;
     private Vector3 defaultPosition, aimPosition, aimSightPosition;
@@ -57,15 +58,15 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
 
         clipAmmo = gun.weaponAmount;
         range = gun.range;
-        damage = isBarrelUpgraded ? gun.damage * 1.25f : gun.damage;
+        damage = gun.damage;
         fireRate = gun.fireRate;
         // inaccuracy = gun.inaccuracy;
         reloadTime = gun.reloadTime;
         weaponCategory = (int)gun.weaponCategory;
-        maxDurability = gun.maxDurability;
-        durability = maxDurability;
+        // maxDurability = gun.maxDurability;
+        // durability = 1;
         slowReload = gun.slowReload;
-        gunName = gun.weaponName;
+        // gunName = gun.weaponName;
 
         // id = gun.weaponID;
         cam = Camera.main.transform;
@@ -102,8 +103,9 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     }
 
     void Update(){
-        if (autoFireCoroutine != null && durability == 0) StopCoroutine(autoFireCoroutine);
         AimDownSight(isAiming);
+        crosshair.SetGap((int)(Inaccuracy() * 15f), true);
+        // if (autoFireCoroutine != null && durability == 0) StopCoroutine(autoFireCoroutine);
         // inaccuracy = Inaccuracy();
         // Debug.Log(inaccuracy); // for testing purposes
 
@@ -117,7 +119,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         // animator.SetFloat("speed", Mathf.Abs(x) + Mathf.Abs(y));
     }
     private void Shoot(){
-        if (ammo > 0){
+        if (CanShoot){
             StartCoroutine(ShootCooldown());
             ammo--;
             loadoutUI.GetHUDAmmo(ammo, weaponCategory);
@@ -132,6 +134,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
                 for (int i = 0; i < 12; i++){
                     if (Physics.Raycast(cam.position, GetShootingDirection(), out hit , range)){
                         if (hit.collider.tag == "Enemy"){
+                            damage = isBarrelUpgraded ? (int)(gun.damage * 1.25f) : gun.damage;
                             hit.collider.GetComponent<IDamage>().TakeDamage(damage);
                         }
                     }
@@ -143,6 +146,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
             } else { // non-shotgun (no spread)
                 if (Physics.Raycast(cam.position, GetShootingDirection(), out hit, range)){
                     if (hit.collider.tag == "Enemy"){
+                        damage = isBarrelUpgraded ? (int)(gun.damage * 1.25f) : gun.damage;
                         hit.collider.GetComponent<IDamage>().TakeDamage(damage);
                     }
                     Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
@@ -151,7 +155,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
                     Destroy(impact, 10f);
                 }
             }
-        } else StartCoroutine(Reload()); // auto reload when no ammo left
+        } else if (reloadCoroutine == null) reloadCoroutine = StartCoroutine(Reload()); // auto reload when no ammo left
     }
     // reload
     private IEnumerator Reload(){
@@ -202,6 +206,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
             }
         
         isReloading = false;
+        reloadCoroutine = null;
         // canShoot = true;
         // canAim = true;
         animator.SetBool("isReloading", isReloading);
@@ -214,8 +219,11 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
 
         if (isADS){
             crosshair.SetColor(Color.clear, true); // hide crosshair when ads
-            if (isSightUpgraded) parentTransform.localPosition = Vector3.MoveTowards(parentTransform.localPosition, aimSightPosition, 1f * Time.deltaTime);
-            else parentTransform.localPosition = Vector3.MoveTowards(parentTransform.localPosition, aimPosition, ADS_SPEED * Time.deltaTime);
+            if (isSightUpgraded){
+                parentTransform.localPosition = Vector3.MoveTowards(parentTransform.localPosition, aimSightPosition, 1f * Time.deltaTime);
+            } else {
+                parentTransform.localPosition = Vector3.MoveTowards(parentTransform.localPosition, aimPosition, ADS_SPEED * Time.deltaTime);
+            }
         } else {
             crosshair.SetColor(Color.green, true);
             parentTransform.localPosition = Vector3.MoveTowards(parentTransform.localPosition, defaultPosition, ADS_SPEED * Time.deltaTime);
@@ -226,11 +234,13 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         // inaccuracyMove = gun.inaccuracy * 2f;
         // inaccuracyJump = inaccuracyMove * 2f;
         inaccuracyNormal = isLaserUpgraded ? Mathf.Round(gun.inaccuracy / 1.25f * 1000.0f) / 1000.0f : gun.inaccuracy;
-        inaccuracyAim = isSightUpgraded ? Mathf.Round(inaccuracyNormal / 4f * 1000.0f) / 1000.0f : Mathf.Round(inaccuracyNormal / 3f * 1000.0f) / 1000.0f;
-        
+        inaccuracyAim = /*isSightUpgraded ? */Mathf.Round(inaccuracyNormal / 4f * 1000.0f) / 1000.0f/* : Mathf.Round(inaccuracyNormal / 3f * 1000.0f) / 1000.0f*/;
+
         //float inaccuracyMoveJump = inaccuracyMove + inaccuracyJump;
 
-        if (gun.gunType != GunType.shotgun){// shotguns are unaffected when moving
+        if (gun.gunType == GunType.shotgun) return inaccuracyNormal; // shotguns are unaffected when moving
+        else
+        {
             if (isAiming) return inaccuracyAim;
             // if (isAiming && x+y != 0) // player is moving while ads
             // {
@@ -241,7 +251,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
             //     return inaccuracyJump;
             // }
             else return inaccuracyNormal;
-        } else return inaccuracyNormal;
+        }
     }
     // randomize accuracy
     Vector3 GetShootingDirection(){
@@ -263,16 +273,22 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
             loadoutUI.GetHUDAmmo(ammo, weaponCategory);
         }
     }
-    bool CanShoot(){
-        if (durability > 0 && !isShooting && !isEquiping){
-            if (isReloading){
-                if (slowReload) return true;
-                else return false;
-            } else return true;
-        } else return false;
+    bool CanShoot{
+        get{
+            if (/*durability > 0 && !isEquiping */!isShooting && ammo > 0 && canShoot){
+                if (isReloading){
+                    if (slowReload) return true;
+                    else return false;
+                } else return true;
+            } else return false;
+        }
+        set{
+            canShoot = value;
+        }
     }
+
     bool CanReload(){
-        return durability > 0 && !isReloading && !isShooting && !isEquiping;
+        return /*durability > 0 && */!isReloading && !isShooting && !isEquiping;
     }
     bool CanAim(){
         return !isReloading && !isEquiping && !isShooting;
@@ -282,10 +298,12 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     }
     // equiping weapon when active
     IEnumerator Equip(float deployTime){
-        isEquiping = true;
+        // isEquiping = true;
         cockSound.Play();
+        canShoot = false;
         yield return new WaitForSeconds(deployTime);
-        isEquiping = false;
+        // isEquiping = false;
+        canShoot = true;
     }
     // full auto
     IEnumerator AutoFire(){
@@ -296,14 +314,16 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         }
     }
     // burst
+    private void Burst(){
+        Invoke(nameof(Shoot), 1/(fireRate*2));
+        Invoke(nameof(Shoot), 1/fireRate);
+        Invoke(nameof(Shoot), 2/fireRate);
+    }
     IEnumerator BurstFire(){
-        if (!isShooting){
-            Shoot();
-            yield return new WaitForSeconds(1f/fireRate);
-            Shoot();
-            yield return new WaitForSeconds(1f/fireRate);
-            Shoot();
-            yield return new WaitForSeconds(2f/fireRate);
+        Burst();
+        while (ammo > 0){
+            yield return new WaitForSeconds(4/fireRate);
+            Burst();
         }
     }
     IEnumerator ShootCooldown(){
@@ -312,7 +332,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         isShooting = false;
     }
     private void StartShooting(){
-        if (CanShoot()){
+        if (CanShoot){
             switch (gun.fireMode){
                 case FireMode.single:
                     Shoot();
@@ -321,17 +341,20 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
                     autoFireCoroutine = StartCoroutine(AutoFire());
                     break;
                 case FireMode.burst:
-                    StartCoroutine(BurstFire());
+                    burstFireCoroutine = StartCoroutine(BurstFire());
                     break;
             }
         }
-        if (durability <= 0 || ammo == 0 && maxAmmo == 0) emptyClipSound.Play();
+        if (/*durability <= 0 || */ammo == 0 && maxAmmo == 0) emptyClipSound.Play();
     }
     private void StopShooting(){
         if (autoFireCoroutine != null) StopCoroutine(autoFireCoroutine);
+        if (burstFireCoroutine != null) StopCoroutine(burstFireCoroutine);
     }
     private void Aiming(){
         if (CanAim()) isAiming = !isAiming;
+        range = isAiming && isSightUpgraded ? gun.range * scopeRangeMultiplier : gun.range;
+        // Debug.Log(range);
     }
     public void UpgradeSight(bool value){
         isSightUpgraded = value;
@@ -355,13 +378,17 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         if (CanReload()) StartCoroutine(Reload());
     }
 
+    // 
     // repair gun
+    // 
     // public void OnRepair(){
     //     durability = maxDurability;
     //     // maybe play some sfx here
     // }
-    public bool CanRepair => durability < maxDurability;
+    // public bool CanRepair => durability < maxDurability;
+    // 
     // upgrade gun
+    // 
     public bool UpgradeRange{
         get { return isSightUpgraded; }
         set {
@@ -417,17 +444,18 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         // isUnloading = false;
         StartCoroutine(Equip(gun.deployTime));
         // animator.SetBool("isEquiping", true);
-        crosshair.SetGap((int)(Inaccuracy() * 10f), true);
         UpgradeBarrel(isBarrelUpgraded);
         UpgradeLaser(isLaserUpgraded);
         UpgradeSight(isSightUpgraded);
     }
     void OnDisable(){
         isShooting = false;
+        StopAllCoroutines();
         // inventory.onItemChangedCallback -= GetMaxAmmo;
     }
     void OnDestroy(){
         isShooting = false;
+        StopAllCoroutines();
         // inventory.onItemChangedCallback -= GetMaxAmmo;
     }
 }
