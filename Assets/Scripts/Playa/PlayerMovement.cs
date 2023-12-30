@@ -92,16 +92,17 @@ public class PlayerMovement : MonoBehaviour
     public bool IsJumping => isJumping;
     public bool CanMove { get => canMove; set => canMove = value; }
     public bool CanSprint => CanMove && isGrounded && stamina > 0;
-    public bool CanJump { get => isGrounded && stamina >= JUMP_STAMINA; set => canJump = value; }
+    public bool CanJump { get => isGrounded && stamina >= JUMP_STAMINA && canJump; set => canJump = value; }
 
-    public void ReceiveInput(Vector2 horizontalValue)
-    {
-        movementInput = horizontalValue;
-    }
-    
     void Start(){
         playerManager = GetComponent<PlayerManager>();
 
         CanMove = true;
+        CanJump = true;
+    }
+    
+    public void ReceiveInput(Vector2 horizontalValue)
+    {
+        movementInput = horizontalValue;
     }
 }
