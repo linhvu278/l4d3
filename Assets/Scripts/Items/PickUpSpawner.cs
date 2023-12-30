@@ -28,7 +28,7 @@ public class PickUpSpawner : MonoBehaviour
             int itemAmount = db.itemList[randomIndex].itemAmount;
 
             GameObject itemToSpawn = Instantiate(db.itemPickupsList[randomIndex], itemSpawnPositions[i].position, itemSpawnPositions[i].rotation);
-            itemToSpawn.GetComponent<PickUpItem>().itemAmount = itemAmount;
+            itemToSpawn.GetComponent<PickUpItem>().ItemAmount = itemAmount;
             spawnedItems.Add(itemToSpawn);
         }
     }
