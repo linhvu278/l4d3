@@ -12,7 +12,7 @@ public class Inventory : MonoBehaviour
     private PlayerInventory playerInventory;
     private WeaponSwitch weaponSwitch;
     private PlayerOverlay playerOverlay;
-    private CombineItems combineItems;
+    // private CombineItems combineItems;
 
     public delegate void OnItemChanged();
     public OnItemChanged onItemChangedCallback;
@@ -24,13 +24,13 @@ public class Inventory : MonoBehaviour
 
     [SerializeField] Transform weaponHolder, itemParent;
     public Weapon[] weaponInventory; // stores the references of weapons
-    private Transform[] weaponSlot; // stores the transforms containing the weapons
+    private Transform[] weaponSlots; // stores the transforms containing the weapons
     public GameObject[] weaponObjects; // stores the player's weapons
     public List<Item> itemInventory = new List<Item>(); // stores the references of items
     private int MAX_ITEM_AMOUNT_LIMIT;
-    private const int MAX_AMMO_AMOUNT_LIMIT = 250,
+    private const int MAX_AMMO_AMOUNT_LIMIT = 360,
                     MAX_GLUE_AMOUNT_LIMIT = 999,
-                    MAX_MATERIAL_AMOUNT_LIMIT = 4;
+                    MAX_MATERIAL_AMOUNT_LIMIT = 3;
     
     // [SerializeField] GameObject inventoryOverlay;
     // [SerializeField] Transform loadoutParent;
@@ -39,88 +39,41 @@ public class Inventory : MonoBehaviour
     // ItemSlot[] itemSlots;
     // bool isInventoryOpen;
 
-    private int ammo_762_amount,
-                ammo_556_amount,
-                ammo_12g_amount,
-                ammo_45acp_amount,
-                ammo_9mm_amount,
-                ammo_magnum_amount,
-                material_alcohol_amount,
-                material_cloth_amount,
-                material_electronics_amount,
-                // material_chemicals_amount,
-                // material_glass_amount,
-                material_gunpowder_amount,
-                material_herbs_amount,
-                material_metal_amount,
-                // material_sugar_amount,
+    private int ammo_762_amount, ammo_556_amount, ammo_12g_amount, ammo_45acp_amount, ammo_9mm_amount, ammo_magnum_amount,
+                material_alcohol_amount, material_cloth_amount, material_electronics_amount, material_gunpowder_amount, material_herbs_amount, material_metal_amount,
                 glue_amount;
 
-    void Awake()
-    {
-        if (instance != null)
-        {
-            Debug.LogWarning("More than one instances of Inventory found.");
-            return;
-        }
-        instance = this;
-    }
-    void Start()
-    {
-        int weaponSlotsNumber = System.Enum.GetNames(typeof(WeaponCategory)).Length;
-        weaponInventory = new Weapon[weaponSlotsNumber];
-        weaponSlot = new Transform[weaponSlotsNumber];
-        weaponObjects = new GameObject[weaponSlotsNumber];
-        MAX_ITEM_AMOUNT_LIMIT = itemParent.childCount;
-
-        for (int i = 0; i < weaponSlotsNumber; i++){
-            weaponSlot[i] = weaponHolder.GetChild(i);
-        }
-
-        db = ItemDatabase.instance;
-        loadoutUI = LoadoutUI.instance;
-        playerInventory = PlayerInventory.instance;
-        weaponSwitch = WeaponSwitch.instance;
-        playerOverlay = PlayerOverlay.instance;
-        combineItems = CombineItems.instance;
-        
-
-        /*
-            This is a block comment
-        */
-
-        // AddWeapon(itemDatabase.gunList[0]); // for testing
-
-        // weaponSlots = loadoutParent.GetComponentsInChildren<WeaponSlot>();
-        // itemSlots = itemParent.GetComponentsInChildren<ItemSlot>();
-        // inventoryOverlay.SetActive(false);
-    }
 
     #region Add weapons
 
-    public void AddWeapon(Weapon weapon, int amount){
+    public bool AddWeapon(Weapon weapon, int amount){
         // PickUpWeapon puwp = weaponToAdd.GetComponent<PickUpWeapon>();
         // Weapon weapon = puwp.GetWeapon();
-        GameObject weaponToAdd;
-        int weaponIndex = (int)weapon.weaponCategory;
-        weaponToAdd = Instantiate(db.weaponPrefabs[weapon.weaponId], weaponSlot[weaponIndex].position, weaponSlot[weaponIndex].rotation);
-        weaponToAdd.transform.SetParent(weaponSlot[weaponIndex]);
-        weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = amount;
+        if (weaponInventory[(int)weapon.weaponCategory] == weapon && weaponInventory[(int)weapon.weaponCategory] != null) return false;
+        else {
+            GameObject weaponToAdd;
+            int weaponIndex = (int)weapon.weaponCategory;
+            weaponToAdd = Instantiate(db.weaponPrefabs[weapon.weaponId], weaponSlots[weaponIndex].position, Quaternion.identity);
+            weaponToAdd.transform.SetParent(weaponSlots[weaponIndex]);
+            weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = amount;
 
-        if (weaponInventory[weaponIndex] != null) DropWeapon(weaponInventory[weaponIndex]);
-        weaponInventory[weaponIndex] = weapon;
-        weaponObjects[weaponIndex] = weaponToAdd;
-        // weaponSwitch.SelectNewWeapon(weaponIndex);
-        weaponSlot[weaponIndex].gameObject.SetActive(false);
+            if (weaponInventory[weaponIndex] != null) DropWeapon(weaponInventory[weaponIndex]);
+            weaponInventory[weaponIndex] = weapon;
+            weaponObjects[weaponIndex] = weaponToAdd;
+            weaponSwitch.SelectNewWeapon(weaponIndex);
+            // weaponSlots[weaponIndex].gameObject.SetActive(false);
 
-        loadoutUI.GetHUDIcon(weapon.weaponIcon, (int)weapon.weaponCategory);
-        playerInventory.UpdateWeapons(weapon, true);
+            loadoutUI.GetHUDIcon(weapon.weaponIcon, (int)weapon.weaponCategory);
+            playerInventory.UpdateWeapons(weapon, true);
+
+            return true;
+        }
     }
     public void AddWeaponWithUpgrades(Weapon weapon, int amount, bool upgradeAcc, bool upgradeDmg, bool upgradeRng){
         GameObject weaponToAdd;
         int weaponIndex = (int)weapon.weaponCategory;
-        weaponToAdd = Instantiate(db.weaponPrefabs[weapon.weaponId], weaponSlot[weaponIndex].position, weaponSlot[weaponIndex].rotation);
-        weaponToAdd.transform.SetParent(weaponSlot[weaponIndex]);
+        weaponToAdd = Instantiate(db.weaponPrefabs[weapon.weaponId], weaponSlots[weaponIndex].position, Quaternion.identity);
+        weaponToAdd.transform.SetParent(weaponSlots[weaponIndex]);
         weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = amount;
 
         IWeaponUpgrade upgrade = weaponToAdd.GetComponent<IWeaponUpgrade>();
@@ -173,13 +126,13 @@ public class Inventory : MonoBehaviour
         int weaponIndex = (int)weapon.weaponCategory;
         weaponInventory[weaponIndex] = null;
 
-        // GameObject weaponToRemove = weaponSlot[weaponIndex].GetChild(0).gameObject;
+        // GameObject weaponToRemove = weaponSlots[weaponIndex].GetChild(0).gameObject;
         Destroy(weaponObjects[weaponIndex]);
 
         loadoutUI.RemoveHUDElements(weaponIndex);
         playerInventory.UpdateWeapons(weapon, false);
         
-        if (weaponIndex == weaponSwitch.selectedWeapon){
+        if (weaponIndex == weaponSwitch.SelectedWeapon){
             for (int i = 0; i < weaponInventory.Length; i++){
                 if (weaponInventory[i] != null){
                     weaponSwitch.SelectNewWeapon(i);
@@ -244,7 +197,7 @@ public class Inventory : MonoBehaviour
 
     public void DropItem(Item item, int itemAmount){
         GameObject itemToDrop = db.itemPickupsList[item.itemId];
-        itemToDrop.GetComponent<PickUpItem>().itemAmount = itemAmount;
+        itemToDrop.GetComponent<PickUpItem>().ItemAmount = itemAmount;
         
         Vector3 camPos = Camera.main.transform.position;
         Vector3 dropPosition = new Vector3(camPos.x, camPos.y - 0.5f, camPos.z);
@@ -362,6 +315,45 @@ public class Inventory : MonoBehaviour
 
     #endregion
     
+    void Awake()
+    {
+        if (instance != null)
+        {
+            Debug.LogWarning("More than one instances of Inventory found.");
+            return;
+        }
+        instance = this;
+    }
+    void Start()
+    {
+        int weaponSlotsNumber = System.Enum.GetNames(typeof(WeaponCategory)).Length;
+        weaponInventory = new Weapon[weaponSlotsNumber];
+        weaponSlots = new Transform[weaponSlotsNumber];
+        weaponObjects = new GameObject[weaponSlotsNumber];
+        MAX_ITEM_AMOUNT_LIMIT = itemParent.childCount;
+
+        for (int i = 0; i < weaponSlotsNumber; i++){
+            weaponSlots[i] = weaponHolder.GetChild(i);
+        }
+
+        db = ItemDatabase.instance;
+        loadoutUI = LoadoutUI.instance;
+        playerInventory = PlayerInventory.instance;
+        weaponSwitch = WeaponSwitch.instance;
+        playerOverlay = PlayerOverlay.instance;
+        // combineItems = CombineItems.instance;
+        
+
+        /*
+            This is a block comment
+        */
+
+        // AddWeapon(itemDatabase.gunList[0]); // for testing
+
+        // weaponSlots = loadoutParent.GetComponentsInChildren<WeaponSlot>();
+        // itemSlots = itemParent.GetComponentsInChildren<ItemSlot>();
+        // inventoryOverlay.SetActive(false);
+    }
     // public void AddCraftingItem(Item itemToAdd){
     //     if (craftingItem2 == null){
     //         if (craftingItem1 == null){
