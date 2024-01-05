@@ -19,9 +19,9 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     Inventory inventory;
     PlayerInventory playerInventory;
 
-    private const string dropWeaponString = "Drop weapon",
-                        unloadWeaponString = "Unload weapon",
-                        upgradeWeaponString = "Upgrade weapon";
+    private const string dropWeaponString = "Drop",
+                        unloadWeaponString = "Unload",
+                        upgradeWeaponString = "Upgrade";
 
     void Awake(){
         weaponButton = GetComponent<Button>();
