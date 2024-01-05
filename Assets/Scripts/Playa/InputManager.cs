@@ -11,7 +11,7 @@ public class InputManager : MonoBehaviour
     private Vector2 horizontalValue;
     private float mouseValueX, mouseValueY, scrollValue, middleMouseValue;
 
-    private const float INTERACT_RANGE = 2.5f;
+    private const float INTERACT_RANGE = 3f;
     public float InteractRange => INTERACT_RANGE;
 
     public void OnPlayerMovement(InputAction.CallbackContext value){
@@ -37,8 +37,7 @@ public class InputManager : MonoBehaviour
         RaycastHit hit;
         Transform cam = Camera.main.transform;
         if (Physics.Raycast(cam.position, cam.forward, out hit, INTERACT_RANGE)){
-            IInteractable interactable = hit.collider.GetComponent<IInteractable>();
-            if (interactable != null) {
+            if (hit.collider.TryGetComponent(out IInteractable interactable)){
                 if (value.started) interactable.OnInteractStart();
                 else if (value.canceled) interactable.OnInteractEnd();
             }
