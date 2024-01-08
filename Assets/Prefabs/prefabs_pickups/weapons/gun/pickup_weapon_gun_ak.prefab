@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 5485617519634748900}
   m_Layer: 8
   m_Name: pickup_weapon_gun_ak
-  m_TagString: Weapon
+  m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: {fileID: 11400000, guid: 717aadcc14766834d96608ba1929f86c, type: 2}
-  weaponAmount: 16
+  weaponAmount: 25
 --- !u!114 &4784901123537801195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8701,7 +8701,7 @@ GameObject:
   - component: {fileID: 5312366869335955069}
   m_Layer: 8
   m_Name: sight
-  m_TagString: Untagged
+  m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8783,7 +8783,7 @@ GameObject:
   - component: {fileID: 8382054035639951965}
   m_Layer: 8
   m_Name: upgrades
-  m_TagString: Untagged
+  m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8819,7 +8819,7 @@ GameObject:
   - component: {fileID: 6588972265268282279}
   m_Layer: 8
   m_Name: barrel
-  m_TagString: Untagged
+  m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8902,7 +8902,7 @@ GameObject:
   - component: {fileID: 4434356528930177680}
   m_Layer: 8
   m_Name: laser
-  m_TagString: Untagged
+  m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

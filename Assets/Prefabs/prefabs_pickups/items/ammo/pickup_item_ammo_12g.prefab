@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 1318765152553158266}
   m_Layer: 8
   m_Name: pickup_item_ammo_12g
-  m_TagString: Item
+  m_TagString: Ammo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 4049819854276107705}
   m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
   m_LocalPosition: {x: -9.861, y: 1.127, z: 11.147}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalScale: {x: 120.00001, y: 120.00001, z: 120.00001}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}

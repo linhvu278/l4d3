@@ -4,18 +4,24 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Primary
-  - Secondary
+  - Gun
   - Throwable
   - Utility
   - Health
+  - Buff
   - Enemy
   - Crosshair
-  - Buff
-  - Weapon
-  - Item
   - Lure
   - Workshop
+  - Ammo
+  - Material
+  - Glue
+  - Upgrade
+  - Weapon
+  - Secondary
+  - Primary
+  - Item
+  - Crate
   layers:
   - Default
   - TransparentFX

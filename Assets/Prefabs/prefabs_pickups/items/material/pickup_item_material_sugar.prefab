@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: -1759291415942052825}
   m_Layer: 8
   m_Name: pickup_item_material_sugar
-  m_TagString: Item
+  m_TagString: Material
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -129,6 +129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: a246c90163b20894787e7fcae8b6fa1b, type: 2}
+  itemAmount: 0
   destroyItemOnPickUp: 1
 --- !u!114 &-1759291415942052825
 MonoBehaviour:

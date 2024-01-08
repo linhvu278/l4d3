@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: -8359081470974721158}
   m_Layer: 8
   m_Name: pickup_item_glue
-  m_TagString: Item
+  m_TagString: Glue
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -131,6 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: c3251be2911888040bfc8d16ce56559a, type: 2}
+  itemAmount: 0
   destroyItemOnPickUp: 1
 --- !u!114 &-8359081470974721158
 MonoBehaviour:

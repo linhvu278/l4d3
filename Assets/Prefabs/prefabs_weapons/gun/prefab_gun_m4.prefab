@@ -15070,7 +15070,7 @@ GameObject:
   - component: {fileID: 390109562705543425}
   m_Layer: 10
   m_Name: prefab_gun_m4
-  m_TagString: Primary
+  m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

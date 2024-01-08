@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: -6378132299862909028}
   m_Layer: 8
   m_Name: pickup_item_material_herbs
-  m_TagString: Item
+  m_TagString: Material
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -133,6 +133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 03258273cfd21bb49805a1e4631d28d4, type: 2}
+  itemAmount: 0
   destroyItemOnPickUp: 1
 --- !u!114 &-6378132299862909028
 MonoBehaviour:

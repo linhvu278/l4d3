@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 5508472890539576350}
   m_Layer: 8
   m_Name: pickup_item_material_metal
-  m_TagString: Item
+  m_TagString: Material
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

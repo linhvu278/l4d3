@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 4794529202891718675}
   m_Layer: 8
   m_Name: pickup_weapon_gun_1911
-  m_TagString: Weapon
+  m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5093,7 +5093,7 @@ GameObject:
   - component: {fileID: 7290993076108381255}
   m_Layer: 8
   m_Name: laser
-  m_TagString: Untagged
+  m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5176,7 +5176,7 @@ GameObject:
   - component: {fileID: 137232378142733327}
   m_Layer: 8
   m_Name: sight_3
-  m_TagString: Untagged
+  m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5259,7 +5259,7 @@ GameObject:
   - component: {fileID: 5168532445710887488}
   m_Layer: 8
   m_Name: barrel
-  m_TagString: Untagged
+  m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5340,7 +5340,7 @@ GameObject:
   - component: {fileID: 271810186693511963}
   m_Layer: 8
   m_Name: upgrades
-  m_TagString: Untagged
+  m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

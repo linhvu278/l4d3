@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 1629046986731179123}
   m_Layer: 8
   m_Name: pickup_item_upgrade_laser
-  m_TagString: Item
+  m_TagString: Upgrade
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

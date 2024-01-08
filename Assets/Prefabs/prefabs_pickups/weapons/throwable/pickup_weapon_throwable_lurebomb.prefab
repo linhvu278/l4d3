@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 8160909101726335275}
   m_Layer: 8
   m_Name: pickup_weapon_throwable_lurebomb
-  m_TagString: Weapon
+  m_TagString: Throwable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

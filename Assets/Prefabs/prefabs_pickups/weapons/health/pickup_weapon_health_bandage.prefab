@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 8290013437113536562}
   m_Layer: 8
   m_Name: pickup_weapon_health_bandage
-  m_TagString: Weapon
+  m_TagString: Health
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
