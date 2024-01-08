@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45ccbe2c800d9d349adb6ad6ad53d91c, type: 3}
   m_Name: weapon_health_sanitizer
   m_EditorClassIdentifier: 
-  weaponId: 7
+  weaponId: 14
   weaponName: Sanitizer
   weaponIcon: {fileID: 21300000, guid: b28dc1e452430d245957e3f526b4d4e0, type: 3}
   weaponCategory: 3

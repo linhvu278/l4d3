@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f309c478c1a8ba4aa5aa57a8f7e2984, type: 3}
   m_Name: item_material_alcohol
   m_EditorClassIdentifier: 
-  itemId: 8
+  itemId: 7
   itemName: Alcohol
   itemIcon: {fileID: 21300000, guid: 4984c141fa5b39d4f8404c03cbe07e56, type: 3}
   itemCategory: 1
   itemType: 6
   itemAmount: 1
+  itemRotation: {x: 0, y: 0, z: 0}

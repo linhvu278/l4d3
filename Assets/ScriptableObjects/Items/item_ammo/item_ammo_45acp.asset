@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f309c478c1a8ba4aa5aa57a8f7e2984, type: 3}
   m_Name: item_ammo_45acp
   m_EditorClassIdentifier: 
-  itemId: 3
+  itemId: 2
   itemName: 45acp rounds
   itemIcon: {fileID: 21300000, guid: b325ccd94f6a44a4e9d7a7c9bcb3461b, type: 3}
   itemCategory: 0

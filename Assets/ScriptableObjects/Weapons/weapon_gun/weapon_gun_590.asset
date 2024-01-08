@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71649ad3ca0f6b344b85b21ffd9209e4, type: 3}
   m_Name: weapon_gun_590
   m_EditorClassIdentifier: 
-  weaponId: 3
+  weaponId: 6
   weaponName: 590
   weaponIcon: {fileID: 21300000, guid: 144ed20a5c1ec4a4a8c48d980e70768c, type: 3}
   weaponCategory: 0

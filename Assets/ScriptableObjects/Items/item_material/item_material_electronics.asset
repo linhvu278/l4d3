@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f309c478c1a8ba4aa5aa57a8f7e2984, type: 3}
   m_Name: item_material_electronics
   m_EditorClassIdentifier: 
-  itemId: 10
+  itemId: 9
   itemName: Electronics
   itemIcon: {fileID: 21300000, guid: 2d573aed0d6fd6b4389ec9d1f488e76f, type: 3}
   itemCategory: 1

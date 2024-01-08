@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16de6236462e989418af628a35d3f48a, type: 3}
   m_Name: weapon_utility_ammobox
   m_EditorClassIdentifier: 
-  weaponId: 9
+  weaponId: 16
   weaponName: Ammo Box
   weaponIcon: {fileID: 21300000, guid: 611c7904dc905ee40b5a7f12d802b9a0, type: 3}
   weaponCategory: 4
