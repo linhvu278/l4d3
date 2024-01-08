@@ -28,7 +28,7 @@ public class PickUpItem : MonoBehaviour, IInteractable, IOutline
                         if (!gun.UpgradeRange)
                         {
                             gun.UpgradeRange = true;
-                            if (!destroyItemOnPickUp) Destroy(gameObject);
+                            if (destroyItemOnPickUp) Destroy(gameObject);
                         }
                         else playerOverlay.EnableWarningText("Upgrade already applied");
                         break;
@@ -36,7 +36,7 @@ public class PickUpItem : MonoBehaviour, IInteractable, IOutline
                         if (!gun.UpgradeDamage)
                         {
                             gun.UpgradeDamage = true;
-                            if (!destroyItemOnPickUp) Destroy(gameObject);
+                            if (destroyItemOnPickUp) Destroy(gameObject);
                         }
                         else playerOverlay.EnableWarningText("Upgrade already applied");
                         break;
@@ -44,7 +44,7 @@ public class PickUpItem : MonoBehaviour, IInteractable, IOutline
                         if (!gun.UpgradeAccuracy)
                         {
                             gun.UpgradeAccuracy = true;
-                            if (!destroyItemOnPickUp) Destroy(gameObject);
+                            if (destroyItemOnPickUp) Destroy(gameObject);
                         }
                         else playerOverlay.EnableWarningText("Upgrade already applied");
                         break;
@@ -63,9 +63,8 @@ public class PickUpItem : MonoBehaviour, IInteractable, IOutline
             if (inventory.AddItem(item, itemAmount) && destroyItemOnPickUp) Destroy(gameObject);
         }
     }
-    public void SetItemRotation(){
-        transform.eulerAngles = item.itemRotation;
-    }
+    public void SpawnItemAmount() => itemAmount = item.itemAmount;
+    public void SetItemRotation() => transform.eulerAngles = item.itemRotation;
     void Start(){
         inventory = Inventory.instance;
         playerOverlay = PlayerOverlay.instance;
