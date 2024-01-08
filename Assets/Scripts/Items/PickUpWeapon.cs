@@ -13,7 +13,7 @@ public class PickUpWeapon : MonoBehaviour, IInteractable, IOutline, IWeaponAmoun
     // private ItemDatabase db;
     void WeaponPickUp(){
         if (TryGetComponent(out WeaponStats ws)){
-            inventory.AddWeaponWithUpgrades(weapon, weaponAmount, ws.UpgradeAccuracy, ws.UpgradeDamage, ws.UpgradeRange);
+            inventory.AddWeaponWithUpgrades(weapon, weaponAmount, transform.position, ws.UpgradeAccuracy, ws.UpgradeDamage, ws.UpgradeRange);
             Destroy(gameObject);
         } else {
             if (inventory.AddWeapon(weapon, weaponAmount)) Destroy(gameObject);
@@ -21,12 +21,8 @@ public class PickUpWeapon : MonoBehaviour, IInteractable, IOutline, IWeaponAmoun
     }
 
     public int WeaponAmount { get { return weaponAmount;} set { weaponAmount = value; } }
-    public void SpawnWeaponAmount(){
-        weaponAmount = weapon.weaponAmount;
-    }
-    private void SetWeaponRotation(){
-        transform.eulerAngles = weapon.weaponRotation;
-    }
+    public void SpawnWeaponAmount() => weaponAmount = weapon.weaponAmount;
+    private void SetWeaponRotation() => transform.eulerAngles = weapon.weaponRotation;
 
     void OnEnable(){
         outline = GetComponent<Outline>();
