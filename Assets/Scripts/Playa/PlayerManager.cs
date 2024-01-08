@@ -5,10 +5,10 @@ using TMPro;
 
 public class PlayerManager : MonoBehaviour, IDamage
 {
-    public static PlayerManager playerManager;
+    public static PlayerManager instance;
 
-    PlayerMovement playerMovement;
-    PlayerOverlay playerOverlay;
+    // PlayerMovement playerMovement;
+    // PlayerOverlay playerOverlay;
 
     [SerializeField] TextMeshProUGUI healthText;
     [SerializeField] TextMeshProUGUI staminaText;
@@ -33,17 +33,17 @@ public class PlayerManager : MonoBehaviour, IDamage
 
     void Awake()
     {
-        if (playerManager != null){
+        if (instance != null){
             Debug.Log("More than one instances of PlayerManager found");
             return;
         }
-        playerManager = this;
+        instance = this;
     }
 
     void Start()
     {
-        playerMovement = GetComponent<PlayerMovement>();
-        playerOverlay = PlayerOverlay.instance;
+        // playerMovement = GetComponent<PlayerMovement>();
+        // playerOverlay = PlayerOverlay.instance;
 
         maxHealth = 100f;
         maxStamina = 100f;
