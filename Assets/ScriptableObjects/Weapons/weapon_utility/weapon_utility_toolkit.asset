@@ -20,4 +20,4 @@ MonoBehaviour:
   weaponAmount: 1
   craftingCost: 50
   weaponRotation: {x: 0, y: 90, z: 0}
-  useTime: 4
+  useTime: 3
