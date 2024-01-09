@@ -67,7 +67,7 @@ public class LoadoutUI : MonoBehaviour
     public void GetHUDAmmoIcon(ItemType gunAmmoType, int weaponIndex){
         ammoIcon = loadoutUI.GetChild(weaponIndex).Find("AmmoIcon").GetComponent<Image>();
         // Item item = db.itemList.Find(x => x.itemType == gunAmmoType);
-        ammoIcon.sprite = db.GetItem(gunAmmoType).itemIcon;
+        ammoIcon.sprite = db.GetItemByType(gunAmmoType).itemIcon;
         ammoIcon.enabled = true;
     }
 

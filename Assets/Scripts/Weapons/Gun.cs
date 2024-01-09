@@ -271,7 +271,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     // 
     public void Unload(){
         if (CanUnload()){
-            Item itemToAdd = db.GetItem(GetItemType());
+            Item itemToAdd = db.GetItemByType(GetItemType());
             if (!inventory.AddItem(itemToAdd, ammo)) inventory.DropItem(itemToAdd, ammo);
             ammo = 0;
             loadoutUI.GetHUDAmmo(ammo, weaponCategory);
