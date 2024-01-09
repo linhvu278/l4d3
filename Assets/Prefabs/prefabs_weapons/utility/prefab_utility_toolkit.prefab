@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toolkit: {fileID: 11400000, guid: ed94018c158729e4fa33b595070dee6e, type: 2}
-  repairSound: {fileID: 1081347831227612306}
+  unlockSound: {fileID: 1081347831227612306}
 --- !u!95 &1081347831227612307
 Animator:
   serializedVersion: 5
