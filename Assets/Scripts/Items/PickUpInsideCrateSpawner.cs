@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable
+public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
 {
     ItemDatabase db;
     ProgressBar progressBar;
@@ -11,9 +11,9 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable
     BoxCollider bc;
 
     public CrateType crateType;
-    private const float OPEN_DURATION = 2f;
+    private const float OPEN_DURATION = 1f;
     private Coroutine openCoroutine;
-    [SerializeField] private GameObject crateLid;
+    [SerializeField] private GameObject crateLid, crateLock;
     [SerializeField] private AudioSource openingSound, crateOpenedSound;
     private bool isOpening, isLocked, isCrateOpened;
 
@@ -25,7 +25,7 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable
     private void SpawnItems(){
         // crateOpenedSound.Play();
         Destroy(crateLid);
-        // bc.enabled = false;
+        bc.enabled = false;
         switch (crateType){
             case CrateType.weapon_crate:
                 spawnObjects.AddRange(db.weaponPickups.Where(obj => obj != null && obj.tag == "Gun"));
@@ -52,6 +52,11 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable
                 }
                 break;
         }
+    }
+    public void Unlock(){
+        isLocked = false;
+        // Destroy(crateLock);
+        crateLock.SetActive(isLocked);
     }
     public void OnInteractStart(){
         progressBar.SetProgressBar(OpenCrateString, OPEN_DURATION);
@@ -81,6 +86,7 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable
         playerMovement.CanMove = !value;
         playerMovement.CanJump = !value;
     }
+    public bool IsLocked { get => isLocked; }
     private bool CanOpen => !(isOpening || isCrateOpened || isLocked);
     private string OpenCrateString => crateType switch
     {
@@ -110,9 +116,11 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable
         db = ItemDatabase.instance;
         progressBar = ProgressBar.instance;
         playerMovement = PlayerMovement.instance;
-        // bc = GetComponent<BoxCollider>();
+        bc = GetComponent<BoxCollider>();
 
         isCrateOpened = false;
+        isLocked = true;
+        crateLock.SetActive(isLocked);
         
         foreach (Transform spawnPos in spawnGroup) spawnPositions.Add(spawnPos);
         // GetSpawnObjects();
