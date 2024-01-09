@@ -5,7 +5,9 @@ using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public Vector2 movementInput { get; set; }
+    public static PlayerMovement instance;
+    
+    private Vector2 movementInput;
     PlayerManager playerManager;
 
     [SerializeField] CharacterController controller;
@@ -30,7 +32,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float jumpHeight;
     private bool isJumping, isSprinting, isCrouching;
     private bool canMove, canJump, canSprint;
-    private bool canMove1;
 
     // [SerializeField] Transform cam;
 
@@ -89,9 +90,10 @@ public class PlayerMovement : MonoBehaviour
 
     public bool IsGrounded => isGrounded;
     public bool IsSprinting => isSprinting;
-    public bool IsJumping => isJumping;
+    // public bool IsJumping => isJumping;
+    public bool IsMoving => movementInput != new Vector2(0,0);
     public bool CanMove { get => canMove; set => canMove = value; }
-    public bool CanSprint => CanMove && isGrounded && stamina > 0;
+    public bool CanSprint => canMove && isGrounded && stamina > 0;
     public bool CanJump { get => isGrounded && stamina >= JUMP_STAMINA && canJump; set => canJump = value; }
 
     void Start(){
@@ -99,6 +101,13 @@ public class PlayerMovement : MonoBehaviour
 
         CanMove = true;
         CanJump = true;
+    }
+    void Awake(){
+        if (instance != null){
+            Debug.Log("More than one instances of PlayerMovement found");
+            return;
+        }
+        instance = this;
     }
     
     public void ReceiveInput(Vector2 horizontalValue)
