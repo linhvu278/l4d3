@@ -11,7 +11,7 @@ public class InputManager : MonoBehaviour
     private Vector2 horizontalValue;
     private float mouseValueX, mouseValueY, scrollValue, middleMouseValue;
 
-    private const float INTERACT_RANGE = 3f;
+    private const float INTERACT_RANGE = 2f;
     public float InteractRange => INTERACT_RANGE;
 
     public void OnPlayerMovement(InputAction.CallbackContext value){
