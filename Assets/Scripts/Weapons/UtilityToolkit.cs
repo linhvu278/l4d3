@@ -1,24 +1,93 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class UtilityToolkit : MonoBehaviour, IWeaponAmount/*, IPrimaryInput, ISecondaryInput*/
+public class UtilityToolkit : MonoBehaviour, IWeaponAmount, IPrimaryInput/*, ISecondaryInput*/
 {
     [SerializeField] private Weapon_Utility toolkit;
-    private int toolkitAmount;
     private float useTime;
+    // private const float toolkitRange = 2f;
 
-    Transform playa;
+    GameObject playa;
     Animator animator;
     Inventory inventory;
     ProgressBar progressBar;
+    RaycastHit hit;
+    Transform cam;
+    PlayerMovement playerMovement;
+    InputManager inputManager;
 
-    private bool isRepairing, isEquiping;
-    Coroutine repairCoroutine;
-    [SerializeField] AudioSource repairSound;
-    private string repairText;
+    // private bool isRepairing, isEquiping;
+    // Coroutine repairCoroutine;
+    // [SerializeField] AudioSource repairSound;
+    // private string repairText;
+    private bool isUnlocking, isEquiping;
+    Coroutine unlockCoroutine;
+    [SerializeField] AudioSource unlockSound;
+    private const string unlockText = "Unlocking...";
+    private int weaponAmount;
+    public int WeaponAmount { get => weaponAmount; set => weaponAmount = value; }
 
+    private IEnumerator StartUnlock(){
+        if (Physics.Raycast(cam.position, cam.forward, out hit, inputManager.InteractRange)){
+            if (hit.transform.TryGetComponent(out IUnlock unlock)){
+                if (unlock.IsLocked){
+                    IsUnlocking(true);
+                    unlockSound.Play();
+                    yield return new WaitForSeconds(useTime);
+                    unlock.Unlock();
+                    IsUnlocking(false);
+                    inventory.RemoveWeapon(toolkit);
+                }
+            }
+        }
+    }
+    private void CancelUnlock(){
+        if (unlockCoroutine != null){
+            StopCoroutine(unlockCoroutine);
+            unlockSound.Stop();
+            IsUnlocking(false);
+        }
+    }
+    private void IsUnlocking(bool value){
+        isUnlocking = value;
+        progressBar.ToggleProgressBar(value);
+        playerMovement.CanMove = !value;
+        playerMovement.CanJump = !value;
+    }
+    public void OnPrimaryStart(){
+        progressBar.SetProgressBar(unlockText, useTime);
+        unlockCoroutine = StartCoroutine(StartUnlock());
+    }
+    public void OnPrimaryEnd() { CancelUnlock(); }
+    IEnumerator Equip(float deployTime){
+        isEquiping = true;
+        yield return new WaitForSeconds(deployTime);
+        isEquiping = false;
+    }
+    void OnEnable(){
+        StartCoroutine(Equip(toolkit.deployTime));
+    }
+    void OnDestroy(){
+        // IsRepairing(false);
+    }
+    void OnDisable(){
+        // IsRepairing(false);
+        StopAllCoroutines();
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        playa = GameObject.FindGameObjectWithTag("Player");
+        animator = GetComponent<Animator>();
+        cam = Camera.main.transform;
+        inventory = Inventory.instance;
+        progressBar = ProgressBar.instance;
+        playerMovement = PlayerMovement.instance;
+        inputManager = playa.GetComponent<InputManager>();
+
+        useTime = toolkit.useTime;
+    }
     // IEnumerator Repair(IRepairWeapon weaponToRepair){
     //     if (CanRepair()){
     //         IsRepairing(true);
@@ -78,35 +147,4 @@ public class UtilityToolkit : MonoBehaviour, IWeaponAmount/*, IPrimaryInput, ISe
     // public void OnSecondaryEnd(){
     //     CancelRepair();
     // }
-
-    public int WeaponAmount{
-        get { return toolkitAmount; }
-        set { toolkitAmount = value; }
-    }
-    IEnumerator Equip(float deployTime){
-        isEquiping = true;
-        yield return new WaitForSeconds(deployTime);
-        isEquiping = false;
-    }
-    void OnEnable(){
-        StartCoroutine(Equip(toolkit.deployTime));
-    }
-    void OnDestroy(){
-        // IsRepairing(false);
-    }
-    void OnDisable(){
-        // IsRepairing(false);
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        playa = GameObject.FindGameObjectWithTag("Player").transform;
-        animator = GetComponent<Animator>();
-
-        inventory = Inventory.instance;
-        progressBar = ProgressBar.instance;
-
-        useTime = toolkit.useTime;
-    }
 }
