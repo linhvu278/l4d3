@@ -12,6 +12,6 @@ public class Weapon_Gun : Weapon
     public Vector3 aimPosition, aimSightPosition;
     // public Item weaponUpgradeType;
 }
-public enum GunType { rifle, shotgun, smg, sniper, pistol }
+public enum GunType { rifle, shotgun, sniper, smg_pistol/*, pistol*/ }
 public enum AmmoType { ammo_762, ammo_556, ammo_12g, ammo_45acp, ammo_9mm, ammo_magnum }
 public enum FireMode { single, auto, burst }

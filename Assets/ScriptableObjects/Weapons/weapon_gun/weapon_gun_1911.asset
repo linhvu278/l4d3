@@ -20,7 +20,7 @@ MonoBehaviour:
   weaponAmount: 12
   craftingCost: 0
   weaponRotation: {x: 0, y: -90, z: -90}
-  gunType: 4
+  gunType: 3
   ammoType: 3
   fireMode: 0
   damage: 36
