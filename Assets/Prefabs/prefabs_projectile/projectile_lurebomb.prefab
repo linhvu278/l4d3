@@ -132,8 +132,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   throwable: {fileID: 11400000, guid: 7c496dd63d9fdcc499409cc7c81dcfaf, type: 2}
   explosionFx: {fileID: 100008, guid: 1dbc518224e49f34095aab42fe05751a, type: 3}
-  explosionSound: {fileID: 8300000, guid: 161a8694d7225054690431bc45510602, type: 3}
-  lureSound: {fileID: 331017746368427516}
+  explosionSound: {fileID: 8300000, guid: 2f860f61f3c559945b4ae989a81d0e6a, type: 3}
+  lureSound: {fileID: 8300000, guid: 90cf95d2eb8ffb141996f7060d858825, type: 3}
 --- !u!82 &331017746368427516
 AudioSource:
   m_ObjectHideFlags: 0
@@ -144,7 +144,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 89bca68bdf3804d4cbd07ee3d0be1345, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 90cf95d2eb8ffb141996f7060d858825, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.5
   m_Pitch: 1
