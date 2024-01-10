@@ -22,9 +22,11 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                         dropAllString = "Drop all", 
                         craftString = "Add to crafting table";
 
+    void OnEnable(){
+        itemButton = GetComponent<Button>();
+    }
     void Start()
     {
-        itemButton = GetComponent<Button>();
         inventory = Inventory.instance;
         playerInventory = PlayerInventory.instance;
         
