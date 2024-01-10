@@ -24,4 +24,4 @@ MonoBehaviour:
   damage: 100
   explosionRadius: 5
   explosionForce: 1000
-  fuseTime: 4
+  fuseTime: 7
