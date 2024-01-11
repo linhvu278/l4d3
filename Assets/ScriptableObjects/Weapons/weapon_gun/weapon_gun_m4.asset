@@ -29,5 +29,5 @@ MonoBehaviour:
   range: 80
   reloadTime: 2
   slowReload: 0
-  aimPosition: {x: 0, y: -0.111, z: 0.32}
-  aimSightPosition: {x: 0, y: -0.111, z: 0.32}
+  aimPosition: {x: 0, y: -0.114, z: 0.3}
+  aimSightPosition: {x: 0, y: -0.112, z: 0.38}
