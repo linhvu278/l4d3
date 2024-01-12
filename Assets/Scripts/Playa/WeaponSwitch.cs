@@ -15,6 +15,7 @@ public class WeaponSwitch : MonoBehaviour
     private int previousSelectedWeapon, lastSelectedWeapon;
     private float scrollInput;
     [SerializeField] Transform weaponHolder;
+    public Transform WeaponHolder => weaponHolder;
     // public GameObject currentWeapon;
 
     public void ReceiveInput(float scrollValue)
@@ -91,10 +92,10 @@ public class WeaponSwitch : MonoBehaviour
             {
                 weapon.gameObject.SetActive(false);
             }
-            weaponHolder.GetChild(directlySelectedWeapon).gameObject.SetActive(true);
             selectedWeapon = directlySelectedWeapon;
+            weaponHolder.GetChild(selectedWeapon).gameObject.SetActive(true);
             // currentWeapon = inventory.weaponObjects[selectedWeapon];
-            LoadoutUI.instance.ChangeHUDColor(directlySelectedWeapon);
+            LoadoutUI.instance.ChangeHUDColor(selectedWeapon);
         }
         else return;
     }

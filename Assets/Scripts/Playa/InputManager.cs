@@ -7,11 +7,14 @@ public class InputManager : MonoBehaviour
     MouseMovement mouseMovement;
     WeaponSwitch weaponSwitch;
     Inventory inventory;
+    GameObject currentWeapon;
+    Transform weaponHolder;
+    Inv_slot[] inventorySlots;
 
     private Vector2 horizontalValue;
     private float mouseValueX, mouseValueY, scrollValue, middleMouseValue;
 
-    private const float INTERACT_RANGE = 2f;
+    private const float INTERACT_RANGE = 2.5f;
     public float InteractRange => INTERACT_RANGE;
 
     public void OnPlayerMovement(InputAction.CallbackContext value){
@@ -44,27 +47,32 @@ public class InputManager : MonoBehaviour
         }
     }
     public void OnAttack1(InputAction.CallbackContext value){
-        GameObject currentWeapon = inventory.weaponObjects[weaponSwitch.SelectedWeapon];
-        if (currentWeapon != null && currentWeapon.TryGetComponent(out IPrimaryInput pm)){
-            if (value.performed) pm.OnPrimaryStart();
-            else if (value.canceled) pm.OnPrimaryEnd();
-        }
+        if (value.performed) inventorySlots[weaponSwitch.SelectedWeapon].StartAttack1();
+        else if (value.canceled) inventorySlots[weaponSwitch.SelectedWeapon].EndAttack1();
+        // currentWeapon = inventory.weaponObjects[weaponSwitch.SelectedWeapon];
+        // if (currentWeapon != null && currentWeapon.TryGetComponent(out IPrimaryInput pm)){
+        //     if (value.performed) pm.OnPrimaryStart();
+        //     else if (value.canceled) pm.OnPrimaryEnd();
+        // }
     }
     public void OnAttack2(InputAction.CallbackContext value){
-        GameObject currentWeapon = inventory.weaponObjects[weaponSwitch.SelectedWeapon];
-        if (currentWeapon != null && currentWeapon.TryGetComponent(out ISecondaryInput sc)){
-            if (value.started) sc.OnSecondaryStart();
-            else if (value.canceled) sc.OnSecondaryEnd();
-        }
+        if (value.performed) inventorySlots[weaponSwitch.SelectedWeapon].StartAttack2();
+        else if (value.canceled) inventorySlots[weaponSwitch.SelectedWeapon].EndAttack2();
+        // currentWeapon = inventory.weaponObjects[weaponSwitch.SelectedWeapon];
+        // if (currentWeapon != null && currentWeapon.TryGetComponent(out ISecondaryInput sc)){
+        //     if (value.started) sc.OnSecondaryStart();
+        //     else if (value.canceled) sc.OnSecondaryEnd();
+        // }
     }
-    public void OnAttack3(InputAction.CallbackContext value){
-        middleMouseValue = value.ReadValue<float>();
-    }
+    // public void OnAttack3(InputAction.CallbackContext value){
+    //     middleMouseValue = value.ReadValue<float>();
+    // }
     public void OnReload(InputAction.CallbackContext value){
-        GameObject currentWeapon = inventory.weaponObjects[weaponSwitch.SelectedWeapon];
-        if (currentWeapon != null && currentWeapon.TryGetComponent(out IReloadInput reload)){
-            if (value.performed) reload.OnReload();
-        }
+        if (value.performed) inventorySlots[weaponSwitch.SelectedWeapon].StartReload();
+        // currentWeapon = inventory.weaponObjects[weaponSwitch.SelectedWeapon];
+        // if (currentWeapon != null && currentWeapon.TryGetComponent(out IReloadInput reload)){
+        //     if (value.performed) reload.OnReload();
+        // }
     }
     public void OnSwitch(InputAction.CallbackContext value){
         scrollValue = value.ReadValue<Vector2>().y;
@@ -98,5 +106,8 @@ public class InputManager : MonoBehaviour
         mouseMovement = GetComponent<MouseMovement>();
         weaponSwitch = GetComponent<WeaponSwitch>();
         inventory = GetComponent<Inventory>();
+
+        weaponHolder = weaponSwitch.WeaponHolder;
+        inventorySlots = weaponHolder.GetComponentsInChildren<Inv_slot>();
     }
 }

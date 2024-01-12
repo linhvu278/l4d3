@@ -59,8 +59,11 @@ public class Inventory : MonoBehaviour
 
             if (weaponInventory[weaponIndex] != null) DropWeapon(weaponInventory[weaponIndex]);
             weaponInventory[weaponIndex] = weapon;
+            if (weaponObjects.Length > 0) weaponSlots[weaponIndex].gameObject.SetActive(false);
             weaponObjects[weaponIndex] = weaponToAdd;
-            weaponSwitch.SelectNewWeapon(weaponIndex);
+            Inv_slot invSlot = weaponSwitch.WeaponHolder.GetChild(weaponIndex).GetComponent<Inv_slot>();
+            invSlot.SetWeaponObject(weaponToAdd);
+            // weaponSwitch.SelectNewWeapon(weaponIndex);
             // weaponSlots[weaponIndex].gameObject.SetActive(false);
 
             loadoutUI.GetHUDIcon(weapon.weaponIcon, (int)weapon.weaponCategory);
@@ -84,17 +87,13 @@ public class Inventory : MonoBehaviour
         if (weaponInventory[weaponIndex] != null) DropWeaponWithUpgrades(weaponInventory[weaponIndex], pos);
         weaponInventory[weaponIndex] = weapon;
         weaponObjects[weaponIndex] = weaponToAdd;
+        Inv_slot invSlot = weaponSwitch.WeaponHolder.GetChild(weaponIndex).GetComponent<Inv_slot>();
+        invSlot.SetWeaponObject(weaponToAdd);
         weaponSwitch.SelectNewWeapon(weaponIndex);
 
         loadoutUI.GetHUDIcon(weapon.weaponIcon, (int)weapon.weaponCategory);
         playerInventory.UpdateWeapons(weapon, true);
     }
-    // public void AddWeaponUpgrade(int index, bool upgradeAcc, bool upgradeDmg, bool upgradeRng){
-    //     IWeaponUpgrade upgrade = weaponObjects[index].GetComponent<IWeaponUpgrade>();
-    //     upgrade.UpgradeAccuracy = upgradeAcc;
-    //     upgrade.UpgradeDamage = upgradeDmg;
-    //     upgrade.UpgradeRange = upgradeRng;
-    // }
 
     #endregion
 
@@ -141,6 +140,8 @@ public class Inventory : MonoBehaviour
         weaponInventory[weaponIndex] = null;
 
         // GameObject weaponToRemove = weaponSlots[weaponIndex].GetChild(0).gameObject;
+        Inv_slot invSlot = weaponSwitch.WeaponHolder.GetChild(weaponIndex).GetComponent<Inv_slot>();
+        invSlot.DestroyWeaponObj();
         Destroy(weaponObjects[weaponIndex]);
 
         loadoutUI.RemoveHUDElements(weaponIndex);
