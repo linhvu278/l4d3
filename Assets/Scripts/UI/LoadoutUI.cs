@@ -12,39 +12,10 @@ public class LoadoutUI : MonoBehaviour
     // private Inventory inventory;
     private ItemDatabase db;
 
-    [SerializeField] Transform loadoutUI;
+    Transform loadoutUI;
     Image icon, ammoIcon;
     TextMeshProUGUI ammo, ammoReserve;
-
-    void Awake()
-    {
-        if (instance != null)
-        {
-            Debug.LogWarning("More than one instances of Inventory found.");
-            return;
-        }
-        instance = this;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        // inventory = Inventory.instance;
-        // db = ItemDatabase.instance;
-        db = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemDatabase>();
-
-        foreach (Transform loadoutItem in loadoutUI){
-            //loadoutItem.GetComponent<Image>().color = Color.white;
-            foreach (Transform child in loadoutItem){
-                if (child.TryGetComponent(out Image image)){
-                    child.GetComponent<Image>().enabled = false;
-                }
-                else if (child.TryGetComponent(out TextMeshProUGUI tmpro)){
-                    child.GetComponent<TextMeshProUGUI>().enabled = false;
-                }
-            }
-        }
-    }
+    Color white, green;
 
     public void GetHUDIcon(Sprite weaponIcon, int weaponIndex){
         icon = loadoutUI.GetChild(weaponIndex).Find("Icon").GetComponent<Image>();
@@ -66,7 +37,6 @@ public class LoadoutUI : MonoBehaviour
 
     public void GetHUDAmmoIcon(ItemType gunAmmoType, int weaponIndex){
         ammoIcon = loadoutUI.GetChild(weaponIndex).Find("AmmoIcon").GetComponent<Image>();
-        // Item item = db.itemList.Find(x => x.itemType == gunAmmoType);
         ammoIcon.sprite = db.GetItemByType(gunAmmoType).itemIcon;
         ammoIcon.enabled = true;
     }
@@ -76,22 +46,22 @@ public class LoadoutUI : MonoBehaviour
     {
         // change color of the outer frames to white
         foreach (Transform loadoutItem in loadoutUI) {
-            if (loadoutItem.TryGetComponent(out Image frame)) frame.color = Color.white;
+            if (loadoutItem.TryGetComponent(out Image frame)) frame.color = white;
             
             // change color of all other items in the loadout to white
             foreach (Transform child in loadoutItem){
-                if (child.TryGetComponent(out Image image)) image.color = Color.white;
-                if (child.TryGetComponent(out TextMeshProUGUI tmpro)) tmpro.color = Color.white;
+                if (child.TryGetComponent(out Image image)) image.color = white;
+                if (child.TryGetComponent(out TextMeshProUGUI tmpro)) tmpro.color = white;
             }
         }
         
         // change color of selected item's frame to green
-        loadoutUI.GetChild(selectedWeapon).GetComponent<Image>().color = Color.green;
+        loadoutUI.GetChild(selectedWeapon).GetComponent<Image>().color = green;
 
         // change the color of selected item to green
         foreach (Transform child in loadoutUI.GetChild(selectedWeapon)) {
-            if (child.TryGetComponent(out Image image)) image.color = Color.green;
-            if (child.TryGetComponent(out TextMeshProUGUI tmpro)) tmpro.color = Color.green;
+            if (child.TryGetComponent(out Image image)) image.color = green;
+            if (child.TryGetComponent(out TextMeshProUGUI tmpro)) tmpro.color = green;
         }
     }
 
@@ -99,6 +69,44 @@ public class LoadoutUI : MonoBehaviour
         foreach (Transform child in loadoutUI.GetChild(weaponIndex)){
             if (child.TryGetComponent(out Image image)) image.enabled = false;
             if (child.TryGetComponent(out TextMeshProUGUI tmpro)) tmpro.enabled = false;
+        }
+    }
+
+    void Awake()
+    {
+        if (instance != null)
+        {
+            Debug.LogWarning("More than one instances of Inventory found.");
+            return;
+        }
+        instance = this;
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        // inventory = Inventory.instance;
+        // db = ItemDatabase.instance;
+        db = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemDatabase>();
+
+        white = Color.white;
+        white.a = .75f;
+        green = Color.green;
+        green.a = .75f;
+
+        loadoutUI = transform;
+        foreach (Transform loadoutItem in loadoutUI){
+            loadoutItem.GetComponent<Image>().color = white;
+            foreach (Transform child in loadoutItem){
+                if (child.TryGetComponent(out Image image)){
+                    image.color = white;
+                    image.enabled = false;
+                }
+                else if (child.TryGetComponent(out TextMeshProUGUI tmpro)){
+                    tmpro.color = white;
+                    tmpro.enabled = false;
+                }
+            }
         }
     }
 }
