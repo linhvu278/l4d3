@@ -109,7 +109,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
 
     void Update(){
         AimDownSight(isAiming);
-        crosshair.SetGap((int)(Inaccuracy() * 10f), true);
+        crosshair.SetGap((int)(Inaccuracy() * 7.5f), true);
         // if (autoFireCoroutine != null && durability == 0) StopCoroutine(autoFireCoroutine);
         // inaccuracy = Inaccuracy();
         // Debug.Log(inaccuracy); // for testing purposes
@@ -161,7 +161,8 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
                     Destroy(impact, 10f);
                 }
             }
-        } else reloadCoroutine = StartCoroutine(Reload()); // auto reload when no ammo left
+        // } else reloadCoroutine = StartCoroutine(Reload()); // auto reload when no ammo left
+        } else emptyClipSound.Play();
     }
     // 
     // reload
@@ -243,8 +244,8 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     // calculate initial weapon inaccuracy
     // 
     private float Inaccuracy(){
-        inaccuracyMove = playerMovement.IsMoving ? 2f : 1f;
-        inaccuracyJump = !playerMovement.IsGrounded ? 4f : 1f;
+        inaccuracyMove = playerMovement.IsMoving ? 1.5f : 1f;
+        inaccuracyJump = !playerMovement.IsGrounded ? 2f : 1f;
         // inaccuracyNormal = isLaserUpgraded ? Mathf.Round(gun.inaccuracy / 1.25f * 1000.0f) / 1000.0f : gun.inaccuracy;
         inaccuracyAim = isAiming ? 0.25f : 1f;
 
@@ -366,7 +367,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
                     break;
             }
         } //else emptyClipSound.Play();
-        if (/*durability <= 0 || */ammo == 0 && maxAmmo == 0 && !isEquiping) emptyClipSound.Play();
+        // if (/*durability <= 0 || */ammo == 0 && maxAmmo == 0 && !isEquiping) emptyClipSound.Play();
     }
     private void StopShooting(){
         if (autoFireCoroutine != null) StopCoroutine(autoFireCoroutine);
