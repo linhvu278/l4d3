@@ -40,5 +40,8 @@ public class Inv_slot : MonoBehaviour
     }
     public void DestroyWeaponObj(){
         weaponObj = null;
+        attack1 = null;
+        attack2 = null;
+        reload = null;
     }
 }
