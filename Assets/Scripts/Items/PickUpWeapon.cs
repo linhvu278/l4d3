@@ -13,7 +13,7 @@ public class PickUpWeapon : MonoBehaviour, IInteractable, IWeaponAmount//, IOutl
     // private ItemDatabase db;
     void WeaponPickUp(){
         if (TryGetComponent(out WeaponStats ws)){
-            inventory.AddWeaponWithUpgrades(weapon, weaponAmount, transform.position, ws.UpgradeAccuracy, ws.UpgradeDamage, ws.UpgradeRange);
+            inventory.AddWeaponWithUpgrades(weapon, weaponAmount, ws.UpgradeAccuracy, ws.UpgradeDamage, ws.UpgradeRange);
             Destroy(gameObject);
         } else {
             if (inventory.AddWeapon(weapon, weaponAmount)) Destroy(gameObject);
