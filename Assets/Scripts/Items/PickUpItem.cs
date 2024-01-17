@@ -14,6 +14,7 @@ public class PickUpItem : MonoBehaviour, IInteractable//, IOutline
     private WeaponSwitch weaponSwitch;
     // private ItemDatabase db;
     // private Outline outline;
+    [SerializeField] private Light light;
 
     void ItemPickUp(){
         if (item.itemCategory == ItemCategory.upgrade){
@@ -84,23 +85,30 @@ public class PickUpItem : MonoBehaviour, IInteractable//, IOutline
         // outline = GetComponent<Outline>();
 
         SetItemRotation();
-        // switch (item.itemCategory)
-        // {
-        //     case ItemCategory.ammo:
-        //         outline.OutlineColor = Color.cyan;
-        //         break;
-        //     case ItemCategory.material:
-        //         outline.OutlineColor = Color.green;
-        //         break;
-        //     case ItemCategory.glue:
-        //         outline.OutlineColor = Color.yellow;
-        //         break;
-        //     case ItemCategory.upgrade:
-        //         outline.OutlineColor = Color.magenta;
-        //         break;
-        //     default:
-        //         break;
-        // }
+        light.GetComponent<Light>();
+        light.range = .5f;
+        light.intensity = .5f;
+        switch (item.itemCategory)
+        {
+            case ItemCategory.ammo:
+                // outline.OutlineColor = Color.cyan;
+                light.color = Color.cyan;
+                break;
+            case ItemCategory.material:
+                // outline.OutlineColor = Color.green;
+                light.color = Color.green;
+                break;
+            case ItemCategory.glue:
+                // outline.OutlineColor = Color.yellow;
+                light.color = Color.yellow;
+                break;
+            case ItemCategory.upgrade:
+                // outline.OutlineColor = Color.magenta;
+                light.color = Color.magenta;
+                break;
+            default:
+                break;
+        }
         // DisableOutline();
         // db = ItemDatabase.instance;
 
