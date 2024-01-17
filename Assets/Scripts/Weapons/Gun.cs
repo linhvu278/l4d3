@@ -7,6 +7,8 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
 
     // [SerializeField] private Transform gunUpgrades;
     [SerializeField] private GameObject sightUpgrade, barrelUpgrade, laserUpgrade;
+    public delegate void OnUpgradeChange();
+    public OnUpgradeChange onSightUpgradeChange, onBarrelUpgradeChange, onLaserUpgradeChange;
     
     // GameObject playa;
     SimpleCrosshair crosshair;
@@ -27,7 +29,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
 
     private float range, damage, fireRate, inaccuracy, reloadTime;
     private float inaccuracyNormal, inaccuracyMove, inaccuracyJump, inaccuracyAim;
-    private const float scopeRangeMultiplier = 1.1f;
+    private const float scopeRangeMultiplier = 1.2f;
     private int weaponCategory; // 0: primary, 1: secondary
     private bool slowReload;
     // public float durability { get; set; }
@@ -50,79 +52,6 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     private Vector3 defaultPosition, aimPosition, aimSightPosition;
     private const float ADS_SPEED = 2f;
 
-    void Awake(){
-        crosshair = GameObject.FindGameObjectWithTag("Crosshair").GetComponent<SimpleCrosshair>();
-    }
-
-    void Start(){
-        inventory = Inventory.instance;
-        loadoutUI = LoadoutUI.instance;
-        playerMovement = PlayerMovement.instance;
-
-        clipAmmo = gun.weaponAmount;
-        range = gun.range;
-        // damage = gun.damage;
-        // damage = isBarrelUpgraded ? (int)(gun.damage * dmgModifier) : gun.damage;
-        GetGunDamage();
-        fireRate = gun.fireRate;
-        // inaccuracy = gun.inaccuracy;
-        reloadTime = gun.reloadTime;
-        weaponCategory = (int)gun.weaponCategory;
-        // maxDurability = gun.maxDurability;
-        // durability = 1;
-        slowReload = gun.slowReload;
-        // gunName = gun.weaponName;
-
-        // id = gun.weaponID;
-        cam = Camera.main.transform;
-        animator = gameObject.GetComponent<Animator>();
-        // playa = GameObject.FindGameObjectWithTag("Player");
-        // playerMovement = playa.GetComponent<PlayerMovement>();
-        db = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemDatabase>();
-        
-        parentTransform = transform.parent;
-        // get default and ads position
-        // primary
-        // if (weaponCategory == 0){
-        //     defaultPosition = new Vector3(0.15f,-0.15f,0.55f);
-        //     // aimPosition = new Vector3(0f,-0.111f,0.3f);
-        // // secondary
-        // } else {
-        //     defaultPosition = new Vector3(0.15f,-0.125f,0.35f);
-        //     // aimPosition = new Vector3(0f,-0.05f,0.2f);
-        // }
-        defaultPosition = parentTransform.localPosition;
-        aimPosition = gun.aimPosition;
-        aimSightPosition = gun.aimSightPosition;
-
-        // ammo = clipAmmo;
-        // ammoType = gun.ammoType;
-        GetMaxAmmo();
-        loadoutUI.GetHUDAmmo(ammo, weaponCategory);
-        loadoutUI.GetHUDAmmoIcon(GetItemType(), weaponCategory);
-        inventory.onItemChangedCallback += GetMaxAmmo;
-
-        // sightUpgrade = gunUpgrades.Find("sight") ? gunUpgrades.Find("sight").gameObject : null;
-        // barrelUpgrade = gunUpgrades.Find("barrel") ? gunUpgrades.Find("barrel").gameObject : null;
-        // laserUpgrade = gunUpgrades.Find("laser") ? gunUpgrades.Find("laser").gameObject : null;
-    }
-
-    void Update(){
-        AimDownSight(isAiming);
-        crosshair.SetGap((int)(Inaccuracy() * 7.5f), true);
-        // if (autoFireCoroutine != null && durability == 0) StopCoroutine(autoFireCoroutine);
-        // inaccuracy = Inaccuracy();
-        // Debug.Log(inaccuracy); // for testing purposes
-
-        // could group all of these to a single isMoving bool
-        // x = playerMovement.movementInput.x;
-        // y = playerMovement.movementInput.y;
-        // isGrounded = playerMovement.isGrounded;
-        // speed = playerMovement.speed;
-        // normalSpeed = playerMovement.normalSpeed;
-
-        // animator.SetFloat("speed", Mathf.Abs(x) + Mathf.Abs(y));
-    }
     // 
     // shooting
     // 
@@ -280,12 +209,11 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     }
 
     private float GetGunDamage(){
-        dmgModifier = (int)gun.gunType == 3 ? 1.25f : 1.15f;
-        damage = isBarrelUpgraded ? damage * dmgModifier : gun.damage;
-        return damage;
+        dmgModifier = (int)gun.gunType == 3 ? 1.25f : 1.15f; //pistols & smgs get higher damage multiplier
+        return isBarrelUpgraded ? gun.damage * dmgModifier : gun.damage;
     }
     private float GetAccuracyModifier(){
-        accModifier = isLaserUpgraded ? 0.8f : 1f;
+        accModifier = isLaserUpgraded ? 0.75f : 1f;
         return accModifier;
     }
 
@@ -381,15 +309,17 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     public void UpgradeSight(bool value){
         isSightUpgraded = value;
         sightUpgrade.SetActive(value);
+        if (onSightUpgradeChange != null) onSightUpgradeChange.Invoke();
     }
     public void UpgradeBarrel(bool value){
         isBarrelUpgraded = value;
-        GetGunDamage();
         barrelUpgrade.SetActive(value);
+        if (onBarrelUpgradeChange != null) onBarrelUpgradeChange.Invoke();
     }
     public void UpgradeLaser(bool value){
         isLaserUpgraded = value;
         laserUpgrade.SetActive(value);
+        if (onLaserUpgradeChange != null) onLaserUpgradeChange.Invoke();
     }
 
     // get keyboard input here
@@ -400,38 +330,20 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     public void OnReload(){
         if (CanReload()) StartCoroutine(Reload());
     }
-
-    // 
-    // repair gun
-    // 
-    // public void OnRepair(){
-    //     durability = maxDurability;
-    //     // maybe play some sfx here
-    // }
-    // public bool CanRepair => durability < maxDurability;
     // 
     // upgrade gun
     // 
     public bool UpgradeRange{
         get { return isSightUpgraded; }
-        set {
-            isSightUpgraded = value;
-            UpgradeSight(isSightUpgraded);
-        }
+        set { UpgradeSight(value); }
     } //=> gunUpgrades.Find("sight") && !isSightUpgraded;
     public bool UpgradeDamage{
         get { return isBarrelUpgraded; }
-        set {
-            isBarrelUpgraded = value;
-            UpgradeBarrel(isBarrelUpgraded);
-        }
+        set { UpgradeBarrel(value); }
     }
     public bool UpgradeAccuracy{
         get { return isLaserUpgraded; }
-        set {
-            isLaserUpgraded = value;
-            UpgradeLaser(isLaserUpgraded);
-        }
+        set { UpgradeLaser(value); }
     }
     public bool IsFullyUpgraded => isSightUpgraded && isLaserUpgraded && isBarrelUpgraded;
     
@@ -479,6 +391,87 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     void OnDestroy(){
         isShooting = false;
         StopAllCoroutines();
-        // inventory.onItemChangedCallback -= GetMaxAmmo;
+        inventory.onItemChangedCallback -= GetMaxAmmo;
+    }
+
+    // 
+    // repair gun
+    // 
+    // public void OnRepair(){
+    //     durability = maxDurability;
+    //     // maybe play some sfx here
+    // }
+    // public bool CanRepair => durability < maxDurability;
+
+    void Awake(){
+        crosshair = GameObject.FindGameObjectWithTag("Crosshair").GetComponent<SimpleCrosshair>();
+    }
+    void Start(){
+        inventory = Inventory.instance;
+        loadoutUI = LoadoutUI.instance;
+        playerMovement = PlayerMovement.instance;
+
+        clipAmmo = gun.weaponAmount;
+        range = gun.range;
+        // damage = gun.damage;
+        // damage = isBarrelUpgraded ? (int)(gun.damage * dmgModifier) : gun.damage;
+        // GetGunDamage();
+        fireRate = gun.fireRate;
+        // inaccuracy = gun.inaccuracy;
+        reloadTime = gun.reloadTime;
+        weaponCategory = (int)gun.weaponCategory;
+        // maxDurability = gun.maxDurability;
+        // durability = 1;
+        slowReload = gun.slowReload;
+        // gunName = gun.weaponName;
+
+        // id = gun.weaponID;
+        cam = Camera.main.transform;
+        animator = gameObject.GetComponent<Animator>();
+        // playa = GameObject.FindGameObjectWithTag("Player");
+        // playerMovement = playa.GetComponent<PlayerMovement>();
+        db = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemDatabase>();
+        
+        parentTransform = transform.parent;
+        // get default and ads position
+        // primary
+        // if (weaponCategory == 0){
+        //     defaultPosition = new Vector3(0.15f,-0.15f,0.55f);
+        //     // aimPosition = new Vector3(0f,-0.111f,0.3f);
+        // // secondary
+        // } else {
+        //     defaultPosition = new Vector3(0.15f,-0.125f,0.35f);
+        //     // aimPosition = new Vector3(0f,-0.05f,0.2f);
+        // }
+        defaultPosition = parentTransform.localPosition;
+        aimPosition = gun.aimPosition;
+        aimSightPosition = gun.aimSightPosition;
+
+        // ammo = clipAmmo;
+        // ammoType = gun.ammoType;
+        GetMaxAmmo();
+        loadoutUI.GetHUDAmmo(ammo, weaponCategory);
+        loadoutUI.GetHUDAmmoIcon(GetItemType(), weaponCategory);
+        inventory.onItemChangedCallback += GetMaxAmmo;
+
+        // sightUpgrade = gunUpgrades.Find("sight") ? gunUpgrades.Find("sight").gameObject : null;
+        // barrelUpgrade = gunUpgrades.Find("barrel") ? gunUpgrades.Find("barrel").gameObject : null;
+        // laserUpgrade = gunUpgrades.Find("laser") ? gunUpgrades.Find("laser").gameObject : null;
+    }
+    void Update(){
+        AimDownSight(isAiming);
+        crosshair.SetGap((int)(Inaccuracy() * 7.5f), true);
+        // if (autoFireCoroutine != null && durability == 0) StopCoroutine(autoFireCoroutine);
+        // inaccuracy = Inaccuracy();
+        // Debug.Log(inaccuracy); // for testing purposes
+
+        // could group all of these to a single isMoving bool
+        // x = playerMovement.movementInput.x;
+        // y = playerMovement.movementInput.y;
+        // isGrounded = playerMovement.isGrounded;
+        // speed = playerMovement.speed;
+        // normalSpeed = playerMovement.normalSpeed;
+
+        // animator.SetFloat("speed", Mathf.Abs(x) + Mathf.Abs(y));
     }
 }

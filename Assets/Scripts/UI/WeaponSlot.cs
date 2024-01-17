@@ -6,9 +6,12 @@ using UnityEngine.EventSystems;
 
 public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    public static WeaponSlot instance;
+    
     [SerializeField] private Image weaponIcon;
     [SerializeField] private TextMeshProUGUI weaponName;
     private Button weaponButton;
+    [SerializeField] private Transform upgradeIconGroup;
 
     // [SerializeField] Transform inventoryMenu;
     // Button equipButton;
@@ -16,6 +19,8 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     // Button unloadButton;
 
     private Weapon weapon;
+    private int weaponIndex;
+
     Inventory inventory;
     PlayerInventory playerInventory;
 
@@ -23,15 +28,9 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
                         unloadWeaponString = "Unload",
                         upgradeWeaponString = "Upgrade";
 
-    void Awake(){
-        weaponButton = GetComponent<Button>();
-        // weaponButton.onClick.AddListener(ToggleMenu);
-    }
-    // void OnEnable(){
-    //     inventoryMenu.gameObject.SetActive(false);
-    // }
     public void AddWeaponSlot(Weapon newWeapon){
         weapon = newWeapon;
+        weaponIndex = (int)weapon.weaponCategory;
 
         weaponIcon.sprite = weapon.weaponIcon;
         weaponIcon.preserveAspect = true;
@@ -39,17 +38,53 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 
         weaponName.text = weapon.weaponName;
         weaponName.enabled = true;
+        
+        if (upgradeIconGroup != null) upgradeIconGroup.gameObject.SetActive(true);
+        GetUpgradeIconDelegate();
 
         weaponButton.enabled = true;
     }
     public void ClearWeaponSlot(){
         weapon = null;
+        weaponIndex = -1;
 
         weaponIcon.sprite = null;
         weaponIcon.enabled = false;
         weaponName.enabled = false;
 
+        if (upgradeIconGroup != null) upgradeIconGroup.gameObject.SetActive(false);
+
         weaponButton.enabled = false;
+    }
+    // public void GetWeaponUpgradesIcons(){
+    //     int index = (int)weapon.weaponCategory;
+    //     if (inventory.weaponObjects[index].TryGetComponent(out IWeaponUpgrade upg)){
+    //         upgradeIconGroup.GetChild(2).GetComponent<Image>().enabled = upg.UpgradeAccuracy;
+    //         upgradeIconGroup.GetChild(1).GetComponent<Image>().enabled = upg.UpgradeDamage;
+    //         upgradeIconGroup.GetChild(0).GetComponent<Image>().enabled = upg.UpgradeRange;
+    //     }
+    // }
+    public void GetWeaponSightUpgradeIcon(){
+        if (inventory.weaponObjects[weaponIndex].TryGetComponent(out IWeaponUpgrade upg))
+            upgradeIconGroup.GetChild(0).GetComponent<Image>().enabled = upg.UpgradeRange;
+    }
+    public void GetWeaponBarrelUpgradeIcon(){
+        if (inventory.weaponObjects[weaponIndex].TryGetComponent(out IWeaponUpgrade upg))
+            upgradeIconGroup.GetChild(1).GetComponent<Image>().enabled = upg.UpgradeDamage;
+    }
+    public void GetWeaponLaserUpgradeIcon(){
+        if (inventory.weaponObjects[weaponIndex].TryGetComponent(out IWeaponUpgrade upg))
+            upgradeIconGroup.GetChild(2).GetComponent<Image>().enabled = upg.UpgradeAccuracy;
+    }
+    public void GetUpgradeIconDelegate(){
+        if (inventory.weaponObjects[weaponIndex].TryGetComponent(out Gun gun)){
+            gun.onSightUpgradeChange += GetWeaponSightUpgradeIcon;
+            gun.onBarrelUpgradeChange += GetWeaponBarrelUpgradeIcon;
+            gun.onLaserUpgradeChange += GetWeaponLaserUpgradeIcon;
+        }
+        GetWeaponSightUpgradeIcon();
+        GetWeaponBarrelUpgradeIcon();
+        GetWeaponLaserUpgradeIcon();
     }
     public void OnPointerClick(PointerEventData eventData){
         if (weaponButton.enabled == true){
@@ -88,10 +123,24 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     }
     public void OnPointerExit(PointerEventData eventData) { playerInventory.DisableInputGuide(); }
     // private bool IsWeaponUpgradable => playerInventory.IsWorkshopOpen && (int)weapon.weaponCategory < 2;
+    void Awake(){
+        weaponButton = GetComponent<Button>();
+        // weaponButton.onClick.AddListener(ToggleMenu);
+    }
     void Start(){
         inventory = Inventory.instance;
         playerInventory = PlayerInventory.instance;
     }
+    // void OnEnable(){
+    //     inventoryMenu.gameObject.SetActive(false);
+    // }
+    // void OnDisable(){
+    //     if (inventory.weaponObjects[weaponIndex].TryGetComponent(out Gun gun)){
+    //         gun.onSightUpgradeChange -= GetWeaponSightUpgradeIcon;
+    //         gun.onBarrelUpgradeChange -= GetWeaponBarrelUpgradeIcon;
+    //         gun.onLaserUpgradeChange -= GetWeaponLaserUpgradeIcon;
+    //     }
+    // }
     // public void ToggleMenu(){
     //     inventoryMenu.GetComponent<InventoryMenu>().GetWeapon(weapon);
     //     inventoryMenu.GetComponent<RectTransform>().position = Mouse.current.position.ReadValue();
