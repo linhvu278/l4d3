@@ -17,10 +17,9 @@ public class EnemyController : MonoBehaviour
     bool isPlayerInRange;
     Vector3 playerPosition;
 
-    private const float CHASE_RANGE = 15f;
-    private const float ATTACK_RANGE = 1f;
-    private const float ROAM_SPEED = 1f;
-    private const float CHASE_SPEED = 4.5f;
+    private const float CHASE_RANGE = 15f, CHASE_SPEED = 4.5f,
+                        ATTACK_RANGE = 1f, ATTACK_SPEED = 1f,
+                        ROAM_SPEED = 1f;
     // float distanceToTarget;
     private bool isTargetInChaseRange, isTargetInAttackRange;
 
@@ -29,7 +28,6 @@ public class EnemyController : MonoBehaviour
     const float ROAM_RANGE = 7.5f;
     
     private bool isAttacking;
-    private float attackInterval = 1f;
     
     // Start is called before the first frame update
     void Start()
@@ -111,7 +109,7 @@ public class EnemyController : MonoBehaviour
             if (target.TryGetComponent(out IDamage dmg)) target.GetComponent<IDamage>().TakeDamage(em.GetAttackDamage());
 
             isAttacking = true;
-            Invoke(nameof(ResetAttack), attackInterval);
+            Invoke(nameof(ResetAttack), ATTACK_SPEED);
         }
     }
     void ResetAttack(){

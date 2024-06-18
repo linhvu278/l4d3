@@ -10,8 +10,9 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     
     [SerializeField] private Image weaponIcon;
     [SerializeField] private TextMeshProUGUI weaponName;
+    [SerializeField] private string defaultSlotName;
     private Button weaponButton;
-    [SerializeField] private Transform upgradeIconGroup;
+    // [SerializeField] private Transform upgradeIconGroup;
 
     // [SerializeField] Transform inventoryMenu;
     // Button equipButton;
@@ -37,9 +38,9 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
         weaponIcon.enabled = true;
 
         weaponName.text = weapon.weaponName;
-        weaponName.enabled = true;
+        // weaponName.enabled = true;
         
-        if (upgradeIconGroup != null) upgradeIconGroup.gameObject.SetActive(true);
+        // if (upgradeIconGroup != null) upgradeIconGroup.gameObject.SetActive(true);
         GetUpgradeIconDelegate();
 
         weaponButton.enabled = true;
@@ -50,9 +51,10 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 
         weaponIcon.sprite = null;
         weaponIcon.enabled = false;
-        weaponName.enabled = false;
+        weaponName.text = defaultSlotName;
+        // weaponName.enabled = false;
 
-        if (upgradeIconGroup != null) upgradeIconGroup.gameObject.SetActive(false);
+        // if (upgradeIconGroup != null) upgradeIconGroup.gameObject.SetActive(false);
 
         weaponButton.enabled = false;
     }
@@ -65,16 +67,16 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     //     }
     // }
     public void GetWeaponSightUpgradeIcon(){
-        if (inventory.weaponObjects[weaponIndex].TryGetComponent(out IWeaponUpgrade upg))
-            upgradeIconGroup.GetChild(0).GetComponent<Image>().enabled = upg.UpgradeRange;
+        // if (inventory.weaponObjects[weaponIndex].TryGetComponent(out IWeaponUpgrade upg))
+        //     upgradeIconGroup.GetChild(0).GetComponent<Image>().enabled = upg.UpgradeRange;
     }
     public void GetWeaponBarrelUpgradeIcon(){
-        if (inventory.weaponObjects[weaponIndex].TryGetComponent(out IWeaponUpgrade upg))
-            upgradeIconGroup.GetChild(1).GetComponent<Image>().enabled = upg.UpgradeDamage;
+        // if (inventory.weaponObjects[weaponIndex].TryGetComponent(out IWeaponUpgrade upg))
+        //     upgradeIconGroup.GetChild(1).GetComponent<Image>().enabled = upg.UpgradeDamage;
     }
     public void GetWeaponLaserUpgradeIcon(){
-        if (inventory.weaponObjects[weaponIndex].TryGetComponent(out IWeaponUpgrade upg))
-            upgradeIconGroup.GetChild(2).GetComponent<Image>().enabled = upg.UpgradeAccuracy;
+        // if (inventory.weaponObjects[weaponIndex].TryGetComponent(out IWeaponUpgrade upg))
+        //     upgradeIconGroup.GetChild(2).GetComponent<Image>().enabled = upg.UpgradeAccuracy;
     }
     public void GetUpgradeIconDelegate(){
         if (inventory.weaponObjects[weaponIndex].TryGetComponent(out Gun gun)){

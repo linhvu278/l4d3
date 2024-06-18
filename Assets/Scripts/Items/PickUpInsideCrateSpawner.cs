@@ -44,7 +44,7 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
                 }
                 break;
             case CrateType.support_crate:
-                spawnObjects.AddRange(db.weaponPickups.Where(obj => obj.tag == "Health" || obj.tag == "Throwable"));
+                spawnObjects.AddRange(db.weaponPickups.Where(predicate: obj => obj != null && obj.tag == "Health" || obj.tag == "Throwable"));
                 for (int i = 0; i < spawnPositions.Count; i++){
                     int rnd = Random.Range(0, spawnObjects.Count);
                     GameObject health = Instantiate(spawnObjects[rnd], spawnPositions[i].position, Quaternion.identity);
@@ -95,6 +95,19 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
         CrateType.support_crate => "Opening medical crate...",
         _ => null,
     };
+    void Start(){
+        db = ItemDatabase.instance;
+        progressBar = ProgressBar.instance;
+        playerMovement = PlayerMovement.instance;
+        bc = GetComponent<BoxCollider>();
+
+        isCrateOpened = false;
+        // isLocked = true;
+        crateLock.SetActive(isLocked);
+        
+        foreach (Transform spawnPos in spawnGroup) spawnPositions.Add(spawnPos);
+        // GetSpawnObjects();
+    }
     // private void GetSpawnObjects(){
     //     switch (crateType)
     //     {
@@ -111,19 +124,5 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
     //             break;
     //     }
     // }
-
-    void Start(){
-        db = ItemDatabase.instance;
-        progressBar = ProgressBar.instance;
-        playerMovement = PlayerMovement.instance;
-        bc = GetComponent<BoxCollider>();
-
-        isCrateOpened = false;
-        isLocked = true;
-        crateLock.SetActive(isLocked);
-        
-        foreach (Transform spawnPos in spawnGroup) spawnPositions.Add(spawnPos);
-        // GetSpawnObjects();
-    }
 }
 public enum CrateType { weapon_crate, ammunition_crate, support_crate }

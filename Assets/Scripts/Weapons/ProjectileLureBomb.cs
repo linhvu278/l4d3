@@ -2,15 +2,14 @@ using UnityEngine;
 
 public class ProjectileLureBomb : Throwable
 {
-    private float fuseTime; // = 4f;
-    private float explosionRadius; // = 5f;
-    private float explosionForce; // = 1000f;
-    private float explosionDamage; // = 100f;
-    private float lureRadius = 7.5f;
+    private float fuseTime, // = 4f;
+                  explosionRadius, // = 5f
+                  explosionForce, // = 1000f
+                  explosionDamage; // = 100f
+    private const float lureRadius = 10f;
 
     [SerializeField] GameObject explosionFx;
-    [SerializeField] AudioClip explosionSound;
-    [SerializeField] AudioSource lureSound;
+    [SerializeField] AudioClip explosionSound, lureSound;
 
     private LayerMask lureMask;
 
@@ -20,7 +19,8 @@ public class ProjectileLureBomb : Throwable
         explosionDamage = throwable.damage;
         // explosionForce = throwable.explosionForce;
         explosionRadius = throwable.explosionRadius;
-        lureSound.Play();
+        // lureSound.Play();
+        AudioSource.PlayClipAtPoint(lureSound, transform.position);
         Lure();
     }
     void Lure(){

@@ -14,55 +14,56 @@ public class PickUpItem : MonoBehaviour, IInteractable//, IOutline
     private WeaponSwitch weaponSwitch;
     // private ItemDatabase db;
     // private Outline outline;
-    [SerializeField] private Light light;
+    // [SerializeField] private Light light;
 
     void ItemPickUp(){
         if (item.itemCategory == ItemCategory.upgrade){
             // 
             // weapon upgrades
             // 
-            int selectedWeapon = weaponSwitch.SelectedWeapon;
-            GameObject selectedGun = inventory.weaponObjects[selectedWeapon];
-            if (selectedGun != null && selectedGun.TryGetComponent(out Gun gun)){
-                switch (item.itemType){
-                    case ItemType.item_upgrade_sight:
-                        if (!gun.UpgradeRange)
-                        {
-                            gun.UpgradeRange = true;
-                            if (destroyItemOnPickUp){
-                                AudioSource.PlayClipAtPoint(pickupSound, transform.position);
-                                Destroy(gameObject);
-                            }
-                        }
-                        else playerOverlay.EnableWarningText("Upgrade already applied");
-                        break;
-                    case ItemType.item_upgrade_barrel:
-                        if (!gun.UpgradeDamage)
-                        {
-                            gun.UpgradeDamage = true;
-                            if (destroyItemOnPickUp){
-                                AudioSource.PlayClipAtPoint(pickupSound, transform.position);
-                                Destroy(gameObject);
-                            }
-                        }
-                        else playerOverlay.EnableWarningText("Upgrade already applied");
-                        break;
-                    case ItemType.item_upgrade_laser:
-                        if (!gun.UpgradeAccuracy)
-                        {
-                            gun.UpgradeAccuracy = true;
-                            if (destroyItemOnPickUp){
-                                AudioSource.PlayClipAtPoint(pickupSound, transform.position);
-                                Destroy(gameObject);
-                            }
-                        }
-                        else playerOverlay.EnableWarningText("Upgrade already applied");
-                        break;
-                    default:
-                        break;
-                }
-            }
-            else playerOverlay.EnableWarningText("Firearm required for upgrade");
+            // int selectedWeapon = weaponSwitch.SelectedWeapon;
+            // GameObject selectedGun = inventory.weaponObjects[selectedWeapon];
+            // if (selectedGun != null && selectedGun.TryGetComponent(out Gun gun)){
+            //     switch (item.itemType){
+            //         case ItemType.item_upgrade_sight:
+            //             if (!gun.UpgradeRange)
+            //             {
+            //                 gun.UpgradeRange = true;
+            //                 if (destroyItemOnPickUp){
+            //                     AudioSource.PlayClipAtPoint(pickupSound, transform.position);
+            //                     Destroy(gameObject);
+            //                 }
+            //             }
+            //             else playerOverlay.EnableWarningText("Upgrade already applied");
+            //             break;
+            //         case ItemType.item_upgrade_barrel:
+            //             if (!gun.UpgradeDamage)
+            //             {
+            //                 gun.UpgradeDamage = true;
+            //                 if (destroyItemOnPickUp){
+            //                     AudioSource.PlayClipAtPoint(pickupSound, transform.position);
+            //                     Destroy(gameObject);
+            //                 }
+            //             }
+            //             else playerOverlay.EnableWarningText("Upgrade already applied");
+            //             break;
+            //         case ItemType.item_upgrade_laser:
+            //             if (!gun.UpgradeAccuracy)
+            //             {
+            //                 gun.UpgradeAccuracy = true;
+            //                 if (destroyItemOnPickUp){
+            //                     AudioSource.PlayClipAtPoint(pickupSound, transform.position);
+            //                     Destroy(gameObject);
+            //                 }
+            //             }
+            //             else playerOverlay.EnableWarningText("Upgrade already applied");
+            //             break;
+            //         default:
+            //             break;
+            //     }
+            // }
+            // else playerOverlay.EnableWarningText("Firearm required for upgrade");
+            return;
         }
         else
         {
@@ -85,30 +86,30 @@ public class PickUpItem : MonoBehaviour, IInteractable//, IOutline
         // outline = GetComponent<Outline>();
 
         SetItemRotation();
-        light.GetComponent<Light>();
-        light.range = .5f;
-        light.intensity = .5f;
-        switch (item.itemCategory)
-        {
-            case ItemCategory.ammo:
-                // outline.OutlineColor = Color.cyan;
-                light.color = Color.cyan;
-                break;
-            case ItemCategory.material:
-                // outline.OutlineColor = Color.green;
-                light.color = Color.green;
-                break;
-            case ItemCategory.glue:
-                // outline.OutlineColor = Color.yellow;
-                light.color = Color.yellow;
-                break;
-            case ItemCategory.upgrade:
-                // outline.OutlineColor = Color.magenta;
-                light.color = Color.magenta;
-                break;
-            default:
-                break;
-        }
+        // light.GetComponent<Light>();
+        // light.range = .5f;
+        // light.intensity = .5f;
+        // switch (item.itemCategory)
+        // {
+        //     case ItemCategory.ammo:
+        //         // outline.OutlineColor = Color.cyan;
+        //         light.color = Color.cyan;
+        //         break;
+        //     case ItemCategory.material:
+        //         // outline.OutlineColor = Color.green;
+        //         light.color = Color.green;
+        //         break;
+        //     case ItemCategory.glue:
+        //         // outline.OutlineColor = Color.yellow;
+        //         light.color = Color.yellow;
+        //         break;
+        //     case ItemCategory.upgrade:
+        //         // outline.OutlineColor = Color.magenta;
+        //         light.color = Color.magenta;
+        //         break;
+        //     default:
+        //         break;
+        // }
         // DisableOutline();
         // db = ItemDatabase.instance;
 

@@ -40,7 +40,7 @@ public class InventoryMenu : MonoBehaviour
         gameObject.SetActive(true);
         weaponInfo = newWeapon;
 
-        bool isWeaponAlreadyEquipped = weaponSwitch.selectedWeapon != (int)weaponInfo.weaponCategory;
+        bool isWeaponAlreadyEquipped = weaponSwitch.SelectedWeapon != (int)weaponInfo.weaponCategory;
         weaponObj = inventory.weaponObjects[(int)weaponInfo.weaponCategory];
         bool isWeaponAGun = weaponObj.TryGetComponent(out Gun gun);
         // bool isWeaponRepairable = weaponObj.TryGetComponent(out IRepairWeapon repair);
@@ -51,11 +51,11 @@ public class InventoryMenu : MonoBehaviour
         dropAllButton.gameObject.SetActive(false);
         addCraftingItemButton.gameObject.SetActive(false);
 
-        equipButton.gameObject.SetActive(isWeaponAlreadyEquipped && !playerInventory.isWorkshopOpen);
+        equipButton.gameObject.SetActive(isWeaponAlreadyEquipped && !playerInventory.IsWorkshopOpen);
         dropButton.gameObject.SetActive(true);
         unloadButton.gameObject.SetActive(isWeaponAGun && gun.WeaponAmount > 0);
         // repairButton.gameObject.SetActive(playerInventory.isWorkshopOpen && repair.CanRepair);
-        upgradeButton.gameObject.SetActive(playerInventory.isWorkshopOpen);
+        upgradeButton.gameObject.SetActive(playerInventory.IsWorkshopOpen);
     }
 
     #endregion

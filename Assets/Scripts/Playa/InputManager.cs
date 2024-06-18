@@ -11,8 +11,14 @@ public class InputManager : MonoBehaviour
     Transform weaponHolder;
     Inv_slot[] inventorySlots;
 
+    // player movement
     private Vector2 horizontalValue;
+    public Vector2 HorizontalValue => horizontalValue;
+
+    // mouse movement
     private float mouseValueX, mouseValueY, scrollValue, middleMouseValue;
+    public float MouseValueX => mouseValueX;
+    public float MouseValueY => mouseValueY;
 
     private const float INTERACT_RANGE = 2.5f;
     public float InteractRange => INTERACT_RANGE;
@@ -93,10 +99,10 @@ public class InputManager : MonoBehaviour
     public void OnHealth(InputAction.CallbackContext value){
         if (value.performed) weaponSwitch.SelectNewWeapon(3);
     }
-    public void OnUtility(InputAction.CallbackContext value){
+    public void OnGadget(InputAction.CallbackContext value){
         if (value.performed) weaponSwitch.SelectNewWeapon(4);
     }
-    // public void OnBuff(InputAction.CallbackContext value){
+    // public void OnAbility(InputAction.CallbackContext value){
     //     if (value.performed) weaponSwitch.SelectNewWeapon(5);
     // }
     

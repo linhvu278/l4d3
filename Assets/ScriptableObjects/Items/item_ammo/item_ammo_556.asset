@@ -17,5 +17,5 @@ MonoBehaviour:
   itemIcon: {fileID: 21300000, guid: bd275d0f2b2965541bb5ed9da60deee6, type: 3}
   itemCategory: 0
   itemType: 1
-  itemAmount: 40
+  itemAmount: 30
   itemRotation: {x: 0, y: 0, z: 0}

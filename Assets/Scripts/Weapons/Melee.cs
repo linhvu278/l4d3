@@ -84,7 +84,7 @@ public class Melee : MonoBehaviour, IPrimaryInput
     }
     private void StartSwinging(){ if (CanSwing()) swingCouroutine = StartCoroutine(Attack()); }
     private void StopSwinging(){ if (swingCouroutine != null) StopCoroutine(swingCouroutine); }
-    private bool CanSwing() { return !isEquiping && durability > 0 && pm.stamina >= meleeStamina; }
+    private bool CanSwing() { return !isEquiping && durability > 0 && pm.Stamina >= meleeStamina; }
     public void OnPrimaryStart(){ StartSwinging(); }
     public void OnPrimaryEnd(){ StopSwinging(); }
     private void OnEnable(){ StartCoroutine(Equip(melee.deployTime)); }

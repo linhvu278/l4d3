@@ -7,7 +7,7 @@ public class PickUpWeapon : MonoBehaviour, IInteractable, IWeaponAmount//, IOutl
     public Weapon Weapon => weapon;
 
     private Inventory inventory;
-    [SerializeField] private Light light;
+    // [SerializeField] private Light light;
     // private WeaponStats weaponStats;
     // private Outline outline;
     // private WeaponStats stats;
@@ -34,11 +34,11 @@ public class PickUpWeapon : MonoBehaviour, IInteractable, IWeaponAmount//, IOutl
     void Start(){
         inventory = Inventory.instance;
 
-        light.GetComponent<Light>();
-        light.range = .5f;
-        light.intensity = .5f;
-        if ((int)weapon.weaponCategory < 2) light.color = Color.red;
-        else light.color = Color.blue;
+        // light.GetComponent<Light>();
+        // light.range = .5f;
+        // light.intensity = .5f;
+        // if ((int)weapon.weaponCategory < 2) light.color = Color.red;
+        // else light.color = Color.blue;
         // if (TryGetComponent(out WeaponStats ws)) weaponStats = GetComponent<WeaponStats>();
         // db = ItemDatabase.instance;
 

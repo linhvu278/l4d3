@@ -21,7 +21,7 @@ public class Buff : BaseWeapon, IPrimaryInput
     void Start()
     {
         inventory = Inventory.instance;
-        playerManager = PlayerManager.playerManager;
+        playerManager = PlayerManager.instance;
         progressBar = ProgressBar.instance;
         animator = GetComponent<Animator>();
 
@@ -48,10 +48,10 @@ public class Buff : BaseWeapon, IPrimaryInput
             // Debug.Log("It's buffin' time.");
             switch (buff.buffType){
                 case BuffType.staminaBuff:
-                    playerManager.StaminaBuff(buffDuration);
+                    // playerManager.StaminaBuff(buffDuration);
                     break;
                 case BuffType.healthBuff:
-                    playerManager.HealthBuff(buffDuration);
+                    // playerManager.HealthBuff(buffDuration);
                     break;
             }
             IsBuffing(false);

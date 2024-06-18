@@ -17,7 +17,7 @@ public class Weapon : ScriptableObject
     // public Item weaponUpgradeType;
 }
 
-public enum WeaponCategory{ primary, secondary, throwable, health, utility, buff}
+public enum WeaponCategory{ primary, secondary, throwable, health, gadget, ability }
 
 // differentiate between many types of weapons
 // public enum WeaponType{

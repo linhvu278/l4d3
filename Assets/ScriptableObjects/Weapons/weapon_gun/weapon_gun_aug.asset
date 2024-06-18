@@ -17,13 +17,13 @@ MonoBehaviour:
   weaponIcon: {fileID: 21300000, guid: 56b3fe1cae8d8ad4388e1e1c8421c119, type: 3}
   weaponCategory: 0
   deployTime: 1
-  weaponAmount: 33
+  weaponAmount: 42
   craftingCost: 0
   weaponRotation: {x: 180, y: -90, z: 0}
   gunType: 0
   ammoType: 1
   fireMode: 2
-  damage: 34
+  damage: 33
   fireRate: 8.75
   inaccuracy: 1.2
   range: 80

@@ -36,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
     // [SerializeField] Transform cam;
 
     void Update(){
-        stamina = playerManager.stamina;
+        stamina = playerManager.Stamina;
 
         // player movement
         if (canMove){

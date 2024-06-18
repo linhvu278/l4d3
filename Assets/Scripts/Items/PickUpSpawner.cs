@@ -7,11 +7,12 @@ public class PickUpSpawner : MonoBehaviour
     [SerializeField] private Transform[] gunSpawnPositions, itemSpawnPositions;
     [SerializeField] private List<GameObject> spawnedWeapons = new List<GameObject>();
     [SerializeField] private List<GameObject> spawnedItems = new List<GameObject>();
+    public List<GameObject> placeholder = new List<GameObject>();
 
     void Start(){
         // gun spawns
         for (int i = 0; i < gunSpawnPositions.Length; i++){
-            GameObject weaponToSpawn = Instantiate(db.weaponPickups[i+1], gunSpawnPositions[i].position, gunSpawnPositions[i].rotation);
+            GameObject weaponToSpawn = Instantiate(placeholder[i], gunSpawnPositions[i].position, gunSpawnPositions[i].rotation);
             weaponToSpawn.GetComponent<PickUpWeapon>().SpawnWeaponAmount();
             if (weaponToSpawn.TryGetComponent(out WeaponStats ws)) ws.SetWeaponUpgrades(false, false, false);
             // weaponToSpawnStats.durability = db.gunList[i].maxDurability;
@@ -21,14 +22,16 @@ public class PickUpSpawner : MonoBehaviour
         // item spawns
         for (int i = 0; i < itemSpawnPositions.Length; i++){
             // select a random item to spawn
-            int randomIndex = Random.Range(1, db.itemList.Count);
+            int limit = db.itemList.Count;
+            int randomIndex = Random.Range(0, limit - 1);
 
             // select a random amount of item to spawn
             // int minAmount = db.itemList[randomIndex].minimumAmount;
-            int itemAmount = db.itemList[randomIndex].itemAmount;
+            // int itemAmount = db.itemList[randomIndex].itemAmount;
 
             GameObject itemToSpawn = Instantiate(db.itemPickupsList[randomIndex], itemSpawnPositions[i].position, itemSpawnPositions[i].rotation);
-            itemToSpawn.GetComponent<PickUpItem>().ItemAmount = itemAmount;
+            // itemToSpawn.GetComponent<PickUpItem>().ItemAmount = itemAmount;
+            itemToSpawn.GetComponent<PickUpItem>().SpawnItemAmount();
             spawnedItems.Add(itemToSpawn);
         }
     }
