@@ -18,7 +18,7 @@ MonoBehaviour:
   weaponCategory: 3
   deployTime: 1
   weaponAmount: 1
-  craftingCost: 25
+  craftingCost: 20
   weaponRotation: {x: 0, y: 0, z: 0}
   healAmount: 25
   healTime: 1

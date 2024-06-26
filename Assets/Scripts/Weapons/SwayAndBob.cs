@@ -1,21 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
+// using System.Collections;
+// using System.Collections.Generic;
 using UnityEngine;
 
 public class SwayAndBob : MonoBehaviour
 {
-    GameObject playa;
-    InputManager input;
+    [SerializeField] private float smoothness, swayMultiplier;
+    private GameObject playa;
+    private InputManager input;
 
-    Vector2 walkInput, lookInput;
+    // Vector2 walkInput, lookInput;
+    float valueX, valueY;
 
     private void GetInput(){
-        walkInput.x = input.HorizontalValue.x;
-        walkInput.y = input.HorizontalValue.y;
-        walkInput = walkInput.normalized;
+        // walkInput.x = input.HorizontalValue.x;
+        // walkInput.y = input.HorizontalValue.y;
+        // walkInput = walkInput.normalized;
 
-        lookInput.x = input.MouseValueX;
-        lookInput.y = input.MouseValueY;
+        valueX = input.MouseValueX * swayMultiplier;
+        valueY = input.MouseValueY * swayMultiplier;
+
+        Quaternion rotationY = Quaternion.AngleAxis(-valueY, Vector3.right);
+        Quaternion rotationX = Quaternion.AngleAxis(valueX, Vector3.up);
+        Quaternion targetRotation = rotationX * rotationY;
+
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, smoothness * Time.deltaTime);
     }
     void Update(){
         GetInput();

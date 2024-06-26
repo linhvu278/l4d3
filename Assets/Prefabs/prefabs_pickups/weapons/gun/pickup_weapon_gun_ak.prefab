@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2594296285122628957}
   - component: {fileID: 2594296285122628958}
   - component: {fileID: 2594296285122628930}
-  - component: {fileID: 4784901123537801195}
+  - component: {fileID: -376729007059921671}
   m_Layer: 8
   m_Name: pickup_weapon_gun_ak
   m_TagString: Gun
@@ -131,9 +131,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: {fileID: 11400000, guid: 717aadcc14766834d96608ba1929f86c, type: 2}
-  weaponAmount: 25
-  light: {fileID: 0}
---- !u!114 &4784901123537801195
+  weaponAmount: 24
+--- !u!114 &-376729007059921671
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -145,9 +144,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ecc46638c061d4fb437cc00b6b9243, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sight: {fileID: 6047162821569490812}
-  barrel: {fileID: 8904824005069725095}
-  laser: {fileID: 9124982607165046324}
+  sight: {fileID: 0}
+  barrel: {fileID: 0}
+  laser: {fileID: 0}
   isSightUpgraded: 0
   isBarrelUpgraded: 0
   isLaserUpgraded: 0

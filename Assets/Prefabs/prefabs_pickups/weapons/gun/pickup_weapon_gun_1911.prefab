@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4519350411878259035}
   - component: {fileID: 4519350411878259036}
   - component: {fileID: 4519350411878259037}
-  - component: {fileID: 1412006013203644300}
+  - component: {fileID: 6258685743659188228}
   m_Layer: 8
   m_Name: pickup_weapon_gun_1911
   m_TagString: Gun
@@ -139,8 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon: {fileID: 11400000, guid: 5464196387d46d74d8655b63db37a5b3, type: 2}
   weaponAmount: 7
-  light: {fileID: 0}
---- !u!114 &1412006013203644300
+--- !u!114 &6258685743659188228
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,9 +151,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ecc46638c061d4fb437cc00b6b9243, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sight: {fileID: 2790779747418782858}
-  barrel: {fileID: 8636308029821177928}
-  laser: {fileID: 172720346458759895}
+  sight: {fileID: 0}
+  barrel: {fileID: 0}
+  laser: {fileID: 0}
   isSightUpgraded: 0
   isBarrelUpgraded: 0
   isLaserUpgraded: 0

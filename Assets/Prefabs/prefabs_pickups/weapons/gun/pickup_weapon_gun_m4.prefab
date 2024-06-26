@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: 1355631087765828775}
   - component: {fileID: 1355631087765828776}
   - component: {fileID: 1355631087765828777}
-  - component: {fileID: 172804024861640728}
+  - component: {fileID: 1271095176841299302}
   m_Layer: 8
   m_Name: pickup_weapon_gun_m4
   m_TagString: Gun
@@ -169,8 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon: {fileID: 11400000, guid: 7fad09a2fa4204749a65c65404010cf3, type: 2}
   weaponAmount: 30
-  light: {fileID: 0}
---- !u!114 &172804024861640728
+--- !u!114 &1271095176841299302
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,9 +181,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ecc46638c061d4fb437cc00b6b9243, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sight: {fileID: 3689249055372963526}
-  barrel: {fileID: 3680724799340080687}
-  laser: {fileID: 5267413935837508677}
+  sight: {fileID: 0}
+  barrel: {fileID: 0}
+  laser: {fileID: 0}
   isSightUpgraded: 0
   isBarrelUpgraded: 0
   isLaserUpgraded: 0
