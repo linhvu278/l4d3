@@ -28,7 +28,7 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
         bc.enabled = false;
         switch (crateType){
             case CrateType.weapon_crate:
-                spawnObjects.AddRange(db.weaponPickups.Where(obj => obj != null && obj.tag == "Gun"));
+                spawnObjects.AddRange(db.weaponPickups.Where(obj => obj.tag == "Gun"));
                 for (int i = 0; i < spawnPositions.Count; i++){
                     int rnd = Random.Range(0, spawnObjects.Count);
                     GameObject wp = Instantiate(spawnObjects[rnd], spawnPositions[i].position, Quaternion.identity);

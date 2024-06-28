@@ -17,9 +17,13 @@ public class PlayerManager : MonoBehaviour, IDamage, IFire
 
     [SerializeField] AudioSource outOfStaminaSound;
 
-    public float health { get; set; }
-    public float maxHealth { get; set; }
+    // player health
+    private float health;
+    public float Health { get => health; set => health = value; }
+    private float maxHealth;
+    public float MaxHealth { get => maxHealth; }
 
+    // player stamina
     private float stamina;
     public float Stamina { get => stamina ; set => stamina = value; }
     private float maxStamina;

@@ -3,6 +3,7 @@ using UnityEngine;
 public class AmmoBoxObject : MonoBehaviour, IInteractable
 {
     private int refillAmount;
+    private const int REFILL_AMOUNT = 8;
     private bool canRefillAmmo;
     private float delayTime;
     [SerializeField] private AudioClip deploySound, refillSound;
@@ -12,17 +13,18 @@ public class AmmoBoxObject : MonoBehaviour, IInteractable
     ItemDatabase db;
     PlayerOverlay playerOverlay;
 
-    // Start is called before the first frame update
+    void OnEnable(){
+        refillAmount = REFILL_AMOUNT;
+        canRefillAmmo = true;
+        delayTime = 1f;
+    }
+
     void Start()
     {
         inventory = Inventory.instance;
         weaponSwitch = WeaponSwitch.instance;
         playerOverlay = PlayerOverlay.instance;
         db = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemDatabase>();
-
-        refillAmount = 10;
-        canRefillAmmo = true;
-        delayTime = 1f;
 
         // AudioSource.PlayClipAtPoint(deploySound, transform.position);
     }

@@ -15,7 +15,7 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
     Animator animator;
     Inventory inventory;
     // GameObject playa;
-    PlayerManager playerManager;
+    PlayerManager pm;
     PlayerMovement playerMovement;
     ProgressBar progressBar;
 
@@ -37,7 +37,9 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
             IsHealing(false);
             // playerMovement.CanMove = true;
             // playerMovement.CanJump = true;
-            playerManager.HealthRegen(healAmount);
+            float medkitHealAmount = (pm.MaxHealth - pm.Health) * health.healAmount / 100f;
+            healAmount = canHealWhileMoving ? health.healAmount : medkitHealAmount;
+            pm.HealthRegen(healAmount);
             healthAmount--;
             if (healthAmount == 0) inventory.RemoveWeapon(health);
         }
@@ -59,7 +61,7 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
         playerMovement.CanJump = !value || canHealWhileMoving;
     }
 
-    private bool CanHeal => !isHealing && !isEquiping && playerManager.health < playerManager.maxHealth;
+    private bool CanHeal => !isHealing && !isEquiping && pm.Health < pm.MaxHealth;
 
     public int WeaponAmount{
         get { return healthAmount; }
@@ -79,15 +81,14 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
     void Start(){
         inventory = Inventory.instance;
         // playa = GameObject.FindGameObjectWithTag("Player");
-        // playerManager = playa.GetComponent<PlayerManager>();
+        // pm = playa.GetComponent<PlayerManager>();
         // playerMovement = playa.GetComponent<PlayerMovement>();
-        playerManager = PlayerManager.instance;
+        pm = PlayerManager.instance;
         playerMovement = PlayerMovement.instance;
         progressBar = ProgressBar.instance;
         animator = GetComponent<Animator>();
 
         healTime = health.healTime;
-        healAmount = health.healAmount;
         canHealWhileMoving = health.canHealWhileMoving;
     }
 }

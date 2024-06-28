@@ -10066,16 +10066,9 @@ MonoBehaviour:
   weaponPickups:
   - {fileID: 2594296285122628951, guid: 4a0d86f16f8bf9043b3ab7a4aea1d876, type: 3}
   - {fileID: 3329321704512905657, guid: 3a9088adbb0c8b54b8f9c275afec5fb8, type: 3}
-  - {fileID: 0}
   - {fileID: 9045611103694554023, guid: f9fc7e3c8c5f78348a424eed449e76d2, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 2012521530251159050, guid: 08f3c55cbf532e543bebcb267723edd7, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 167757405029633089, guid: 2b72ba255cd6ed34fb62a49f2026668e, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 2752397938139639610, guid: 27487a89aa3969441ab6bb047fe19ee0, type: 3}
   - {fileID: 8266848680791994300, guid: c7772956fe3e4e940840a5cb8b3c37d3, type: 3}
   - {fileID: 1505023694829768160, guid: 613bd80e1eaa08049bdb656f478241b6, type: 3}
