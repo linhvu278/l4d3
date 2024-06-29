@@ -6,11 +6,14 @@ using System.Linq;
 public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
 {
     ItemDatabase db;
+    GameObject playa;
+    Inventory inv;
     ProgressBar progressBar;
-    PlayerMovement playerMovement;
+    PlayerMovement pMovement;
     BoxCollider bc;
 
     public CrateType crateType;
+    private const int UNLOCK_VALUE = 150;
     private const float OPEN_DURATION = 1f;
     private Coroutine openCoroutine;
     [SerializeField] private GameObject crateLid, crateLock;
@@ -59,8 +62,10 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
         crateLock.SetActive(isLocked);
     }
     public void OnInteractStart(){
-        progressBar.SetProgressBar(OpenCrateString, OPEN_DURATION);
-        openCoroutine = StartCoroutine(OpenCrate());
+        if (inv.GetItemAmount(ItemType.item_glue) >= UNLOCK_VALUE){
+            progressBar.SetProgressBar(OpenCrateString, OPEN_DURATION);
+            openCoroutine = StartCoroutine(OpenCrate());
+        }
     }
     public void OnInteractEnd(){ CancelOpenCrate(); }
     private IEnumerator OpenCrate(){
@@ -71,6 +76,7 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
             IsOpening(false);
             SpawnItems();
             isCrateOpened = true;
+            inv.SetItemAmount(ItemType.item_glue, -UNLOCK_VALUE);
         }
     }
     private void CancelOpenCrate(){
@@ -83,8 +89,8 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
     private void IsOpening(bool value){
         isOpening = value;
         progressBar.ToggleProgressBar(value);
-        playerMovement.CanMove = !value;
-        playerMovement.CanJump = !value;
+        pMovement.CanMove = !value;
+        pMovement.CanJump = !value;
     }
     public bool IsLocked { get => isLocked; }
     private bool CanOpen => !(isOpening || isCrateOpened || isLocked);
@@ -98,7 +104,10 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
     void Start(){
         db = ItemDatabase.instance;
         progressBar = ProgressBar.instance;
-        playerMovement = PlayerMovement.instance;
+        playa = GameObject.FindGameObjectWithTag("Player");
+        // pMovement = PlayerMovement.instance;
+        pMovement = playa.GetComponent<PlayerMovement>();
+        inv = playa.GetComponent<Inventory>();
         bc = GetComponent<BoxCollider>();
 
         isCrateOpened = false;
