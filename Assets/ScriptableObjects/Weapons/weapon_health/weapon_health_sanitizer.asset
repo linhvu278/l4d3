@@ -20,6 +20,6 @@ MonoBehaviour:
   weaponAmount: 1
   craftingCost: 20
   weaponRotation: {x: 0, y: 0, z: 0}
-  healAmount: 25
+  healAmount: 20
   healTime: 1
   canHealWhileMoving: 1
