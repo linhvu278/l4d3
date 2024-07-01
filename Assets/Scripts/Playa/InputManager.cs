@@ -20,7 +20,9 @@ public class InputManager : MonoBehaviour
     public float MouseValueX => mouseValueX;
     public float MouseValueY => mouseValueY;
 
-    private const float INTERACT_RANGE = 2.5f;
+    RaycastHit hit;
+    Transform cam;
+    private const float INTERACT_RANGE = 2f;
     public float InteractRange => INTERACT_RANGE;
 
     public void OnPlayerMovement(InputAction.CallbackContext value){
@@ -43,8 +45,6 @@ public class InputManager : MonoBehaviour
         if (value.started) playerMovement.Crouch();
     }
     public void OnInteract(InputAction.CallbackContext value){
-        RaycastHit hit;
-        Transform cam = Camera.main.transform;
         if (Physics.Raycast(cam.position, cam.forward, out hit, INTERACT_RANGE)){
             if (hit.collider.TryGetComponent(out IInteractable interactable)){
                 if (value.started) interactable.OnInteractStart();
@@ -115,5 +115,7 @@ public class InputManager : MonoBehaviour
 
         weaponHolder = weaponSwitch.WeaponHolder;
         inventorySlots = weaponHolder.GetComponentsInChildren<Inv_slot>();
+
+        cam = Camera.main.transform;
     }
 }

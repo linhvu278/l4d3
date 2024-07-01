@@ -27,20 +27,20 @@ public class UtilityToolkit : MonoBehaviour, IWeaponAmount, IPrimaryInput/*, ISe
     private int weaponAmount;
     public int WeaponAmount { get => weaponAmount; set => weaponAmount = value; }
 
-    private IEnumerator StartUnlock(){
-        if (Physics.Raycast(cam.position, cam.forward, out hit, inputManager.InteractRange)){
-            if (hit.transform.TryGetComponent(out IUnlock unlock)){
-                if (unlock.IsLocked){
-                    IsUnlocking(true);
-                    unlockSound.Play();
-                    yield return new WaitForSeconds(useTime);
-                    unlock.Unlock();
-                    IsUnlocking(false);
-                    inventory.RemoveWeapon(toolkit);
-                }
-            }
-        }
-    }
+    // private IEnumerator StartUnlock(){
+    //     if (Physics.Raycast(cam.position, cam.forward, out hit, inputManager.InteractRange)){
+    //         if (hit.transform.TryGetComponent(out IUnlock unlock)){
+    //             if (unlock.IsLocked){
+    //                 IsUnlocking(true);
+    //                 unlockSound.Play();
+    //                 yield return new WaitForSeconds(useTime);
+    //                 unlock.Unlock();
+    //                 IsUnlocking(false);
+    //                 inventory.RemoveWeapon(toolkit);
+    //             }
+    //         }
+    //     }
+    // }
     private void CancelUnlock(){
         if (unlockCoroutine != null){
             StopCoroutine(unlockCoroutine);
@@ -56,7 +56,7 @@ public class UtilityToolkit : MonoBehaviour, IWeaponAmount, IPrimaryInput/*, ISe
     }
     public void OnPrimaryStart(){
         progressBar.SetProgressBar(unlockText, useTime);
-        unlockCoroutine = StartCoroutine(StartUnlock());
+        // unlockCoroutine = StartCoroutine(StartUnlock());
     }
     public void OnPrimaryEnd() { CancelUnlock(); }
     IEnumerator Equip(float deployTime){

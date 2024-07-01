@@ -117,6 +117,7 @@ public class PickUpItem : MonoBehaviour, IInteractable//, IOutline
     }
     public void OnInteractStart() { ItemPickUp(); }
     public void OnInteractEnd() {}
+    public string InteractText() => "Press E to pick up " + item.itemName;
     // public void EnableOutline() { outline.OutlineWidth = 10f; }
     // public void DisableOutline() { outline.OutlineWidth = 0f; }
 }

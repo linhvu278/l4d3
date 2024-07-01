@@ -12,4 +12,5 @@ public class WorkshopManager : MonoBehaviour, IInteractable
 
     public void OnInteractStart(){ playerInventory.ToggleInventory(true); }
     public void OnInteractEnd(){}
+    public string InteractText() => "Press E to open workshop screen";
 }

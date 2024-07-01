@@ -14,7 +14,7 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
 
     public CrateType crateType;
     private const int UNLOCK_VALUE = 150;
-    private const float OPEN_DURATION = 1f;
+    private const float OPEN_DURATION = 1.5f;
     private Coroutine openCoroutine;
     [SerializeField] private GameObject crateLid, crateLock;
     [SerializeField] private AudioSource openingSound, crateOpenedSound;
@@ -68,6 +68,7 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
         }
     }
     public void OnInteractEnd(){ CancelOpenCrate(); }
+    public string InteractText() => "Hold E to open crate (Cost " + UNLOCK_VALUE + " glue)";
     private IEnumerator OpenCrate(){
         if (CanOpen){
             IsOpening(true);

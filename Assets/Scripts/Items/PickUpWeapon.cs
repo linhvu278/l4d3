@@ -4,7 +4,7 @@ public class PickUpWeapon : MonoBehaviour, IInteractable, IWeaponAmount//, IOutl
 {
     [SerializeField] private Weapon weapon;
     [SerializeField] private int weaponAmount;
-    public Weapon Weapon => weapon;
+    // public Weapon Weapon => weapon;
 
     private Inventory inventory;
     // [SerializeField] private Light light;
@@ -47,6 +47,7 @@ public class PickUpWeapon : MonoBehaviour, IInteractable, IWeaponAmount//, IOutl
 
     public void OnInteractStart() => WeaponPickUp();
     public void OnInteractEnd() {}
+    public string InteractText() => "Press E to pick up " + weapon.weaponName;
     // public void EnableOutline(){ outline.OutlineWidth = 10f; }
     // public void DisableOutline(){ outline.OutlineWidth = 0f; }
 }

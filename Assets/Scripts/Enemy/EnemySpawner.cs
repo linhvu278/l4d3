@@ -14,9 +14,6 @@ public class EnemySpawner : MonoBehaviour, IInteractable
     Vector3 boundsMin, boundsMax;
     [SerializeField] BoxCollider boxCollider;
 
-    public void OnInteractStart() { SpawnEnemy(); }
-    public void OnInteractEnd(){}
-
     // Start is called before the first frame update
     void Start()
     {
@@ -66,4 +63,8 @@ public class EnemySpawner : MonoBehaviour, IInteractable
             Instantiate(enemyObject, new Vector3(Random.Range(boundsMin.x, boundsMax.x), 1, Random.Range(boundsMin.z, boundsMax.z)), Quaternion.identity);
         }
     }
+
+    public void OnInteractStart() { SpawnEnemy(); }
+    public void OnInteractEnd(){}
+    public string InteractText() => "Press E to spawn an enemy";
 }

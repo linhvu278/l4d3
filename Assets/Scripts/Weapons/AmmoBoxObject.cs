@@ -51,5 +51,5 @@ public class AmmoBoxObject : MonoBehaviour, IInteractable
 
     public void OnInteractStart() { RefillAmmo(); }
     public void OnInteractEnd(){}
-    public int RefillAmount => refillAmount;
+    public string InteractText() => "Refills left: " + refillAmount;
 }
