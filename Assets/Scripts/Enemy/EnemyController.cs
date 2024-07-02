@@ -106,7 +106,7 @@ public class EnemyController : MonoBehaviour
 
         // attacking the target
         if (!isAttacking){
-            if (target.TryGetComponent(out IDamage dmg)) target.GetComponent<IDamage>().TakeDamage(em.GetAttackDamage());
+            if (target.TryGetComponent(out IDamage dmg)) target.GetComponent<IDamage>().TakeDamage(em.AttackDamage);
 
             isAttacking = true;
             Invoke(nameof(ResetAttack), ATTACK_SPEED);
