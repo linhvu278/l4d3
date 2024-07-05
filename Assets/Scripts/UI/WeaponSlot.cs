@@ -27,7 +27,8 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 
     private const string dropWeaponString = "Drop",
                         unloadWeaponString = "Unload",
-                        upgradeWeaponString = "Upgrade";
+                        upgradeWeaponString = "Upgrade",
+                        activateAbilityString = "Activate ability";
 
     public void AddWeaponSlot(Weapon newWeapon){
         weapon = newWeapon;
@@ -79,14 +80,14 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
         //     upgradeIconGroup.GetChild(2).GetComponent<Image>().enabled = upg.UpgradeAccuracy;
     }
     public void GetUpgradeIconDelegate(){
-        if (inventory.weaponObjects[weaponIndex].TryGetComponent(out Gun gun)){
-            gun.onSightUpgradeChange += GetWeaponSightUpgradeIcon;
-            gun.onBarrelUpgradeChange += GetWeaponBarrelUpgradeIcon;
-            gun.onLaserUpgradeChange += GetWeaponLaserUpgradeIcon;
-        }
-        GetWeaponSightUpgradeIcon();
-        GetWeaponBarrelUpgradeIcon();
-        GetWeaponLaserUpgradeIcon();
+        // if (inventory.weaponObjects[weaponIndex].TryGetComponent(out Gun gun)){
+        //     gun.onSightUpgradeChange += GetWeaponSightUpgradeIcon;
+        //     gun.onBarrelUpgradeChange += GetWeaponBarrelUpgradeIcon;
+        //     gun.onLaserUpgradeChange += GetWeaponLaserUpgradeIcon;
+        // }
+        // GetWeaponSightUpgradeIcon();
+        // GetWeaponBarrelUpgradeIcon();
+        // GetWeaponLaserUpgradeIcon();
     }
     public void OnPointerClick(PointerEventData eventData){
         if (weaponButton.enabled == true){
@@ -114,12 +115,25 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
         if (weaponButton.enabled == true){
             // if (IsWeaponUpgradable) playerInventory.EnableInputGuide(upgradeWeaponString, dropWeaponString);
             // else playerInventory.EnableInputGuide(unloadWeaponString, dropWeaponString);
+
+            // int weaponIndex = (int)weapon.weaponCategory;
+            // if (weaponIndex < 2){
+            //     // if (playerInventory.IsWorkshopOpen) playerInventory.EnableInputGuide(upgradeWeaponString, dropWeaponString);
+            //     /*else*/ playerInventory.EnableInputGuide(dropWeaponString, unloadWeaponString);
+            // } else {
+            //     playerInventory.EnableInputGuide(dropWeaponString, null);
+            // }
+
             int weaponIndex = (int)weapon.weaponCategory;
-            if (weaponIndex < 2){
-                // if (playerInventory.IsWorkshopOpen) playerInventory.EnableInputGuide(upgradeWeaponString, dropWeaponString);
-                /*else*/ playerInventory.EnableInputGuide(dropWeaponString, unloadWeaponString);
-            } else {
-                playerInventory.EnableInputGuide(dropWeaponString, null);
+            switch (weaponIndex){
+                case 5:
+                    playerInventory.EnableLMBInputGuide(activateAbilityString);
+                    break;
+                case < 5:
+                    playerInventory.EnableLMBInputGuide(dropWeaponString);
+                    if (weaponIndex > 1) playerInventory.EnableRMBInputGuide(null);
+                    else playerInventory.EnableRMBInputGuide(unloadWeaponString);
+                    break;
             }
         }
     }

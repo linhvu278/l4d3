@@ -66,7 +66,7 @@ public class PlayerInventory : MonoBehaviour
     private void SetCraftButton(Weapon craftedWeapon){
         if (craftedWeapon != null){
             craftWeaponButton.gameObject.SetActive(true);
-            newCraftingCost = isWorkshopOpen ? craftedWeapon.craftingCost * 2 / 5 : craftedWeapon.craftingCost;
+            newCraftingCost = isWorkshopOpen ? craftedWeapon.craftingCost / 4 : craftedWeapon.craftingCost;
             craftButtonText.text = string.Format("Craft {0} (Cost {1} glue)", craftedWeapon.weaponName, newCraftingCost);
             // craftWeaponButton.enabled = inventory.GetItemAmount(ItemType.item_glue) >= newCraftingCost;
             // EnableCraftButton();
@@ -135,6 +135,18 @@ public class PlayerInventory : MonoBehaviour
         }
         if (inputRMB != null){
             inputGuideRMB.text = "RMB: " + inputRMB;
+            inputGuideRMB.enabled = true;
+        }
+    }
+    public void EnableLMBInputGuide(string value){
+        if (value != null){
+            inputGuideLMB.text = "LMB: " + value;
+            inputGuideLMB.enabled = true;
+        }
+    }
+    public void EnableRMBInputGuide(string value){
+        if (value != null){
+            inputGuideRMB.text = "RMB: " + value;
             inputGuideRMB.enabled = true;
         }
     }
