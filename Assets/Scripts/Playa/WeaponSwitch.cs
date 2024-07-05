@@ -14,7 +14,7 @@ public class WeaponSwitch : MonoBehaviour
     }
     private int previousSelectedWeapon, lastSelectedWeapon;
     private float scrollInput;
-    [SerializeField] Transform weaponHolder;
+    [SerializeField] private Transform weaponHolder;
     public Transform WeaponHolder => weaponHolder;
     // public GameObject currentWeapon;
 
@@ -22,82 +22,64 @@ public class WeaponSwitch : MonoBehaviour
     {
         scrollInput = scrollValue;
     }
-    public void NextWeapon()
-    {
+    public void NextWeapon(){
         lastSelectedWeapon = selectedWeapon;
-        foreach (Weapon weapon in inventory.weaponInventory)
-        {
+        foreach (Weapon weapon in inventory.weaponInventory){
             selectedWeapon += 1;
-            if (selectedWeapon > weaponHolder.childCount - 1)
-            {
-                selectedWeapon = 0;
-            }
-            if (inventory.weaponInventory[selectedWeapon] != null)
-            {
-                if (inventory.weaponInventory[selectedWeapon] != inventory.weaponInventory[previousSelectedWeapon])
-                {
+            if (selectedWeapon > weaponHolder.childCount - 1) selectedWeapon = 0;
+
+            // if (inventory.weaponInventory[selectedWeapon] != null){
+            bool isWeaponInLoadout = weaponHolder.GetChild(selectedWeapon).GetComponent<Inv_slot>().IsWeaponInLoadout;
+            if (isWeaponInLoadout){
+                if (inventory.weaponInventory[selectedWeapon] != inventory.weaponInventory[previousSelectedWeapon]){
                     SelectWeapon(Array.IndexOf(inventory.weaponInventory, weapon));
                     return;
-                }
-                else return;
+                } else return;
             }
         }
     }
-    public void PreviousWeapon()
-    {
+    public void PreviousWeapon(){
         lastSelectedWeapon = selectedWeapon;
-        foreach (Weapon weapon in inventory.weaponInventory)
-        {
+        foreach (Weapon weapon in inventory.weaponInventory){
             selectedWeapon -= 1;
-            if (selectedWeapon < 0 )
-            {
-                selectedWeapon = weaponHolder.childCount - 1;
-            }
-            if (inventory.weaponInventory[selectedWeapon] != null)
-            {
-                if (inventory.weaponInventory[selectedWeapon] != inventory.weaponInventory[previousSelectedWeapon])
-                {
+            if (selectedWeapon < 0 ) selectedWeapon = weaponHolder.childCount - 1;
+            
+            // if (inventory.weaponInventory[selectedWeapon] != null){
+            bool isWeaponInLoadout = weaponHolder.GetChild(selectedWeapon).GetComponent<Inv_slot>().IsWeaponInLoadout;
+            if (isWeaponInLoadout){
+                if (inventory.weaponInventory[selectedWeapon] != inventory.weaponInventory[previousSelectedWeapon]){
                     SelectWeapon(Array.IndexOf(inventory.weaponInventory, weapon));
                     return;
-                }
-                else return;
+                } else return;
             }
         }
     }
-    public void SelectWeapon(int newSelectedWeapon)
-    {
-        foreach(Transform weapon in weaponHolder)
-        {
-            weapon.gameObject.SetActive(false);
-        }
+    public void SelectWeapon(int newSelectedWeapon){
+        foreach(Transform weapon in weaponHolder) weapon.gameObject.SetActive(false);
+        
         weaponHolder.GetChild(newSelectedWeapon).gameObject.SetActive(true);
         // currentWeapon = inventory.weaponObjects[selectedWeapon];
         LoadoutUI.instance.ChangeHUDColor(selectedWeapon);
     }
     //switch to a new weapon directly
-    public void SelectNewWeapon(int directlySelectedWeapon)
-    {
+    public void SelectNewWeapon(int directlySelectedWeapon){
         lastSelectedWeapon = selectedWeapon;
+
         // make sure HUD changes color when primary weapon is picked up for the 1st time
-        if (directlySelectedWeapon == selectedWeapon)
-        {
+        if (directlySelectedWeapon == selectedWeapon){
             LoadoutUI.instance.ChangeHUDColor(directlySelectedWeapon);
             return;
         }
             
         // prevent re-equipping already equipped weapon/item    
-        if (inventory.weaponInventory[directlySelectedWeapon] != null)
-        {
-            foreach(Transform weapon in weaponHolder)
-            {
-                weapon.gameObject.SetActive(false);
-            }
+        if (inventory.weaponInventory[directlySelectedWeapon] != null){
+            foreach(Transform weapon in weaponHolder) weapon.gameObject.SetActive(false);
+            
             selectedWeapon = directlySelectedWeapon;
             weaponHolder.GetChild(selectedWeapon).gameObject.SetActive(true);
             // currentWeapon = inventory.weaponObjects[selectedWeapon];
             LoadoutUI.instance.ChangeHUDColor(selectedWeapon);
-        }
-        else return;
+        } else return;
     }
     public void SelectLastWeapon(){
         if (selectedWeapon != lastSelectedWeapon){

@@ -44,4 +44,5 @@ public class Inv_slot : MonoBehaviour
         attack2 = null;
         reload = null;
     }
+    public bool IsWeaponInLoadout => weaponObj != null;
 }
