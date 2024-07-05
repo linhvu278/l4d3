@@ -61,14 +61,6 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
         // Destroy(crateLock);
         crateLock.SetActive(isLocked);
     }
-    public void OnInteractStart(){
-        if (inv.GetItemAmount(ItemType.item_glue) >= UNLOCK_VALUE){
-            progressBar.SetProgressBar(OpenCrateString, OPEN_DURATION);
-            openCoroutine = StartCoroutine(OpenCrate());
-        }
-    }
-    public void OnInteractEnd(){ CancelOpenCrate(); }
-    public string InteractText() => "Hold E to open crate (Cost " + UNLOCK_VALUE + " glue)";
     private IEnumerator OpenCrate(){
         if (CanOpen){
             IsOpening(true);
@@ -95,13 +87,20 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
     }
     public bool IsLocked { get => isLocked; }
     private bool CanOpen => !(isOpening || isCrateOpened || isLocked);
-    private string OpenCrateString => crateType switch
-    {
+    private string OpenCrateString => crateType switch {
         CrateType.weapon_crate => "Opening weapons crate...",
         CrateType.ammunition_crate => "Opening ammunition crate...",
         CrateType.support_crate => "Opening medical crate...",
         _ => null,
     };
+    public void OnInteractStart(){
+        if (inv.GetItemAmount(ItemType.item_glue) >= UNLOCK_VALUE){
+            progressBar.SetProgressBar(OpenCrateString, OPEN_DURATION);
+            openCoroutine = StartCoroutine(OpenCrate());
+        }
+    }
+    public void OnInteractEnd(){ CancelOpenCrate(); }
+    public string InteractText() => "Hold E to open crate (Cost " + UNLOCK_VALUE + " glue)";
     void Start(){
         db = ItemDatabase.instance;
         progressBar = ProgressBar.instance;
