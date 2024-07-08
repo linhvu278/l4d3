@@ -1,7 +1,4 @@
-// using System.Collections;
-// using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -37,6 +34,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update(){
         stamina = playerManager.Stamina;
+        canJump = isGrounded && stamina >= JUMP_STAMINA;
+        canSprint = canMove && isGrounded && stamina > 0;
 
         // player movement
         if (canMove){
@@ -57,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
         // player jumping
         // canJump = isGrounded && stamina >= JUMP_STAMINA;
         if (isJumping){
-            if (CanJump){
+            if (canJump){
                 velocity.y = Mathf.Sqrt(jumpHeight * -1f * gravity);
                 playerManager.StaminaDrain(JUMP_STAMINA);
             }
@@ -65,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // player sprinting
-        if (isSprinting && CanSprint && movementInput.y > 0){
+        if (isSprinting && canSprint && movementInput.y > 0){
             currentSpeed = SPRINT_SPEED;
             playerManager.StaminaDrain(SPRINT_STAMINA * Time.deltaTime);
         } else {
@@ -92,15 +91,15 @@ public class PlayerMovement : MonoBehaviour
     public bool IsSprinting => isSprinting;
     // public bool IsJumping => isJumping;
     public bool IsMoving => movementInput != new Vector2(0,0);
-    public bool CanMove { get => canMove; set => canMove = value; }
-    public bool CanSprint => canMove && isGrounded && stamina > 0;
-    public bool CanJump { get => isGrounded && stamina >= JUMP_STAMINA && canJump; set => canJump = value; }
+    // public bool CanMove { get => canMove; set => canMove = value; }
+    // public bool CanSprint => canMove && isGrounded && stamina > 0;
+    // public bool CanJump { get => isGrounded && stamina >= JUMP_STAMINA && canJump; set => canJump = value; }
 
     void Start(){
         playerManager = GetComponent<PlayerManager>();
 
-        CanMove = true;
-        CanJump = true;
+        // CanMove = true;
+        // CanJump = true;
     }
     void Awake(){
         if (instance != null){
@@ -110,8 +109,8 @@ public class PlayerMovement : MonoBehaviour
         instance = this;
     }
     
-    public void ReceiveInput(Vector2 horizontalValue)
-    {
+    public void ReceiveInput(Vector2 horizontalValue, bool value){
         movementInput = horizontalValue;
+        canMove = value;
     }
 }

@@ -14,9 +14,9 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
 
     Animator animator;
     Inventory inventory;
-    // GameObject playa;
+    GameObject playa;
     PlayerManager pm;
-    PlayerMovement playerMovement;
+    InputManager input;
     ProgressBar progressBar;
 
     [SerializeField] private AudioSource healSound;
@@ -29,14 +29,14 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
     IEnumerator Heal(){
         if (CanHeal){
             IsHealing(true);
-            // playerMovement.CanMove = canHealWhileMoving;
-            // playerMovement.CanJump = canHealWhileMoving;
+            // input.CanMove = canHealWhileMoving;
+            // input.CanJump = canHealWhileMoving;
             progressBar.SetProgressBar("Healing...", healTime);
             healSound.Play();
             yield return new WaitForSeconds(healTime);
             IsHealing(false);
-            // playerMovement.CanMove = true;
-            // playerMovement.CanJump = true;
+            // input.CanMove = true;
+            // input.CanJump = true;
             float medkitHealAmount = (pm.MaxHealth - pm.Health) * health.healAmount / 100f;
             healAmount = canHealWhileMoving ? health.healAmount : medkitHealAmount;
             pm.HealthRegen(healAmount);
@@ -48,8 +48,8 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
         if (healCoroutine != null){
             StopCoroutine(healCoroutine);
             IsHealing(false);
-            // playerMovement.CanMove = true;
-            // playerMovement.CanJump = true;
+            // input.CanMove = true;
+            // input.CanJump = true;
             healSound.Stop();
         }
     }
@@ -57,8 +57,8 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
         isHealing = value;
         animator.SetBool("isReloading", value);
         progressBar.ToggleProgressBar(value);
-        playerMovement.CanMove = !value || canHealWhileMoving;
-        playerMovement.CanJump = !value || canHealWhileMoving;
+        input.CanMove = !value || canHealWhileMoving;
+        input.CanJump = !value || canHealWhileMoving;
     }
 
     private bool CanHeal => !isHealing && !isEquiping && pm.Health < pm.MaxHealth;
@@ -80,11 +80,9 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
 
     void Start(){
         inventory = Inventory.instance;
-        // playa = GameObject.FindGameObjectWithTag("Player");
-        // pm = playa.GetComponent<PlayerManager>();
-        // playerMovement = playa.GetComponent<PlayerMovement>();
-        pm = PlayerManager.instance;
-        playerMovement = PlayerMovement.instance;
+        playa = GameObject.FindGameObjectWithTag("Player");
+        pm = playa.GetComponent<PlayerManager>();
+        input = playa.GetComponent<InputManager>();
         progressBar = ProgressBar.instance;
         animator = GetComponent<Animator>();
 

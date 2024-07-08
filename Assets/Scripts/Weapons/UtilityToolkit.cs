@@ -13,8 +13,7 @@ public class UtilityToolkit : MonoBehaviour, IWeaponAmount, IPrimaryInput/*, ISe
     ProgressBar progressBar;
     RaycastHit hit;
     Transform cam;
-    PlayerMovement playerMovement;
-    InputManager inputManager;
+    InputManager input;
 
     // private bool isRepairing, isEquiping;
     // Coroutine repairCoroutine;
@@ -51,8 +50,8 @@ public class UtilityToolkit : MonoBehaviour, IWeaponAmount, IPrimaryInput/*, ISe
     private void IsUnlocking(bool value){
         isUnlocking = value;
         progressBar.ToggleProgressBar(value);
-        playerMovement.CanMove = !value;
-        playerMovement.CanJump = !value;
+        input.CanMove = !value;
+        input.CanJump = !value;
     }
     public void OnPrimaryStart(){
         progressBar.SetProgressBar(unlockText, useTime);
@@ -81,10 +80,9 @@ public class UtilityToolkit : MonoBehaviour, IWeaponAmount, IPrimaryInput/*, ISe
         playa = GameObject.FindGameObjectWithTag("Player");
         animator = GetComponent<Animator>();
         cam = Camera.main.transform;
-        inventory = Inventory.instance;
+        inventory = playa.GetComponent<Inventory>();
         progressBar = ProgressBar.instance;
-        playerMovement = PlayerMovement.instance;
-        inputManager = playa.GetComponent<InputManager>();
+        input = playa.GetComponent<InputManager>();
 
         useTime = toolkit.useTime;
     }
