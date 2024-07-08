@@ -8,7 +8,9 @@ public class PlayerInventory : MonoBehaviour
 {
     public static PlayerInventory instance;
     private Inventory inventory;
-    PlayerInput playerInput;
+    GameObject playa;
+    InputManager input;
+    // PlayerInput playerInput;
     CombineItems combineItems;
     // ItemDatabase db;
     // UpgradeWeaponUI upgradeWeaponUI;
@@ -20,7 +22,7 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private Button craftWeaponButton, /*upgradeWeaponButton, */clearItemsButton, closeInventoryButton;
     [SerializeField] private TextMeshProUGUI inventoryHeader, craftButtonText, inputGuideLMB, inputGuideRMB, inventoryStatusText;
     [SerializeField] private Image firstCraftingItemIcon, secondCraftingItemIcon, craftedWeaponIcon;
-    private Weapon weaponToCraft;
+    private Weapon_CraftingCost weaponToCraft;
     public Item firstCraftingItem, secondCraftingItem;
     private int newCraftingCost;
 
@@ -63,7 +65,7 @@ public class PlayerInventory : MonoBehaviour
             }
         } else return;
     }
-    private void SetCraftButton(Weapon craftedWeapon){
+    private void SetCraftButton(Weapon_CraftingCost craftedWeapon){
         if (craftedWeapon != null){
             craftWeaponButton.gameObject.SetActive(true);
             newCraftingCost = isWorkshopOpen ? craftedWeapon.craftingCost / 4 : craftedWeapon.craftingCost;
@@ -167,13 +169,9 @@ public class PlayerInventory : MonoBehaviour
         inventoryPanel.gameObject.SetActive(isInventoryOpen);
         inventoryHeader.text = isWorkshopOpen ? "Workshop" : "Inventory";
         Cursor.visible = isInventoryOpen;
-        if (isInventoryOpen){
-            Cursor.lockState = CursorLockMode.Confined;
-            playerInput.actions.Disable();
-        } else {
-            Cursor.lockState = CursorLockMode.Locked;
-            playerInput.actions.Enable();
-        }
+        Cursor.lockState = isInventoryOpen ? CursorLockMode.Confined : Cursor.lockState = CursorLockMode.Locked;
+        input.CanMove = !isInventoryOpen;
+        input.CanJump = !isInventoryOpen;
         ClearCraftingItems();
 
         // upgradeWeaponUI.CloseMenu();
@@ -193,15 +191,16 @@ public class PlayerInventory : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        inventory = Inventory.instance;
+        playa = GameObject.FindGameObjectWithTag("Player");
+        inventory = playa.GetComponent<Inventory>();
+        input = playa.GetComponent<InputManager>();
         combineItems = CombineItems.instance;
+        // playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
         // db = ItemDatabase.instance;
         // upgradeWeaponUI = UpgradeWeaponUI.instance;
 
         closeInventoryButton.onClick.AddListener(OnCloseInventory);
         inventoryPanel.gameObject.SetActive(false);
-
-        playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
 
         weaponSlots = loadoutParent.GetComponentsInChildren<WeaponSlot>();
         itemSlots = itemParent.GetComponentsInChildren<ItemSlot>();
