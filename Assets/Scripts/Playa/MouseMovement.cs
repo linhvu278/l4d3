@@ -23,6 +23,8 @@ public class MouseMovement : MonoBehaviour
         cam = Camera.main.transform;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        CanLook = true;
     }
 
     // Update is called once per frame

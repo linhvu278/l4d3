@@ -21,10 +21,12 @@ public class InputManager : MonoBehaviour
     public float MouseValueY => mouseValueY;
 
     // booleans
-    public bool CanMove { get; set; }
-    public bool CanJump { get; set; }
-    public bool CanLook { get; set; }
+    // public bool CanMove { get; set; }
+    // public bool CanJump { get; set; }
+    // public bool CanLook { get; set; }
+    // public bool CanSprint { get; set; }
 
+    // interaction
     RaycastHit hit;
     Transform cam;
     private const float INTERACT_RANGE = 2f;
@@ -32,19 +34,15 @@ public class InputManager : MonoBehaviour
 
     public void OnPlayerMovement(InputAction.CallbackContext value){
         horizontalValue = value.ReadValue<Vector2>();
-        playerMovement.ReceiveInput(horizontalValue, CanMove);
+        playerMovement.ReceiveInput(horizontalValue);
     }
     public void OnMouseMovement(InputAction.CallbackContext value){
-        if (CanLook){
-            mouseValueX = value.ReadValue<Vector2>().x;
-            mouseValueY = value.ReadValue<Vector2>().y;
-            mouseMovement.ReceiveInput(mouseValueX, mouseValueY);
-        }
+        mouseValueX = value.ReadValue<Vector2>().x;
+        mouseValueY = value.ReadValue<Vector2>().y;
+        mouseMovement.ReceiveInput(mouseValueX, mouseValueY);
     }
     public void OnJump(InputAction.CallbackContext value){
-        if (value.performed){
-            if (CanJump) playerMovement.Jump();
-        }
+        if (value.performed) playerMovement.Jump();
     }
     public void OnSprint(InputAction.CallbackContext value){
         if (value.started) GetComponent<PlayerMovement>().StartSprint();
@@ -115,13 +113,7 @@ public class InputManager : MonoBehaviour
     //     if (value.performed) weaponSwitch.SelectNewWeapon(5);
     // }
     
-    void Start(){
-        CanMove = true;
-        CanJump = true;
-        CanLook = true;
-    }
-    void Awake()
-    {
+    void Awake(){
         playerMovement = GetComponent<PlayerMovement>();
         mouseMovement = GetComponent<MouseMovement>();
         weaponSwitch = GetComponent<WeaponSwitch>();

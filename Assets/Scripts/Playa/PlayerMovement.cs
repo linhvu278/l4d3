@@ -16,8 +16,8 @@ public class PlayerMovement : MonoBehaviour
 
     // [SerializeField] Text staminaText;
     private float stamina;
-    private const float JUMP_STAMINA = 15f;
-    private const float SPRINT_STAMINA = 12f;
+    private const float JUMP_STAMINA = 18f;
+    private const float SPRINT_STAMINA = 15f;
                 
     private const float gravity = -9.81f;
     private Vector3 velocity;
