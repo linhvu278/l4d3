@@ -12,7 +12,7 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
     PlayerMovement pMovement;
     BoxCollider bc;
 
-    public CrateType crateType;
+    [SerializeField] private CrateType crateType;
     private const int UNLOCK_VALUE = 150;
     private const float OPEN_DURATION = 1.5f;
     private Coroutine openCoroutine;
@@ -105,7 +105,6 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
         db = ItemDatabase.instance;
         progressBar = ProgressBar.instance;
         playa = GameObject.FindGameObjectWithTag("Player");
-        // pMovement = PlayerMovement.instance;
         pMovement = playa.GetComponent<PlayerMovement>();
         inv = playa.GetComponent<Inventory>();
         bc = GetComponent<BoxCollider>();

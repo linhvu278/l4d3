@@ -16,7 +16,7 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
     Inventory inventory;
     GameObject playa;
     PlayerManager pm;
-    InputManager input;
+    PlayerMovement pMovement;
     ProgressBar progressBar;
 
     [SerializeField] private AudioSource healSound;
@@ -29,14 +29,10 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
     IEnumerator Heal(){
         if (CanHeal){
             IsHealing(true);
-            // input.CanMove = canHealWhileMoving;
-            // input.CanJump = canHealWhileMoving;
             progressBar.SetProgressBar("Healing...", healTime);
             healSound.Play();
             yield return new WaitForSeconds(healTime);
             IsHealing(false);
-            // input.CanMove = true;
-            // input.CanJump = true;
             float medkitHealAmount = (pm.MaxHealth - pm.Health) * health.healAmount / 100f;
             healAmount = canHealWhileMoving ? health.healAmount : medkitHealAmount;
             pm.HealthRegen(healAmount);
@@ -48,8 +44,6 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
         if (healCoroutine != null){
             StopCoroutine(healCoroutine);
             IsHealing(false);
-            // input.CanMove = true;
-            // input.CanJump = true;
             healSound.Stop();
         }
     }
@@ -57,8 +51,8 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
         isHealing = value;
         animator.SetBool("isReloading", value);
         progressBar.ToggleProgressBar(value);
-        input.CanMove = !value || canHealWhileMoving;
-        input.CanJump = !value || canHealWhileMoving;
+        pMovement.CanMove = !value || canHealWhileMoving;
+        pMovement.CanJump = !value || canHealWhileMoving;
     }
 
     private bool CanHeal => !isHealing && !isEquiping && pm.Health < pm.MaxHealth;
@@ -82,7 +76,7 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
         inventory = Inventory.instance;
         playa = GameObject.FindGameObjectWithTag("Player");
         pm = playa.GetComponent<PlayerManager>();
-        input = playa.GetComponent<InputManager>();
+        pMovement = playa.GetComponent<PlayerMovement>();
         progressBar = ProgressBar.instance;
         animator = GetComponent<Animator>();
 

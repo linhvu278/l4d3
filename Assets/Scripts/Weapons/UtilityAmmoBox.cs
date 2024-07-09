@@ -9,7 +9,6 @@ public class UtilityAmmoBox : MonoBehaviour, IPrimaryInput, IWeaponAmount
     private float useTime;
 
     private GameObject playa;
-    private InputManager input;
     private PlayerMovement pMovement;
     private Animator animator;
     private Inventory inventory;
@@ -54,8 +53,8 @@ public class UtilityAmmoBox : MonoBehaviour, IPrimaryInput, IWeaponAmount
         // isDeploying = value;
         animator.SetBool("isReloading", value);
         progressBar.ToggleProgressBar(value);
-        input.CanMove = !value;
-        input.CanJump = !value;
+        pMovement.CanMove = !value;
+        pMovement.CanJump = !value;
     }
 
     public int WeaponAmount{
@@ -77,12 +76,10 @@ public class UtilityAmmoBox : MonoBehaviour, IPrimaryInput, IWeaponAmount
     void Start()
     {
         playa = GameObject.FindGameObjectWithTag("Player");
-        input = playa.GetComponent<InputManager>();
         pMovement = playa.GetComponent<PlayerMovement>();
         animator = GetComponent<Animator>();
         // Debug.Log(animator);
         // Debug.Log(progressBar);
-        // Debug.Log(input);
 
         inventory = Inventory.instance;
         progressBar = ProgressBar.instance;
