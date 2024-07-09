@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MouseMovement : MonoBehaviour
@@ -7,6 +5,8 @@ public class MouseMovement : MonoBehaviour
     public float mouseSens = 10f;
     float mouseX;
     float mouseY;
+
+    public bool CanLook { get; set; }
 
     Transform cam;
     float xRotation = 0f;
@@ -31,15 +31,16 @@ public class MouseMovement : MonoBehaviour
         // mouseX = GetComponent<InputManager>().mouseValueX * mouseSens * Time.deltaTime;
         // mouseY = GetComponent<InputManager>().mouseValueY * mouseSens * Time.deltaTime;
 
-        //rotate player
-        transform.Rotate(Vector3.up, mouseX);
+        if (CanLook){
+            //rotate player
+            transform.Rotate(Vector3.up, mouseX);
 
-        //lock vertical rotation
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-        Vector3 targetRotation = transform.eulerAngles;
-        targetRotation.x = xRotation;
-        cam.eulerAngles = targetRotation;
-        
+            //lock vertical rotation
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            Vector3 targetRotation = transform.eulerAngles;
+            targetRotation.x = xRotation;
+            cam.eulerAngles = targetRotation;
+        }
     }
 }
