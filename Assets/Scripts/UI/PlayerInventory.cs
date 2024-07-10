@@ -86,9 +86,9 @@ public class PlayerInventory : MonoBehaviour
         //     // Debug.Log("not enough glue");
         //     EnableInventoryStatusText("Not enough glue");
         // } else {
-            if (!inventory.AddWeapon(weaponToCraft, weaponToCraft.weaponAmount)){
+            if (!inventory.AddWeapon(weaponToCraft, (int)weaponToCraft.weaponCategory, weaponToCraft.weaponAmount)){
                 inventory.DropWeapon(weaponToCraft);
-                inventory.AddWeapon(weaponToCraft, weaponToCraft.weaponAmount);
+                inventory.AddWeapon(weaponToCraft,(int)weaponToCraft.weaponCategory, weaponToCraft.weaponAmount);
             }
             inventory.SetItemAmount(firstCraftingItem.itemType, -1);
             inventory.SetItemAmount(secondCraftingItem.itemType, -1);

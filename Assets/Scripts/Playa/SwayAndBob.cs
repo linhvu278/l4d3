@@ -7,6 +7,7 @@ public class SwayAndBob : MonoBehaviour
     [SerializeField] private float smoothness, swayMultiplier;
     private GameObject playa;
     private InputManager input;
+    private MouseMovement m_Movement;
 
     // Vector2 walkInput, lookInput;
     float valueX, valueY;
@@ -26,10 +27,11 @@ public class SwayAndBob : MonoBehaviour
         transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, smoothness * Time.deltaTime);
     }
     void Update(){
-        GetInput();
+        if (m_Movement.CanLook) GetInput();
     }
     void Start(){
         playa = GameObject.FindGameObjectWithTag("Player");
         input = playa.GetComponent<InputManager>();
+        m_Movement = playa.GetComponent<MouseMovement>();
     }
 }

@@ -30,12 +30,13 @@ public class PlayerManager : MonoBehaviour, IDamage, IFire
     public float MaxStamina { get => maxStamina; set => maxStamina = value; }
     private const float regenStamina = 25f;
     private const float regenStaminaDelay = 2f;
-    private float staminaRegenCounter = 0;//, staminaBuffCounter, healthBuffCounter
+    private float staminaRegenCounter = 0,
+                  staminaBuffCounter = 0;//, healthBuffCounter
 
-    public bool IsStaminaBuffed { get; set; }
-    public bool IsHealthBuffed { get; set; }
+    public bool IsStaminaBuffActive { get => isStaminaBuffActive; set => isStaminaBuffActive = value; }
+    public bool IsHealthBuffActive { get => isHealthBuffActive; set => isHealthBuffActive = value; }
 
-    private bool isOnFire;
+    private bool isStaminaBuffActive, isHealthBuffActive, isOnFire;
     private float fireDamage, fireDurationCounter = 0;
     private const float fireDebuffMultiplier = 0.2f,
                         fireDuration = 10f;
@@ -57,7 +58,7 @@ public class PlayerManager : MonoBehaviour, IDamage, IFire
     }
 
     public void StaminaDrain(float staminaDrain){
-        /*if (!isStaminaBuffed)*/ stamina -= staminaDrain;
+        /*if (!isStaminaBuffActive)*/ stamina -= staminaDrain;
         staminaRegenCounter = regenStaminaDelay;
     }
 
@@ -77,15 +78,15 @@ public class PlayerManager : MonoBehaviour, IDamage, IFire
     }
     public float FireDamage { get => fireDamage; set => fireDamage = value; }
 
-    // public void StaminaBuff(float duration){
-    //     isStaminaBuffed = true;
-    //     stamina = maxStamina;
-    //     staminaBuffCounter = duration;
-    //     Debug.Log("stamina buffed");
-    // }
+    public void StaminaBuff(float duration){
+        isStaminaBuffActive = true;
+        stamina = maxStamina;
+        staminaBuffCounter = duration;
+        Debug.Log("stamina buffed");
+    }
 
     // public void HealthBuff(float duration){
-    //     isHealthBuffed = true;
+    //     isHealthBuffActive = true;
     //     Invoke("ResetHealthBuff", duration);
     //     Debug.Log("health buffed");
     // }
@@ -119,20 +120,20 @@ public class PlayerManager : MonoBehaviour, IDamage, IFire
         }
         // Debug.Log(fireDurationCounter);
 
-        // if (staminaBuffCounter > 0){
-        //     staminaBuffCounter -= Time.deltaTime;
-        //     if (staminaBuffCounter < 0) {
-        //         staminaBuffCounter = 0;
-        //         isStaminaBuffed = false;
-        //         Debug.Log("stamina debuffed");
-        //     }
-        // }
+        if (staminaBuffCounter > 0){
+            staminaBuffCounter -= Time.deltaTime;
+            if (staminaBuffCounter < 0){
+                staminaBuffCounter = 0;
+                isStaminaBuffActive = false;
+                Debug.Log("stamina debuffed");
+            }
+        }
 
         // if (healthBuffCounter > 0){
         //     healthBuffCounter -= Time.deltaTime;
         //     if (healthBuffCounter < 0){
         //         healthBuffCounter = 0;
-        //         isHealthBuffed = false;
+        //         isHealthBuffActive = false;
         //         Debug.Log("health debuffed");
         //     }
         // }

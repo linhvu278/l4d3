@@ -13,12 +13,13 @@ public class PickUpWeapon : MonoBehaviour, IInteractable, IWeaponAmount//, IOutl
     // private WeaponStats stats;
     // private ItemDatabase db;
     void WeaponPickUp(){
-        if (TryGetComponent(out WeaponStats ws)){
-            inventory.AddWeaponWithUpgrades(weapon, weaponAmount, ws.UpgradeAccuracy, ws.UpgradeDamage, ws.UpgradeRange);
-            Destroy(gameObject);
-        } else {
-            if (inventory.AddWeapon(weapon, weaponAmount)) Destroy(gameObject);
-        }
+        // if (TryGetComponent(out WeaponStats ws)){
+        //     inventory.AddWeaponWithUpgrades(weapon, weaponAmount, ws.UpgradeAccuracy, ws.UpgradeDamage, ws.UpgradeRange);
+        //     Destroy(gameObject);
+        // } else {
+            if (inventory.AddWeapon(weapon, (int)weapon.weaponCategory, weaponAmount)) Destroy(gameObject);
+            else return;
+        // }
     }
 
     public int WeaponAmount { get { return weaponAmount;} set { weaponAmount = value; } }

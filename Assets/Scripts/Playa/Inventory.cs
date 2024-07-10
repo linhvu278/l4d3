@@ -46,53 +46,71 @@ public class Inventory : MonoBehaviour
 
     #region Add weapons
 
-    public bool AddWeapon(Weapon weapon, int amount){
+    public bool AddWeapon(Weapon weapon, int index, int amount){
         // PickUpWeapon puwp = weaponToAdd.GetComponent<PickUpWeapon>();
         // Weapon weapon = puwp.GetWeapon();
-        if (weaponInventory[(int)weapon.weaponCategory] == weapon && weaponInventory[(int)weapon.weaponCategory] != null) return false;
-        else {
+        if (weaponInventory[index] != weapon/* && weaponInventory[weaponIndex] != null*/)
+        {
             GameObject weaponToAdd;
-            int weaponIndex = (int)weapon.weaponCategory;
-            weaponToAdd = Instantiate(db.weaponPrefabs[weapon.weaponId], weaponSlots[weaponIndex].position, Quaternion.identity);
-            weaponToAdd.transform.SetParent(weaponSlots[weaponIndex]);
+            weaponToAdd = Instantiate(db.weaponPrefabs[weapon.weaponId], weaponSlots[index].position, Quaternion.identity);
+            weaponToAdd.transform.SetParent(weaponSlots[index]);
             weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = amount;
 
-            if (weaponInventory[weaponIndex] != null) DropWeapon(weaponInventory[weaponIndex]);
-            weaponInventory[weaponIndex] = weapon;
-            weaponObjects[weaponIndex] = weaponToAdd;
-            weaponSwitch.SelectNewWeapon(weaponIndex);
-            Inv_slot invSlot = weaponSwitch.WeaponHolder.GetChild(weaponIndex).GetComponent<Inv_slot>();
+            if (weaponInventory[index] != null) DropWeapon(weaponInventory[index]);
+            weaponInventory[index] = weapon;
+            weaponObjects[index] = weaponToAdd;
+            weaponSwitch.SelectNewWeapon(index);
+            Inv_slot invSlot = weaponSwitch.WeaponHolder.GetChild(index).GetComponent<Inv_slot>();
             invSlot.SetWeaponObject(weaponToAdd);
-            // weaponSwitch.SelectNewWeapon(weaponIndex);
-            // weaponSlots[weaponIndex].gameObject.SetActive(false);
+            // weaponSwitch.SelectNewWeapon(index);
+            // weaponSlots[index].gameObject.SetActive(false);
 
-            loadoutUI.GetHUDIcon(weapon.weaponIcon, (int)weapon.weaponCategory);
+            loadoutUI.GetHUDIcon(weapon.weaponIcon, index);
             playerInventory.UpdateWeapons(weapon, true);
 
             return true;
         }
+        else return false;
     }
-    public void AddWeaponWithUpgrades(Weapon weapon, int amount, bool upgradeAcc, bool upgradeDmg, bool upgradeRng){
+    // public void AddWeaponWithUpgrades(Weapon weapon, int amount, bool upgradeAcc, bool upgradeDmg, bool upgradeRng){
+    //     int weaponIndex = (int)weapon.weaponCategory;
+    //     GameObject weaponToAdd;
+    //     weaponToAdd = Instantiate(db.weaponPrefabs[weapon.weaponId], weaponSlots[weaponIndex].position, Quaternion.identity);
+    //     weaponToAdd.transform.SetParent(weaponSlots[weaponIndex]);
+    //     weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = amount;
+
+    //     IWeaponUpgrade upgrade = weaponToAdd.GetComponent<IWeaponUpgrade>();
+    //     upgrade.UpgradeAccuracy = upgradeAcc;
+    //     upgrade.UpgradeDamage = upgradeDmg;
+    //     upgrade.UpgradeRange = upgradeRng;
+
+    //     if (weaponInventory[weaponIndex] != null) DropWeapon(weaponInventory[weaponIndex]);
+    //     weaponInventory[weaponIndex] = weapon;
+    //     weaponObjects[weaponIndex] = weaponToAdd;
+    //     Inv_slot invSlot = weaponSwitch.WeaponHolder.GetChild(weaponIndex).GetComponent<Inv_slot>();
+    //     invSlot.SetWeaponObject(weaponToAdd);
+    //     weaponSwitch.SelectNewWeapon(weaponIndex);
+
+    //     loadoutUI.GetHUDIcon(weapon.weaponIcon, (int)weapon.weaponCategory);
+    //     playerInventory.UpdateWeapons(weapon, true);
+    // }
+    
+
+    #endregion
+
+    #region Ability
+
+    public void AddAbility(Weapon_Ability ability){
+        int abilityIndex = (int)WeaponCategory.ability;
+        if (weaponInventory[abilityIndex] != ability) weaponInventory[abilityIndex] = ability;
+        playerInventory.UpdateWeapons(ability, true);
+    }
+    public void AddAbilityWeapon(Weapon_Ability ability){
+        int abilityIndex = (int)WeaponCategory.ability;
         GameObject weaponToAdd;
-        int weaponIndex = (int)weapon.weaponCategory;
-        weaponToAdd = Instantiate(db.weaponPrefabs[weapon.weaponId], weaponSlots[weaponIndex].position, Quaternion.identity);
-        weaponToAdd.transform.SetParent(weaponSlots[weaponIndex]);
-        weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = amount;
-
-        IWeaponUpgrade upgrade = weaponToAdd.GetComponent<IWeaponUpgrade>();
-        upgrade.UpgradeAccuracy = upgradeAcc;
-        upgrade.UpgradeDamage = upgradeDmg;
-        upgrade.UpgradeRange = upgradeRng;
-
-        if (weaponInventory[weaponIndex] != null) DropWeapon(weaponInventory[weaponIndex]);
-        weaponInventory[weaponIndex] = weapon;
-        weaponObjects[weaponIndex] = weaponToAdd;
-        Inv_slot invSlot = weaponSwitch.WeaponHolder.GetChild(weaponIndex).GetComponent<Inv_slot>();
-        invSlot.SetWeaponObject(weaponToAdd);
-        weaponSwitch.SelectNewWeapon(weaponIndex);
-
-        loadoutUI.GetHUDIcon(weapon.weaponIcon, (int)weapon.weaponCategory);
-        playerInventory.UpdateWeapons(weapon, true);
+        weaponToAdd = Instantiate(db.weaponPrefabs[ability.weaponId], weaponSlots[abilityIndex].position, Quaternion.identity);
+        weaponToAdd.transform.SetParent(weaponSlots[abilityIndex]);
+        weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = ability.weaponAmount;
     }
 
     #endregion
@@ -100,25 +118,28 @@ public class Inventory : MonoBehaviour
     #region Remove weapons
 
     public void DropWeapon(Weapon weapon){
+        if (weapon.weaponCategory != WeaponCategory.ability){
+            GameObject weaponToDrop = db.weaponPickups[weapon.weaponId];
+
+            GameObject equippedWeapon = weaponObjects[(int)weapon.weaponCategory];
+            IWeaponAmount wa = equippedWeapon.GetComponent<IWeaponAmount>();
+            weaponToDrop.GetComponent<IWeaponAmount>().WeaponAmount = wa.WeaponAmount;
+            // if (equippedWeapon.TryGetComponent(out IWeaponUpgrade upgrade)){
+            //     WeaponStats ws = weaponToDrop.GetComponent<WeaponStats>();
+            //     ws.UpgradeAccuracy = upgrade.UpgradeAccuracy;
+            //     ws.UpgradeDamage = upgrade.UpgradeDamage;
+            //     ws.UpgradeRange = upgrade.UpgradeRange;
+            // }
+
+            Vector3 camPos = Camera.main.transform.position;
+            Vector3 dropPosition = new Vector3(camPos.x, camPos.y - 0.5f, camPos.z);
+            Instantiate(weaponToDrop, dropPosition, Quaternion.identity);
+            RemoveWeapon(weapon);
+        }
+
         // int weaponIndex = (int)weapon.weaponCategory;
         // GameObject weaponToDrop = weaponObjects[weaponIndex];
         // weaponToDrop.GetComponent<PickUpWeapon>().SetWeapon(weaponObjects[weaponIndex]);
-        GameObject weaponToDrop = db.weaponPickups[weapon.weaponId];
-
-        GameObject equippedWeapon = weaponObjects[(int)weapon.weaponCategory];
-        IWeaponAmount wa = equippedWeapon.GetComponent<IWeaponAmount>();
-        weaponToDrop.GetComponent<IWeaponAmount>().WeaponAmount = wa.WeaponAmount;
-        if (equippedWeapon.TryGetComponent(out IWeaponUpgrade upgrade)){
-            WeaponStats ws = weaponToDrop.GetComponent<WeaponStats>();
-            ws.UpgradeAccuracy = upgrade.UpgradeAccuracy;
-            ws.UpgradeDamage = upgrade.UpgradeDamage;
-            ws.UpgradeRange = upgrade.UpgradeRange;
-        }
-
-        Vector3 camPos = Camera.main.transform.position;
-        Vector3 dropPosition = new Vector3(camPos.x, camPos.y - 0.5f, camPos.z);
-        Instantiate(weaponToDrop, dropPosition, Quaternion.identity);
-        RemoveWeapon(weapon);
     }
     // public void DropWeaponWithUpgrades(Weapon weapon, Vector3 pos){
     //     GameObject weaponToDrop = db.weaponPickups[weapon.weaponId];
@@ -137,7 +158,7 @@ public class Inventory : MonoBehaviour
     // }
     public void RemoveWeapon(Weapon weapon){
         int weaponIndex = (int)weapon.weaponCategory;
-        weaponInventory[weaponIndex] = null;
+        if (weaponIndex != (int)WeaponCategory.ability) weaponInventory[weaponIndex] = null;
 
         // GameObject weaponToRemove = weaponSlots[weaponIndex].GetChild(0).gameObject;
         Inv_slot invSlot = weaponSwitch.WeaponHolder.GetChild(weaponIndex).GetComponent<Inv_slot>();
