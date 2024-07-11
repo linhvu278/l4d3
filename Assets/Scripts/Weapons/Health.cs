@@ -16,7 +16,7 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
     Inventory inventory;
     GameObject playa;
     PlayerManager pm;
-    PlayerMovement pMovement;
+    InputManager input;
     ProgressBar progressBar;
 
     [SerializeField] private AudioSource healSound;
@@ -51,8 +51,8 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
         isHealing = value;
         animator.SetBool("isReloading", value);
         progressBar.ToggleProgressBar(value);
-        pMovement.CanMove = !value || canHealWhileMoving;
-        pMovement.CanJump = !value || canHealWhileMoving;
+        input.P_Movement_CanMove(!value || canHealWhileMoving);
+        input.P_Movement_CanJump(!value || canHealWhileMoving);
     }
 
     private bool CanHeal => !isHealing && !isEquiping && pm.Health < pm.MaxHealth;
@@ -76,7 +76,7 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
         inventory = Inventory.instance;
         playa = GameObject.FindGameObjectWithTag("Player");
         pm = playa.GetComponent<PlayerManager>();
-        pMovement = playa.GetComponent<PlayerMovement>();
+        input = playa.GetComponent<InputManager>();
         progressBar = ProgressBar.instance;
         animator = GetComponent<Animator>();
 

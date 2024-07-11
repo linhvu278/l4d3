@@ -9,7 +9,7 @@ public class PlayerInventory : MonoBehaviour
     public static PlayerInventory instance;
     private Inventory inventory;
     GameObject playa;
-    PlayerMovement p_Movement;
+    InputManager input;
     MouseMovement m_Movement;
     // PlayerInput playerInput;
     CombineItems combineItems;
@@ -171,9 +171,11 @@ public class PlayerInventory : MonoBehaviour
         inventoryHeader.text = isWorkshopOpen ? "Workshop" : "Inventory";
         Cursor.visible = isInventoryOpen;
         Cursor.lockState = isInventoryOpen ? CursorLockMode.Confined : Cursor.lockState = CursorLockMode.Locked;
-        p_Movement.CanMove = !isInventoryOpen;
-        p_Movement.CanJump = !isInventoryOpen;
+        input.P_Movement_CanMove(!isInventoryOpen);
+        input.P_Movement_CanJump(!isInventoryOpen);
         m_Movement.CanLook = !isInventoryOpen;
+        input.M_Input_CanAttack1(!isInventoryOpen);
+        input.M_Input_CanAttack2(!isInventoryOpen);
         ClearCraftingItems();
 
         // upgradeWeaponUI.CloseMenu();
@@ -195,7 +197,7 @@ public class PlayerInventory : MonoBehaviour
     {
         playa = GameObject.FindGameObjectWithTag("Player");
         inventory = playa.GetComponent<Inventory>();
-        p_Movement = playa.GetComponent<PlayerMovement>();
+        input = playa.GetComponent<InputManager>();
         m_Movement = playa.GetComponent<MouseMovement>();
         combineItems = CombineItems.instance;
         // playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();

@@ -9,7 +9,7 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
     GameObject playa;
     Inventory inv;
     ProgressBar progressBar;
-    PlayerMovement pMovement;
+    InputManager input;
     BoxCollider bc;
 
     [SerializeField] private CrateType crateType;
@@ -82,8 +82,8 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
     private void IsOpening(bool value){
         isOpening = value;
         progressBar.ToggleProgressBar(value);
-        pMovement.CanMove = !value;
-        pMovement.CanJump = !value;
+        input.P_Movement_CanMove(!value);
+        input.P_Movement_CanJump(!value);
     }
     public bool IsLocked { get => isLocked; }
     private bool CanOpen => !(isOpening || isCrateOpened || isLocked);
@@ -105,7 +105,7 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
         db = ItemDatabase.instance;
         progressBar = ProgressBar.instance;
         playa = GameObject.FindGameObjectWithTag("Player");
-        pMovement = playa.GetComponent<PlayerMovement>();
+        input = playa.GetComponent<InputManager>();
         inv = playa.GetComponent<Inventory>();
         bc = GetComponent<BoxCollider>();
 

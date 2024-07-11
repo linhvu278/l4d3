@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class PickUpSkillBook : MonoBehaviour, IInteractable
 {
-    [SerializeField] private Weapon_Ability ability;
+    [SerializeField] private Weapon ability;
 
     private GameObject playa;
     private Inventory inv;
     private ProgressBar progressBar;
-    private PlayerMovement pMovement;
+    private InputManager input;
 
     // private bool isPickingUp;
     private string abilityTypeText = "test";
@@ -28,8 +28,8 @@ public class PickUpSkillBook : MonoBehaviour, IInteractable
     private void IsPickingUp(bool value){
         // isPickingUp = value;
         progressBar.ToggleProgressBar(value);
-        pMovement.CanMove = !value;
-        pMovement.CanJump = !value;
+        input.P_Movement_CanMove(!value);
+        input.P_Movement_CanJump(!value);
     }
     private void CancelPickUpSkillBook(){
         if (pickupCoroutine != null){
@@ -50,7 +50,7 @@ public class PickUpSkillBook : MonoBehaviour, IInteractable
     void Start(){
         playa = GameObject.FindGameObjectWithTag("Player");
         inv = playa.GetComponent<Inventory>();
-        pMovement = playa.GetComponent<PlayerMovement>();
+        input = playa.GetComponent<InputManager>();
         progressBar = ProgressBar.instance;
     }
 }

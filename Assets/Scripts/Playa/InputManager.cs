@@ -25,12 +25,26 @@ public class InputManager : MonoBehaviour
     // public bool CanJump { get; set; }
     // public bool CanLook { get; set; }
     // public bool CanSprint { get; set; }
+    public bool P_Movement_CanJump(bool value) => playerMovement.CanJump = value;
+    public bool P_Movement_CanMove(bool value) => playerMovement.CanMove = value;
+    public bool P_Movement_CanSprint(bool value) => playerMovement.CanSprint = value;
+    public bool M_Movement_CanLook(bool value) => mouseMovement.CanLook = value;
+    public bool M_Input_CanAttack1(bool value) => inventorySlots[weaponSwitch.SelectedWeapon].CanAttack1 = value;
+    public bool M_Input_CanAttack2(bool value) => inventorySlots[weaponSwitch.SelectedWeapon].CanAttack2 = value;
 
     // interaction
     RaycastHit hit;
     Transform cam;
     private const float INTERACT_RANGE = 2f;
     public float InteractRange => INTERACT_RANGE;
+
+    // weapon slots
+    private const int index_w_primary = (int)WeaponCategory.primary,
+                      index_w_secondary = (int)WeaponCategory.secondary,
+                      index_w_throwable = (int)WeaponCategory.throwable,
+                      index_w_health = (int)WeaponCategory.health,
+                      index_w_gadget = (int)WeaponCategory.gadget,
+                      index_w_ability = (int)WeaponCategory.ability;
 
     public void OnPlayerMovement(InputAction.CallbackContext value){
         horizontalValue = value.ReadValue<Vector2>();
@@ -95,23 +109,23 @@ public class InputManager : MonoBehaviour
         if (value.performed) weaponSwitch.SelectLastWeapon();
     }
     public void OnPrimary(InputAction.CallbackContext value){
-        if (value.performed) weaponSwitch.SelectNewWeapon(0);
+        if (value.performed) weaponSwitch.SelectNewWeapon(index_w_primary);
     }
     public void OnSecondary(InputAction.CallbackContext value){
-        if (value.performed) weaponSwitch.SelectNewWeapon(1);
+        if (value.performed) weaponSwitch.SelectNewWeapon(index_w_secondary);
     }
     public void OnThrowable(InputAction.CallbackContext value){
-        if (value.performed) weaponSwitch.SelectNewWeapon(2);
+        if (value.performed) weaponSwitch.SelectNewWeapon(index_w_throwable);
     }
     public void OnHealth(InputAction.CallbackContext value){
-        if (value.performed) weaponSwitch.SelectNewWeapon(3);
+        if (value.performed) weaponSwitch.SelectNewWeapon(index_w_health);
     }
     public void OnGadget(InputAction.CallbackContext value){
-        if (value.performed) weaponSwitch.SelectNewWeapon(4);
+        if (value.performed) weaponSwitch.SelectNewWeapon(index_w_gadget);
     }
-    // public void OnAbility(InputAction.CallbackContext value){
-    //     if (value.performed) weaponSwitch.SelectNewWeapon(5);
-    // }
+    public void OnAbility(InputAction.CallbackContext value){
+        if (value.performed) weaponSwitch.SelectNewWeapon(index_w_ability);
+    }
     
     void Awake(){
         playerMovement = GetComponent<PlayerMovement>();
