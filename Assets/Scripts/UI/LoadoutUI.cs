@@ -12,15 +12,20 @@ public class LoadoutUI : MonoBehaviour
     // Transform loadoutUI;
     Image icon, ammoIcon;
     TextMeshProUGUI ammo_main, ammo_side, ammoReserve_main, ammoReserve_side;
+    // [SerializeField] private Slider abilityCounter;
     Color white, green;
 
-    #region get hud elements
+    #region enable hud elements
 
     public void GetHUDIcon(Sprite weaponIcon, int weaponIndex){
         icon = transform.GetChild(weaponIndex).Find("Icon").GetComponent<Image>();
         icon.sprite = weaponIcon;
         icon.enabled = true;
     }
+
+    #endregion
+
+    #region ammo hud
 
     public void GetHUDAmmo(int ammo, int weaponIndex){
         switch (weaponIndex){
@@ -35,7 +40,6 @@ public class LoadoutUI : MonoBehaviour
             default: break;
         }
     }
-
     public void GetHUDMaxAmmo(int maxAmmo, int weaponIndex){
         switch (weaponIndex){
             case (int)WeaponCategory.primary:
@@ -49,7 +53,6 @@ public class LoadoutUI : MonoBehaviour
             default: break;
         }
     }
-
     public void GetHUDAmmoIcon(ItemType gunAmmoType, int weaponIndex){
         ammoIcon = transform.GetChild(weaponIndex).Find("AmmoIcon").GetComponent<Image>();
         ammoIcon.sprite = db.GetItemByType(gunAmmoType).itemIcon;
@@ -58,7 +61,17 @@ public class LoadoutUI : MonoBehaviour
 
     #endregion
 
-    #region update hud elements
+    #region ability hud
+
+    public void EnableAbilityCounter(){}
+
+    public void UpdateAbilityCounter(){}
+
+    public void ResetAbilityCounter(){}
+
+    #endregion
+
+    #region update hud color
     
     // change HUD color of currently selected weapon
     public void ChangeHUDColor(int selectedWeapon){
@@ -82,6 +95,10 @@ public class LoadoutUI : MonoBehaviour
             if (child.TryGetComponent(out TextMeshProUGUI tmpro)) tmpro.color = green;
         }
     }
+
+    #endregion
+
+    #region disable hud elements
 
     public void RemoveHUDElements(int weaponIndex){
         foreach (Transform child in transform.GetChild(weaponIndex)){
