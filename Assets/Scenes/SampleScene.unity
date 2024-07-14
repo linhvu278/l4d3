@@ -357,7 +357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6298,7 +6298,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1196473064}
   m_LocalRotation: {x: 0.042956725, y: 0.17348288, z: -0.007574429, w: 0.98387045}
-  m_LocalPosition: {x: 0.15, y: -0.2, z: 0.5}
+  m_LocalPosition: {x: 0.15, y: -0.3, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10587,18 +10587,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e5cb2b4917b3d94a835fd65dee1cede, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponsList:
-  - {fileID: 11400000, guid: 717aadcc14766834d96608ba1929f86c, type: 2}
-  - {fileID: 11400000, guid: 7fad09a2fa4204749a65c65404010cf3, type: 2}
-  - {fileID: 11400000, guid: 242239e3ebc862e4e968e56ad2489ce1, type: 2}
-  - {fileID: 11400000, guid: 9a915d05bf04687478a656f9ac968dad, type: 2}
-  - {fileID: 11400000, guid: 5464196387d46d74d8655b63db37a5b3, type: 2}
-  - {fileID: 11400000, guid: de9b52da20d9e1f4a848a3ad22292aea, type: 2}
-  - {fileID: 11400000, guid: 7c496dd63d9fdcc499409cc7c81dcfaf, type: 2}
-  - {fileID: 11400000, guid: cdce0a17b0a52a346888043ff845cd83, type: 2}
-  - {fileID: 11400000, guid: f878871314a83ed49818cef2d7d09798, type: 2}
-  - {fileID: 11400000, guid: a6ec6366c1bddea40a888da817205729, type: 2}
-  - {fileID: 11400000, guid: ed94018c158729e4fa33b595070dee6e, type: 2}
   weaponPrefabs:
   - {fileID: 4418672401336491425, guid: f8a743240dfccb345bba1fb12cfe59d9, type: 3}
   - {fileID: 8320346131316551518, guid: 1fac541b79ccb1347b0dc74bd6a17366, type: 3}
@@ -10611,6 +10599,7 @@ MonoBehaviour:
   - {fileID: 8242749675468269338, guid: 2a7debc432aec9049a0110162c728bf2, type: 3}
   - {fileID: 2055563315419240324, guid: ddf450ab66be8914a8aadff5862d5fe6, type: 3}
   - {fileID: 1081347831227612304, guid: 12d4ff875127d3d4b91f3261e324ae18, type: 3}
+  - {fileID: 6361973769110160351, guid: 60e897b3efc112f4481f6f304368407c, type: 3}
   weaponPickups:
   - {fileID: 2594296285122628951, guid: 4a0d86f16f8bf9043b3ab7a4aea1d876, type: 3}
   - {fileID: 3329321704512905657, guid: 3a9088adbb0c8b54b8f9c275afec5fb8, type: 3}
@@ -10623,6 +10612,7 @@ MonoBehaviour:
   - {fileID: 6881094403390449000, guid: 27664bf3e7aff454599a78a179963f04, type: 3}
   - {fileID: 8611619877901726839, guid: 914738ae33bb50a40ac5909cc61db654, type: 3}
   - {fileID: 577201638562120819, guid: bbb6412a83e411b43888d6322f968275, type: 3}
+  - {fileID: 4162315522348796325, guid: a883dfde049ab4f4e895d9301a72ce71, type: 3}
   itemList:
   - {fileID: 11400000, guid: c3251be2911888040bfc8d16ce56559a, type: 2}
   - {fileID: 11400000, guid: de0844624f1426e40852aeb5f6c96b7a, type: 2}
@@ -10655,6 +10645,7 @@ MonoBehaviour:
   - {fileID: 6732138171778181597, guid: 319fa2218a9d5874fbdf289544c2fddc, type: 3}
   - {fileID: 8857256823651526865, guid: e651516e6e9cd784cbc591c51e6abebb, type: 3}
   - {fileID: 157627166505746285, guid: b6ef32833d3c919439fc79eab450d4a0, type: 3}
+  - {fileID: 2465707493009966336, guid: 41113f7f1de6fac4b9c6ffe12a2dd5df, type: 3}
   - {fileID: 6699605514861055559, guid: 6ce081651c1a20e4c80cb9f6a7bfe382, type: 3}
 --- !u!4 &2086781532
 Transform:
@@ -11125,7 +11116,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 4053de23ab63c74468faf38cb6495d0f, type: 2}
   pickupSound: {fileID: 8300000, guid: 149c7727cbf80234d91f0ad69506e6dd, type: 3}
-  itemAmount: 50
+  itemAmount: 60
   destroyItemOnPickUp: 0
 --- !u!4 &173976610765896527
 Transform:
@@ -11973,7 +11964,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: de0844624f1426e40852aeb5f6c96b7a, type: 2}
   pickupSound: {fileID: 8300000, guid: 149c7727cbf80234d91f0ad69506e6dd, type: 3}
-  itemAmount: 50
+  itemAmount: 60
   destroyItemOnPickUp: 0
 --- !u!33 &4658873366408631456
 MeshFilter:
@@ -12691,7 +12682,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 0d86301fdd59b5048a78e4e6bdc6d917, type: 2}
   pickupSound: {fileID: 8300000, guid: 149c7727cbf80234d91f0ad69506e6dd, type: 3}
-  itemAmount: 30
+  itemAmount: 40
   destroyItemOnPickUp: 0
 --- !u!64 &5976277846355353733
 MeshCollider:
@@ -13038,7 +13029,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 12abed5b8908b894ab2b2cf158178bc8, type: 2}
   pickupSound: {fileID: 8300000, guid: 149c7727cbf80234d91f0ad69506e6dd, type: 3}
-  itemAmount: 30
+  itemAmount: 40
   destroyItemOnPickUp: 0
 --- !u!54 &6985720201167857304
 Rigidbody:
@@ -13070,7 +13061,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 05df90498816a7d459fb4885377037fe, type: 2}
   pickupSound: {fileID: 8300000, guid: 149c7727cbf80234d91f0ad69506e6dd, type: 3}
-  itemAmount: 10
+  itemAmount: 20
   destroyItemOnPickUp: 0
 --- !u!65 &7075959539319838090
 BoxCollider:
@@ -13521,7 +13512,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: fde7306169d3d5645813acbc97727524, type: 2}
   pickupSound: {fileID: 8300000, guid: 149c7727cbf80234d91f0ad69506e6dd, type: 3}
-  itemAmount: 30
+  itemAmount: 40
   destroyItemOnPickUp: 0
 --- !u!1001 &8026260109722779837
 PrefabInstance:

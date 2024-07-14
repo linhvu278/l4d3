@@ -9,16 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eff5695a764e13943bb12d256c789ef4, type: 3}
-  m_Name: test_ability
+  m_Script: {fileID: 11500000, guid: 45ccbe2c800d9d349adb6ad6ad53d91c, type: 3}
+  m_Name: weapon_bandage
   m_EditorClassIdentifier: 
-  weaponId: 0
-  weaponName: test ability
-  weaponIcon: {fileID: 21300000, guid: 60c3f9fa69f5a0048987168151e3293d, type: 3}
-  weaponPrefabName: prefab_buff_ed
-  weaponPickupName: pickup_weapon_buff_ed
-  weaponCategory: 5
+  weaponId: 7
+  weaponName: Bandage
+  weaponIcon: {fileID: 21300000, guid: cd6b2df9f00795040b2775445d8b5945, type: 3}
+  weaponCategory: 3
   deployTime: 1
   weaponAmount: 1
+  craftingCost: 25
   weaponRotation: {x: 0, y: 0, z: 0}
-  abilityType: 0
+  healAmount: 20
+  healTime: 1.5
+  canHealWhileMoving: 1
