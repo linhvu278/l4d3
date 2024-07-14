@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-public class UtilityToolkit : MonoBehaviour, IWeaponAmount, IPrimaryInput/*, ISecondaryInput*/
+public class GadgetToolkit : MonoBehaviour, IWeaponAmount, IPrimaryInput/*, ISecondaryInput*/
 {
-    [SerializeField] private Weapon_Utility toolkit;
+    [SerializeField] private Weapon_Gadget toolkit;
     private float useTime;
     // private const float toolkitRange = 2f;
 

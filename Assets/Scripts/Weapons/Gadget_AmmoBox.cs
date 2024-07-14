@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-public class UtilityAmmoBox : MonoBehaviour, IPrimaryInput, IWeaponAmount
+public class Gadget_AmmoBox : MonoBehaviour, IPrimaryInput, IWeaponAmount
 {
-    [SerializeField] private Weapon_Utility ammoBox;
+    [SerializeField] private Weapon_Gadget ammoBox;
     private int ammoboxAmount;
     [SerializeField] private GameObject ammoBoxObject;
     private float useTime;
@@ -33,7 +33,7 @@ public class UtilityAmmoBox : MonoBehaviour, IPrimaryInput, IWeaponAmount
             deployPosition = new Vector3(playa.transform.position.x, playa.transform.position.y - 1f, playa.transform.position.z);
             Instantiate(ammoBoxObject, deployPosition, Quaternion.identity);
             ammoboxAmount--;
-            if (ammoboxAmount == 0) inventory.RemoveWeapon(ammoBox);
+            if (ammoboxAmount == 0) inventory.RemoveWeapon(ammoBox, (int)WeaponCategory.gadget);
         }
     }
     private void CancelDeploy(){
