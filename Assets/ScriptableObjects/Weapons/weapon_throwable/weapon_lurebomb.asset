@@ -12,12 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cf11955b37c02c41b433a0e5bec8825, type: 3}
   m_Name: weapon_lurebomb
   m_EditorClassIdentifier: 
-  weaponId: 13
   weaponName: C4
   weaponIcon: {fileID: 21300000, guid: 81f72ad297c3fec449ce66ef7e6bde86, type: 3}
-  weaponPrefabName: prefab_throwable_lurebomb
-  weaponPickupName: pickup_weapon_throwable_lurebomb
   weaponCategory: 2
+  weaponType: 6
   deployTime: 1
   weaponAmount: 1
   weaponRotation: {x: 0, y: 0, z: 0}

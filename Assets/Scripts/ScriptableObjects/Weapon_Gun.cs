@@ -3,8 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New gun", menuName = "Inventory/Weapon_Gun")]
 public class Weapon_Gun : Weapon
 {
-    public GunType gunType;
-    public AmmoType ammoType;
+    // public GunType gunType;
+    // public AmmoType ammoType;
+    public ItemType ammoType;
     public FireMode fireMode;
     // public int clipAmmo;
     public float damage, fireRate, inaccuracy, /*inaccuracyMove,*/ range, reloadTime/*, maxDurability*/;
@@ -12,6 +13,6 @@ public class Weapon_Gun : Weapon
     public Vector3 aimPosition, aimSightPosition;
     // public Item weaponUpgradeType;
 }
-public enum GunType { rifle, shotgun, sniper, smg_pistol/*, pistol*/ }
-public enum AmmoType { ammo_762, ammo_556, ammo_12g, ammo_45acp, ammo_9mm, ammo_magnum }
+// public enum GunType { rifle, shotgun, sniper, smg_pistol/*, pistol*/ }
+// public enum AmmoType { ammo_762, ammo_556, ammo_12g, ammo_45acp, ammo_9mm, ammo_magnum }
 public enum FireMode { single, auto, burst }

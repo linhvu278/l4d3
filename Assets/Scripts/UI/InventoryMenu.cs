@@ -89,7 +89,7 @@ public class InventoryMenu : MonoBehaviour
         ExitMenu();
     }
     private void DropWeapon(){
-        inventory.DropWeapon(weaponInfo);
+        // inventory.DropWeapon(weaponInfo);
         ExitMenu();
     }
     private void UnloadWeapon(){

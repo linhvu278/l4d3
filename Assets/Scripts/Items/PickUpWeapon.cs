@@ -1,11 +1,15 @@
 using UnityEngine;
 
-public class PickUpWeapon : MonoBehaviour, IInteractable, IWeaponAmount//, IOutline
+public class PickUpWeapon : MonoBehaviour, IInteractable, IWeaponAmount, ITypeWeapon//, IOutline
 {
     [SerializeField] private Weapon weapon;
+    // public int WeaponId { get => weapon.weaponId; }
     [SerializeField] private int weaponAmount;
     // public Weapon Weapon => weapon;
+    // public WeaponType weaponType;
+    public WeaponType getWeaponType => weapon.weaponType;
 
+    private GameObject playa;
     private Inventory inventory;
     // [SerializeField] private Light light;
     // private WeaponStats weaponStats;
@@ -17,8 +21,8 @@ public class PickUpWeapon : MonoBehaviour, IInteractable, IWeaponAmount//, IOutl
         //     inventory.AddWeaponWithUpgrades(weapon, weaponAmount, ws.UpgradeAccuracy, ws.UpgradeDamage, ws.UpgradeRange);
         //     Destroy(gameObject);
         // } else {
-            if (inventory.AddWeapon(weapon, (int)weapon.weaponCategory, weaponAmount)) Destroy(gameObject);
-            else return;
+            inventory.AddWeapon(weapon, (int)weapon.weaponCategory, weaponAmount);
+            Destroy(gameObject);
         // }
     }
 
@@ -33,7 +37,10 @@ public class PickUpWeapon : MonoBehaviour, IInteractable, IWeaponAmount//, IOutl
     //     DisableOutline();
     // }
     void Start(){
-        inventory = Inventory.instance;
+        playa = GameObject.FindGameObjectWithTag("Player");
+        inventory = playa.GetComponent<Inventory>();
+        // weaponType = weapon.weaponType;
+        // Debug.Log(weaponType);
 
         // light.GetComponent<Light>();
         // light.range = .5f;

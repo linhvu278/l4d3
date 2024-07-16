@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Throwable : MonoBehaviour, IPrimaryInput, IWeaponAmount
+public class Throwable : MonoBehaviour, IPrimaryInput, IWeaponAmount, ITypeWeapon
 {
     [SerializeField] protected Weapon_Throwable throwable;
+    [HideInInspector] public WeaponType getWeaponType => throwable.weaponType;
     private int throwAmount;
 
     private bool canThrow;
@@ -37,7 +38,7 @@ public class Throwable : MonoBehaviour, IPrimaryInput, IWeaponAmount
             projectileRb.AddForce(cam.forward * throwForce, ForceMode.VelocityChange);
 
             throwAmount--;
-            if (throwAmount == 0) inventory.RemoveWeapon(throwable);
+            if (throwAmount == 0) inventory.RemoveWeapon(throwable, (int)WeaponCategory.throwable);
         }
     }
 

@@ -9,11 +9,14 @@ public class PlayerManager : MonoBehaviour, IDamage, IFire
 
     // PlayerMovement playerMovement;
     // PlayerOverlay playerOverlay;
+    private Inventory inv;
+    private LoadoutUI loadout;
 
     [SerializeField] TextMeshProUGUI healthText;
     [SerializeField] TextMeshProUGUI staminaText;
     [SerializeField] Slider healthBar;
     [SerializeField] Slider staminaBar;
+    [SerializeField] Slider abilityBar;
 
     [SerializeField] AudioSource outOfStaminaSound;
 
@@ -33,19 +36,23 @@ public class PlayerManager : MonoBehaviour, IDamage, IFire
     private float staminaRegenCounter = 0,
                   staminaBuffCounter = 0;//, healthBuffCounter
 
+    // player buffs
     public bool IsStaminaBuffActive { get => isStaminaBuffActive; set => isStaminaBuffActive = value; }
     public bool IsHealthBuffActive { get => isHealthBuffActive; set => isHealthBuffActive = value; }
+    private bool isStaminaBuffActive, isHealthBuffActive;
 
-    private bool isStaminaBuffActive, isHealthBuffActive, isOnFire;
+    // fire related stuffs
+    private bool isOnFire;
     private float fireDamage, fireDurationCounter = 0;
     private const float fireDebuffMultiplier = 0.2f,
                         fireDuration = 10f;
 
-    void FixedUpdate(){
-        // Debug.Log(staminaRegenCounter);
-        // Debug.Log(staminaBuffCounter);
-    }
+    // ability
+    private int abilityCounter;
+    private readonly int MAX_ABILITY_COUNTER_LIMIT = 1;
 
+    #region health and damage
+    
     public void HealthRegen(float healthRegen){
         health += healthRegen;
         if (health > maxHealth) health = maxHealth;
@@ -57,6 +64,10 @@ public class PlayerManager : MonoBehaviour, IDamage, IFire
         if (health <= 0) Die();
     }
 
+    #endregion
+
+    #region stamina
+    
     public void StaminaDrain(float staminaDrain){
         /*if (!isStaminaBuffActive)*/ stamina -= staminaDrain;
         staminaRegenCounter = regenStaminaDelay;
@@ -69,6 +80,10 @@ public class PlayerManager : MonoBehaviour, IDamage, IFire
         if (stamina > maxStamina) stamina = maxStamina;
     }
 
+    #endregion
+
+    #region fire
+    
     public bool IsOnFire {
         get => isOnFire;
         set {
@@ -78,6 +93,10 @@ public class PlayerManager : MonoBehaviour, IDamage, IFire
     }
     public float FireDamage { get => fireDamage; set => fireDamage = value; }
 
+    #endregion
+
+    #region buff
+    
     public void StaminaBuff(float duration){
         isStaminaBuffActive = true;
         stamina = maxStamina;
@@ -91,10 +110,38 @@ public class PlayerManager : MonoBehaviour, IDamage, IFire
     //     Debug.Log("health buffed");
     // }
 
+    #endregion
+
+    #region death
+    
     private void Die(){
         // show game over screen here
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    #endregion
+
+    #region ability
+
+    public void AddAbilityCounter(){
+        if (inv.weaponInventory[(int)WeaponCategory.ability] != null && abilityCounter < MAX_ABILITY_COUNTER_LIMIT){
+            abilityCounter++;
+            abilityBar.value = abilityCounter;
+            Debug.Log("Ability points: " + abilityCounter);
+            if (abilityCounter == MAX_ABILITY_COUNTER_LIMIT) ActivateAbility();
+        }
+    }
+    public void ActivateAbility(){
+        Debug.Log("Ability ready");
+        int index = (int)WeaponCategory.ability;
+        Weapon abilityWeapon = inv.weaponInventory[index];
+        inv.AddAbilityWeapon(abilityWeapon);
+    }
+    public void ResetAbilityCounter(){
+        abilityCounter = 0;
+    }
+
+    #endregion
 
     void Update()
     {
@@ -142,6 +189,11 @@ public class PlayerManager : MonoBehaviour, IDamage, IFire
         // if (stamina > 50) outOfStaminaSound.Stop();
     }
 
+    void FixedUpdate(){
+        // Debug.Log(staminaRegenCounter);
+        // Debug.Log(staminaBuffCounter);
+    }
+
     void Awake()
     {
         if (instance != null){
@@ -155,6 +207,8 @@ public class PlayerManager : MonoBehaviour, IDamage, IFire
     {
         // playerMovement = GetComponent<PlayerMovement>();
         // playerOverlay = PlayerOverlay.instance;
+        inv = GetComponent<Inventory>();
+        loadout = LoadoutUI.instance;
 
         maxHealth = 100f;
         maxStamina = 100f;
@@ -167,5 +221,7 @@ public class PlayerManager : MonoBehaviour, IDamage, IFire
 
         health = maxHealth;
         stamina = maxStamina;
+
+        abilityBar.maxValue = MAX_ABILITY_COUNTER_LIMIT;
     }
 }

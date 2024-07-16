@@ -5,11 +5,12 @@ public class Weapon : ScriptableObject
 {
     // public GameObject weaponPickup; // weapons spawn in game space
     // public GameObject weaponPrefab; // weapons in weaponHolder
-    public int weaponId;
+    // public int weaponId;
     public string weaponName;
     public Sprite weaponIcon;
+    // public string weaponPrefabName, weaponPickupName;
     public WeaponCategory weaponCategory; // assign weapon to correcet weapon slot
-    // public WeaponType weaponType;
+    public WeaponType weaponType;
     public float deployTime;
     public int weaponAmount;
     // public int craftingCost;
@@ -19,12 +20,9 @@ public class Weapon : ScriptableObject
 
 public enum WeaponCategory { primary, secondary, throwable, health, gadget, ability }
 
-// differentiate between many types of weapons
-// public enum WeaponType{
-//     gun_rifle, gun_shotgun, gun_smg, gun_sniper, gun_lmg, gun_pistol,
-//     melee_blade, melee_blunt,
-//     throwable_explode, throwable_lure,
-//     health_slow, health_quick,
-//     gadget_ammo,
-//     buff_stamina, buff_health
-// }
+public enum WeaponType{
+    gun_ak, gun_m4, gun_aug, gun_1911, gun_590,
+    throwable_molotov, throwable_lurebomb,
+    health_medkit, health_antiseptic,
+    gadget_ammobox
+}

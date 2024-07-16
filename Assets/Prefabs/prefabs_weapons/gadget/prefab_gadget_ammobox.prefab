@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5431453175254753427}
-  - component: {fileID: 9087068890775819325}
+  - component: {fileID: 2738243356532811562}
   - component: {fileID: 6743423317990730508}
   - component: {fileID: 1616124375988669101}
   m_Layer: 10
@@ -35,7 +35,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9087068890775819325
+--- !u!114 &2738243356532811562
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,12 +44,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2055563315419240324}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24d6552d44feff64ca13ed6a331bf85a, type: 3}
+  m_Script: {fileID: 11500000, guid: 31db36d389ef6e14a92e259eba355551, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ammoBox: {fileID: 11400000, guid: a6ec6366c1bddea40a888da817205729, type: 2}
   ammoBoxObject: {fileID: 8196056172072544515, guid: 7c0469046b11bc14f997a45c34da02bb, type: 3}
-  deploySound: {fileID: 1616124375988669101}
+  deploySound: {fileID: 0}
 --- !u!95 &6743423317990730508
 Animator:
   serializedVersion: 5

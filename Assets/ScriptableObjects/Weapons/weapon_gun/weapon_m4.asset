@@ -12,21 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71649ad3ca0f6b344b85b21ffd9209e4, type: 3}
   m_Name: weapon_m4
   m_EditorClassIdentifier: 
-  weaponId: 1
   weaponName: M4
   weaponIcon: {fileID: 21300000, guid: 6034a323c70f0f241a6e92eb92d64c3a, type: 3}
-  weaponPrefabName: prefab_gun_m4
-  weaponPickupName: pickup_weapon_gun_m4
   weaponCategory: 0
+  weaponType: 1
   deployTime: 1
-  weaponAmount: 32
+  weaponAmount: 36
   weaponRotation: {x: 0, y: 0, z: 90}
-  gunType: 0
   ammoType: 1
   fireMode: 1
-  damage: 39
+  damage: 36
   fireRate: 10
-  inaccuracy: 2.25
+  inaccuracy: 3.1
   range: 100
   reloadTime: 2
   slowReload: 0

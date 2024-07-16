@@ -2,9 +2,10 @@ using System.Collections;
 // using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
+public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount, ITypeWeapon
 {
     [SerializeField] private Weapon_Health health;
+    [HideInInspector] public WeaponType getWeaponType => health.weaponType;
     private int healthAmount;
     private bool canHealWhileMoving;
     private float healTime, healAmount;
@@ -37,7 +38,7 @@ public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount
             healAmount = canHealWhileMoving ? health.healAmount : medkitHealAmount;
             pm.HealthRegen(healAmount);
             healthAmount--;
-            if (healthAmount == 0) inventory.RemoveWeapon(health);
+            if (healthAmount == 0) inventory.RemoveWeapon(health, (int)WeaponCategory.health);
         }
     }
     void CancelHeal(){

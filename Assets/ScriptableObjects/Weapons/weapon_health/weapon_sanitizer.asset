@@ -12,12 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45ccbe2c800d9d349adb6ad6ad53d91c, type: 3}
   m_Name: weapon_sanitizer
   m_EditorClassIdentifier: 
-  weaponId: 14
   weaponName: Sanitizer
   weaponIcon: {fileID: 21300000, guid: b28dc1e452430d245957e3f526b4d4e0, type: 3}
-  weaponPrefabName: prefab_health_sanitizer
-  weaponPickupName: pickup_weapon_health_sanitizer
   weaponCategory: 3
+  weaponType: 8
   deployTime: 1
   weaponAmount: 1
   weaponRotation: {x: 0, y: 0, z: 0}

@@ -12,21 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71649ad3ca0f6b344b85b21ffd9209e4, type: 3}
   m_Name: weapon_1911
   m_EditorClassIdentifier: 
-  weaponId: 9
   weaponName: 1911
   weaponIcon: {fileID: 21300000, guid: 72d1716e116e1b54d832c679f8cbc7e6, type: 3}
-  weaponPrefabName: prefab_gun_1911
-  weaponPickupName: pickup_weapon_gun_1911
   weaponCategory: 1
+  weaponType: 3
   deployTime: 1
   weaponAmount: 12
   weaponRotation: {x: 0, y: -90, z: -90}
-  gunType: 3
   ammoType: 3
   fireMode: 0
   damage: 36
   fireRate: 6.25
-  inaccuracy: 1.95
+  inaccuracy: 2.95
   range: 75
   reloadTime: 1.5
   slowReload: 0

@@ -1,24 +1,24 @@
 using System.Collections;
 using UnityEngine;
 
-public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, IUnloadWeapon, /*IRepairWeapon, */IWeaponUpgrade, IWeaponAmount
+public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, IUnloadWeapon, /*IRepairWeapon, */IWeaponUpgrade, IWeaponAmount, ITypeWeapon
 {
     [SerializeField] private Weapon_Gun gun; // where the gun gets its stats from
+    [HideInInspector] public WeaponType getWeaponType => gun.weaponType;
 
     // [SerializeField] private Transform gunUpgrades;
     [SerializeField] private GameObject sightUpgrade, barrelUpgrade, laserUpgrade;
     public delegate void OnUpgradeChange();
     public OnUpgradeChange onSightUpgradeChange, onBarrelUpgradeChange, onLaserUpgradeChange;
     
-    // GameObject playa;
+    GameObject playa;
     SimpleCrosshair crosshair;
     Inventory inventory;
     LoadoutUI loadoutUI;
     Transform cam;
     Animator animator;
-    // PlayerMovement playerMovement;
     ItemDatabase db;
-    PlayerMovement playerMovement;
+    PlayerMovement p_Movement;
     
     // float x, y;
     // bool isGrounded;
@@ -52,9 +52,8 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     private Vector3 defaultPosition, aimPosition, aimSightPosition;
     private const float ADS_SPEED = 2f;
 
-    // 
-    // shooting
-    // 
+    #region shooting
+
     private void Shoot(){
         if (ammo > 0){
             StartCoroutine(ShootCooldown());
@@ -67,7 +66,10 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
             muzzleFlash.Play();
 
             RaycastHit hit;
-            if (gun.gunType == GunType.shotgun){ // shotgun (has spread)
+            // 
+            // shotgun types
+            // 
+            if (gun.ammoType == ItemType.item_ammo_12g){
                 for (int i = 0; i < 12; i++){
                     if (Physics.Raycast(cam.position, GetShootingDirection(), out hit , range)){
                         if (hit.collider.tag == "Enemy"){
@@ -79,7 +81,10 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
                     impact.transform.parent = hit.transform;
                     Destroy(impact, 10f);
                 }
-            } else { // non-shotgun (no spread)
+            // 
+            // non-shotgun types
+            // 
+            } else {
                 if (Physics.Raycast(cam.position, GetShootingDirection(), out hit, range)){
                     if (hit.collider.tag == "Enemy"){
                         hit.collider.GetComponent<IDamage>().TakeDamage(GetGunDamage());
@@ -90,12 +95,15 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
                     Destroy(impact, 10f);
                 }
             }
-        // } else reloadCoroutine = StartCoroutine(Reload()); // auto reload when no ammo left
-        } else emptyClipSound.Play();
+        }
+        else reloadCoroutine = StartCoroutine(Reload()); // auto reload when no ammo left
+        // else emptyClipSound.Play();
     }
-    // 
-    // reload
-    // 
+
+    #endregion
+    
+    #region reloading
+
     private IEnumerator Reload(){
         // magazine ammo is the same and/or no reserve ammo left
         if (ammo == clipAmmo || maxAmmo == 0) yield return null;
@@ -151,9 +159,11 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         loadoutUI.GetHUDAmmo(ammo, weaponCategory);
         }
     }
-    // 
-    // ADS
-    // 
+
+    #endregion
+    
+    #region aim down sight
+
     private void AimDownSight(bool isADS){
         //animator.SetBool("isAiming", isAiming);
 
@@ -169,23 +179,23 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
             parentTransform.localPosition = Vector3.MoveTowards(parentTransform.localPosition, defaultPosition, ADS_SPEED * Time.deltaTime);
         }
     }
-    // 
-    // calculate initial weapon inaccuracy
-    // 
+
+    #endregion
+    
+    #region ramdomize accuracy
+
     private float Inaccuracy(){
-        inaccuracyMove = playerMovement.IsMoving ? 1.5f : 1f;
-        inaccuracyJump = !playerMovement.IsGrounded ? 2f : 1f;
+        inaccuracyMove = p_Movement.IsMoving || !p_Movement.IsGrounded ? 10f/(gun.inaccuracy+1) : 1f;
+        // inaccuracyJump = !p_Movement.IsGrounded ? 2.4f : 1f;
         // inaccuracyNormal = isLaserUpgraded ? Mathf.Round(gun.inaccuracy / 1.25f * 1000.0f) / 1000.0f : gun.inaccuracy;
-        inaccuracyAim = isAiming ? 0.25f : 1f;
+        inaccuracyAim = isAiming ? 0.2f : 1f;
 
         // float inaccuracyMoveJump = inaccuracyMove + inaccuracyJump;
 
-        if (gun.gunType == GunType.shotgun) return gun.inaccuracy; // shotguns are unaffected when moving
-        else return gun.inaccuracy * inaccuracyAim * inaccuracyJump * inaccuracyMove * GetAccuracyModifier();
+        if (gun.ammoType == ItemType.item_ammo_12g) return gun.inaccuracy; // shotguns are unaffected when moving
+        else return gun.inaccuracy * inaccuracyAim * /*inaccuracyJump * */inaccuracyMove * GetAccuracyModifier();
     }
-    // 
-    // randomize aim
-    // 
+    
     Vector3 GetShootingDirection(){
         Vector3 targetPos = cam.position + cam.forward * range;
         targetPos = new Vector3(
@@ -196,11 +206,13 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         Vector3 direction = targetPos - cam.position;
         return direction.normalized;
     }
-    // 
-    // return ammo in gun to inventory
-    // 
+
+    #endregion
+    
+    #region unloading ammo
+
     public void Unload(){
-        if (CanUnload()){
+        if (CanUnload){
             Item itemToAdd = db.GetItemByType(GetItemType());
             if (!inventory.AddItem(itemToAdd, ammo)) inventory.DropItem(itemToAdd, ammo);
             ammo = 0;
@@ -208,42 +220,36 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         }
     }
 
+    #endregion
+
     private float GetGunDamage(){
-        dmgModifier = (int)gun.gunType == 3 ? 1.25f : 1.15f; //pistols & smgs get higher damage multiplier
+        dmgModifier = gun.ammoType == ItemType.item_ammo_12g ? 1.25f : 1.15f; //pistols & smgs get higher damage multiplier
         return isBarrelUpgraded ? gun.damage * dmgModifier : gun.damage;
     }
     private float GetAccuracyModifier(){
-        accModifier = isLaserUpgraded ? 0.75f : 1f;
+        accModifier = isLaserUpgraded ? 0.8f : 1f;
         return accModifier;
     }
 
     bool CanShoot{
-        get{
-            if (/*durability > 0 && !isEquiping */isShooting || ammo <= 0 || !canShoot) return false;
-            else
-            {
-                if (isReloading)
-                {
+        get {
+            if (/*durability > 0 && !isEquiping */isShooting || !canShoot) return false;
+            else {
+                if (isReloading) {
                     if (slowReload) return true;
                     else return false;
-                }
-                else return true;
+                } else return true;
             }
-        }
-        set{
+        } set {
             canShoot = value;
         }
     }
-    bool CanReload(){
-        return /*durability > 0 && */!isReloading && !isShooting && !isEquiping;
-    }
-    bool CanAim(){
-        return !isReloading && !isEquiping && !isShooting;
-    }
-    bool CanUnload(){
-        return ammo > 0 && !isReloading;
-    }
-    // equiping weapon when active
+    bool CanReload => !isReloading && !isShooting && !isEquiping;
+    bool CanAim => !isReloading && !isEquiping && !isShooting;
+    bool CanUnload => ammo > 0 && !isReloading;
+    
+    #region equiping weapon
+
     IEnumerator Equip(float deployTime){
         isEquiping = true;
         cockSound.Play();
@@ -252,7 +258,11 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         isEquiping = false;
         canShoot = true;
     }
-    // full auto
+
+    #endregion
+
+    #region firing modes
+
     IEnumerator AutoFire(){
         Shoot();
         while (ammo > 0){
@@ -260,30 +270,37 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
             Shoot();
         }
     }
-    // burst
+    
     private IEnumerator Burst(){
-        Shoot();
-        yield return new WaitForSeconds(1/fireRate);
-        Shoot();
-        yield return new WaitForSeconds(1/fireRate);
-        Shoot();
-        // yield break;
-    }
-    IEnumerator BurstFire(){
-        StartCoroutine(Burst());
-        while (ammo > 0 && isShooting){
-            yield return new WaitForSeconds(4/fireRate);
-            StartCoroutine(Burst());
+        if (burstFireCoroutine == null){
+            Shoot();
+            yield return new WaitForSeconds(1/fireRate);
+            Shoot();
+            yield return new WaitForSeconds(1/fireRate);
+            Shoot();
+            // yield return new WaitForSeconds(3/fireRate);
+            // yield break;
         }
     }
+    // IEnumerator BurstFire(){
+    //     StartCoroutine(Burst());
+    //     while (ammo > 0 && isShooting){
+    //         yield return new WaitForSeconds(4/fireRate);
+    //         StartCoroutine(Burst());
+    //     }
+    // }
     IEnumerator ShootCooldown(){
         isShooting = true;
         yield return new WaitForSeconds(1/fireRate);
         isShooting = false;
     }
+
+    #endregion
+
     private void StartShooting(){
         if (CanShoot){
-            switch (gun.fireMode){
+            switch (gun.fireMode)
+            {
                 case FireMode.single:
                     Shoot();
                     break;
@@ -291,18 +308,21 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
                     autoFireCoroutine = StartCoroutine(AutoFire());
                     break;
                 case FireMode.burst:
-                    burstFireCoroutine = StartCoroutine(BurstFire());
+                    burstFireCoroutine = StartCoroutine(Burst());
+                    break;
+                default:
                     break;
             }
-        } //else emptyClipSound.Play();
+        }
+        if (maxAmmo == 0) emptyClipSound.Play();
         // if (/*durability <= 0 || */ammo == 0 && maxAmmo == 0 && !isEquiping) emptyClipSound.Play();
     }
     private void StopShooting(){
         if (autoFireCoroutine != null) StopCoroutine(autoFireCoroutine);
-        if (burstFireCoroutine != null) StopCoroutine(burstFireCoroutine);
+        // if (burstFireCoroutine != null) StopCoroutine(burstFireCoroutine);
     }
     private void Aiming(){
-        if (CanAim()) isAiming = !isAiming;
+        if (CanAim) isAiming = !isAiming;
         range = isAiming && isSightUpgraded ? gun.range * scopeRangeMultiplier : gun.range;
         // Debug.Log(range);
     }
@@ -328,7 +348,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     public void OnSecondaryStart() { Aiming(); }
     public void OnSecondaryEnd(){}
     public void OnReload(){
-        if (CanReload()) StartCoroutine(Reload());
+        if (CanReload) StartCoroutine(Reload());
     }
     // 
     // upgrade gun
@@ -361,16 +381,17 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
 
     // convert gun ammo type to inventory item type
     public ItemType GetItemType(){
-        return gun.ammoType switch
-        {
-            AmmoType.ammo_762 => ItemType.item_ammo_762,
-            AmmoType.ammo_556 => ItemType.item_ammo_556,
-            AmmoType.ammo_12g => ItemType.item_ammo_12g,
-            AmmoType.ammo_45acp => ItemType.item_ammo_45acp,
-            AmmoType.ammo_9mm => ItemType.item_ammo_9mm,
-            AmmoType.ammo_magnum => ItemType.item_ammo_magnum,
-            _ => ItemType.item_ammo_762,
-        };
+        // return gun.ammoType switch
+        // {
+        //     AmmoType.ammo_762 => ItemType.item_ammo_762,
+        //     AmmoType.ammo_556 => ItemType.item_ammo_556,
+        //     AmmoType.ammo_12g => ItemType.item_ammo_12g,
+        //     AmmoType.ammo_45acp => ItemType.item_ammo_45acp,
+        //     AmmoType.ammo_9mm => ItemType.item_ammo_9mm,
+        //     AmmoType.ammo_magnum => ItemType.item_ammo_magnum,
+        //     _ => ItemType.item_ammo_762,
+        // };
+        return gun.ammoType;
     }
     
     void OnEnable(){
@@ -407,9 +428,10 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         crosshair = GameObject.FindGameObjectWithTag("Crosshair").GetComponent<SimpleCrosshair>();
     }
     void Start(){
-        inventory = Inventory.instance;
+        playa = GameObject.FindGameObjectWithTag("Player");
+        inventory = playa.GetComponent<Inventory>();
         loadoutUI = LoadoutUI.instance;
-        playerMovement = PlayerMovement.instance;
+        p_Movement = playa.GetComponent<PlayerMovement>();
 
         clipAmmo = gun.weaponAmount;
         range = gun.range;
@@ -429,7 +451,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         cam = Camera.main.transform;
         animator = gameObject.GetComponent<Animator>();
         // playa = GameObject.FindGameObjectWithTag("Player");
-        // playerMovement = playa.GetComponent<PlayerMovement>();
+        // p_Movement = playa.GetComponent<PlayerMovement>();
         db = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemDatabase>();
         
         parentTransform = transform.parent;
@@ -460,17 +482,17 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     }
     void Update(){
         AimDownSight(isAiming);
-        crosshair.SetGap((int)(Inaccuracy() * 7.5f), true);
+        crosshair.SetGap((int)(Inaccuracy() * 8.88f), true);
         // if (autoFireCoroutine != null && durability == 0) StopCoroutine(autoFireCoroutine);
         // inaccuracy = Inaccuracy();
         // Debug.Log(inaccuracy); // for testing purposes
 
         // could group all of these to a single isMoving bool
-        // x = playerMovement.movementInput.x;
-        // y = playerMovement.movementInput.y;
-        // isGrounded = playerMovement.isGrounded;
-        // speed = playerMovement.speed;
-        // normalSpeed = playerMovement.normalSpeed;
+        // x = p_Movement.movementInput.x;
+        // y = p_Movement.movementInput.y;
+        // isGrounded = p_Movement.isGrounded;
+        // speed = p_Movement.speed;
+        // normalSpeed = p_Movement.normalSpeed;
 
         // animator.SetFloat("speed", Mathf.Abs(x) + Mathf.Abs(y));
     }

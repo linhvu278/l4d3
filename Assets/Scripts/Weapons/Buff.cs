@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Buff : MonoBehaviour, IPrimaryInput, IWeaponAmount
 {
-    [SerializeField] private Weapon_Ability_Buff buff;
+    [SerializeField] private Weapon_Buff buff;
     private float buffTime, buffDuration;
     private int weaponAmount;
 
@@ -34,7 +34,7 @@ public class Buff : MonoBehaviour, IPrimaryInput, IWeaponAmount
             }
             IsBuffing(false);
             weaponAmount--;
-            if (weaponAmount == 0) inventory.RemoveWeapon(buff);
+            if (weaponAmount == 0) inventory.RemoveWeapon(buff, (int)WeaponCategory.ability);
         }
     }
 
@@ -48,7 +48,7 @@ public class Buff : MonoBehaviour, IPrimaryInput, IWeaponAmount
 
     private void IsBuffing(bool value){
         isBuffing = value;
-        animator.SetBool("isReloading", value);
+        // animator.SetBool("isReloading", value);
         progressBar.ToggleProgressBar(value);
     }
     bool CanBuff(){
@@ -64,15 +64,15 @@ public class Buff : MonoBehaviour, IPrimaryInput, IWeaponAmount
         IsBuffing(false);
     }
 
-    public void OnPrimaryStart() => buffCoroutine = StartCoroutine(StartBuff());
-    public void OnPrimaryEnd() => CancelBuff();
-    public int WeaponAmount { get => weaponAmount; set => weaponAmount = value; }
-
     IEnumerator Equip(float deployTime){
         isEquiping = true;
         yield return new WaitForSeconds(deployTime);
         isEquiping = false;
     }
+
+    public void OnPrimaryStart() => buffCoroutine = StartCoroutine(StartBuff());
+    public void OnPrimaryEnd() => CancelBuff();
+    public int WeaponAmount { get => weaponAmount; set => weaponAmount = value; }
 
     void Start(){
         inventory = Inventory.instance;

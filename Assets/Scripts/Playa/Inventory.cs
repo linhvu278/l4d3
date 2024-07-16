@@ -30,8 +30,8 @@ public class Inventory : MonoBehaviour
     public List<Item> itemInventory = new List<Item>(); // stores the references of items
     private int MAX_ITEM_AMOUNT_LIMIT;
     private const int MAX_AMMO_AMOUNT_LIMIT = 360,
-                    MAX_GLUE_AMOUNT_LIMIT = 999,
-                    MAX_MATERIAL_AMOUNT_LIMIT = 3;
+                      MAX_GLUE_AMOUNT_LIMIT = 999,
+                      MAX_MATERIAL_AMOUNT_LIMIT = 3;
     
     // [SerializeField] GameObject inventoryOverlay;
     // [SerializeField] Transform loadoutParent;
@@ -46,31 +46,23 @@ public class Inventory : MonoBehaviour
 
     #region Add weapons
 
-    public bool AddWeapon(Weapon weapon, int index, int amount){
+    public void AddWeapon(Weapon weapon, int index, int amount){
         // PickUpWeapon puwp = weaponToAdd.GetComponent<PickUpWeapon>();
         // Weapon weapon = puwp.GetWeapon();
-        if (weaponInventory[index] != weapon/* && weaponInventory[weaponIndex] != null*/)
-        {
-            GameObject weaponToAdd;
-            weaponToAdd = Instantiate(db.weaponPrefabs[weapon.weaponId], weaponSlots[index].position, Quaternion.identity);
-            weaponToAdd.transform.SetParent(weaponSlots[index]);
-            weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = amount;
+        if (weaponInventory[index] != null) DropWeapon(weaponInventory[index], index);
+        GameObject weaponToAdd = Instantiate(db.GetWeaponByType(weapon.weaponType), weaponSlots[index].position, Quaternion.identity);
+        weaponToAdd.transform.SetParent(weaponSlots[index]);
+        weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = amount;
 
-            if (weaponInventory[index] != null) DropWeapon(weaponInventory[index]);
-            weaponInventory[index] = weapon;
-            weaponObjects[index] = weaponToAdd;
-            weaponSwitch.SelectNewWeapon(index);
-            Inv_slot invSlot = weaponSwitch.WeaponHolder.GetChild(index).GetComponent<Inv_slot>();
-            invSlot.SetWeaponObject(weaponToAdd);
-            // weaponSwitch.SelectNewWeapon(index);
-            // weaponSlots[index].gameObject.SetActive(false);
+        weaponInventory[index] = weapon;
+        weaponObjects[index] = weaponToAdd;
+        weaponSwitch.SelectNewWeapon(index);
+        weaponSlots[index].GetComponent<Inv_slot>().SetWeaponObject(weaponToAdd);
+        // weaponSwitch.SelectNewWeapon(index);
+        // weaponSlots[index].gameObject.SetActive(false);
 
-            loadoutUI.GetHUDIcon(weapon.weaponIcon, index);
-            playerInventory.UpdateWeapons(weapon, true);
-
-            return true;
-        }
-        else return false;
+        loadoutUI.GetHUDIcon(weapon.weaponIcon, index);
+        playerInventory.UpdateWeapons(weapon, true);
     }
     // public void AddWeaponWithUpgrades(Weapon weapon, int amount, bool upgradeAcc, bool upgradeDmg, bool upgradeRng){
     //     int weaponIndex = (int)weapon.weaponCategory;
@@ -95,34 +87,14 @@ public class Inventory : MonoBehaviour
     //     playerInventory.UpdateWeapons(weapon, true);
     // }
     
-
-    #endregion
-
-    #region Ability
-
-    public void AddAbility(Weapon_Ability ability){
-        int abilityIndex = (int)WeaponCategory.ability;
-        if (weaponInventory[abilityIndex] != ability) weaponInventory[abilityIndex] = ability;
-        playerInventory.UpdateWeapons(ability, true);
-    }
-    public void AddAbilityWeapon(Weapon_Ability ability){
-        int abilityIndex = (int)WeaponCategory.ability;
-        GameObject weaponToAdd;
-        weaponToAdd = Instantiate(db.weaponPrefabs[ability.weaponId], weaponSlots[abilityIndex].position, Quaternion.identity);
-        weaponToAdd.transform.SetParent(weaponSlots[abilityIndex]);
-        weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = ability.weaponAmount;
-    }
-
     #endregion
 
     #region Remove weapons
 
-    public void DropWeapon(Weapon weapon){
+    public void DropWeapon(Weapon weapon, int index){
         if (weapon.weaponCategory != WeaponCategory.ability){
-            GameObject weaponToDrop = db.weaponPickups[weapon.weaponId];
-
-            GameObject equippedWeapon = weaponObjects[(int)weapon.weaponCategory];
-            IWeaponAmount wa = equippedWeapon.GetComponent<IWeaponAmount>();
+            GameObject weaponToDrop = db.GetWeaponPickupByType(weapon.weaponType);
+            IWeaponAmount wa = weaponObjects[index].GetComponent<IWeaponAmount>();
             weaponToDrop.GetComponent<IWeaponAmount>().WeaponAmount = wa.WeaponAmount;
             // if (equippedWeapon.TryGetComponent(out IWeaponUpgrade upgrade)){
             //     WeaponStats ws = weaponToDrop.GetComponent<WeaponStats>();
@@ -134,7 +106,7 @@ public class Inventory : MonoBehaviour
             Vector3 camPos = Camera.main.transform.position;
             Vector3 dropPosition = new Vector3(camPos.x, camPos.y - 0.5f, camPos.z);
             Instantiate(weaponToDrop, dropPosition, Quaternion.identity);
-            RemoveWeapon(weapon);
+            RemoveWeapon(weapon, index);
         }
 
         // int weaponIndex = (int)weapon.weaponCategory;
@@ -156,19 +128,17 @@ public class Inventory : MonoBehaviour
     //     Instantiate(weaponToDrop, pos, Quaternion.identity);
     //     RemoveWeapon(weapon);
     // }
-    public void RemoveWeapon(Weapon weapon){
-        int weaponIndex = (int)weapon.weaponCategory;
-        if (weaponIndex != (int)WeaponCategory.ability) weaponInventory[weaponIndex] = null;
+    public void RemoveWeapon(Weapon weapon, int index){
+        if (index != (int)WeaponCategory.ability) weaponInventory[index] = null;
 
-        // GameObject weaponToRemove = weaponSlots[weaponIndex].GetChild(0).gameObject;
-        Inv_slot invSlot = weaponSwitch.WeaponHolder.GetChild(weaponIndex).GetComponent<Inv_slot>();
-        invSlot.DestroyWeaponObj();
-        Destroy(weaponObjects[weaponIndex]);
+        // GameObject weaponToRemove = weaponSlots[index].GetChild(0).gameObject;
+        weaponSlots[index].GetComponent<Inv_slot>().DestroyWeaponObj();
+        Destroy(weaponObjects[index]);
 
-        loadoutUI.RemoveHUDElements(weaponIndex);
+        loadoutUI.RemoveHUDElements(index);
         playerInventory.UpdateWeapons(weapon, false);
         
-        if (weaponIndex == weaponSwitch.SelectedWeapon){
+        if (index == weaponSwitch.SelectedWeapon){
             for (int i = 0; i < weaponInventory.Length; i++){
                 if (weaponInventory[i] != null){
                     weaponSwitch.SelectNewWeapon(i);
@@ -176,6 +146,26 @@ public class Inventory : MonoBehaviour
                 }
             }
         }
+    }
+
+    #endregion
+
+    #region Ability
+
+    public void AddAbility(Weapon ability){
+        int abilityIndex = (int)WeaponCategory.ability;
+        if (weaponInventory[abilityIndex] != ability) weaponInventory[abilityIndex] = ability;
+
+        // loadoutUI.GetHUDIcon(ability.weaponIcon, abilityIndex);
+        playerInventory.UpdateWeapons(ability, true);
+    }
+    public void AddAbilityWeapon(Weapon ability){
+        int abilityIndex = (int)WeaponCategory.ability;
+        GameObject weaponToAdd = Instantiate(db.GetWeaponByType(ability.weaponType), weaponSlots[abilityIndex].position, Quaternion.identity);
+        weaponToAdd.transform.SetParent(weaponSlots[abilityIndex]);
+        // weaponSlots[abilityIndex].gameObject.SetActive(false);
+        weaponSwitch.SelectNewWeapon(weaponSwitch.SelectedWeapon);
+        weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = ability.weaponAmount;
     }
 
     #endregion
@@ -232,11 +222,11 @@ public class Inventory : MonoBehaviour
     #region Remove items
 
     public void DropItem(Item item, int itemAmount){
-        GameObject itemToDrop = db.itemPickupsList[item.itemId];
+        GameObject itemToDrop = db.GetItemPickupByType(item.itemType);
         itemToDrop.GetComponent<PickUpItem>().ItemAmount = itemAmount;
         
         Vector3 camPos = Camera.main.transform.position;
-        Vector3 dropPosition = new Vector3(camPos.x, camPos.y - 0.5f, camPos.z);
+        Vector3 dropPosition = Vector3.forward;
         Instantiate(itemToDrop, dropPosition, Quaternion.identity);
         if (GetItemAmount(item.itemType) > 0) SetItemAmount(item.itemType, -itemAmount);
     }

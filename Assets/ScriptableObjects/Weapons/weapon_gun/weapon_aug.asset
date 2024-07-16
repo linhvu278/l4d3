@@ -12,21 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71649ad3ca0f6b344b85b21ffd9209e4, type: 3}
   m_Name: weapon_aug
   m_EditorClassIdentifier: 
-  weaponId: 3
   weaponName: AUG
   weaponIcon: {fileID: 21300000, guid: 56b3fe1cae8d8ad4388e1e1c8421c119, type: 3}
-  weaponPrefabName: prefab_gun_aug
-  weaponPickupName: pickup_weapon_gun_aug
   weaponCategory: 0
+  weaponType: 2
   deployTime: 1
   weaponAmount: 48
   weaponRotation: {x: 180, y: -90, z: 0}
-  gunType: 0
   ammoType: 1
   fireMode: 2
   damage: 32
   fireRate: 8.75
-  inaccuracy: 1.65
+  inaccuracy: 2.05
   range: 100
   reloadTime: 2
   slowReload: 0

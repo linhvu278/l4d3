@@ -26,9 +26,9 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     PlayerInventory playerInventory;
 
     private const string dropWeaponString = "Drop",
-                        unloadWeaponString = "Unload",
-                        upgradeWeaponString = "Upgrade",
-                        activateAbilityString = "Activate ability";
+                        unloadWeaponString = "Unload";
+                        // upgradeWeaponString = "Upgrade",
+                        // activateAbilityString = "Activate ability";
 
     public void AddWeaponSlot(Weapon newWeapon){
         weapon = newWeapon;
@@ -44,7 +44,7 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
         // if (upgradeIconGroup != null) upgradeIconGroup.gameObject.SetActive(true);
         GetUpgradeIconDelegate();
 
-        weaponButton.enabled = true;
+        if (weapon.weaponCategory != WeaponCategory.ability) weaponButton.enabled = true;
     }
     public void ClearWeaponSlot(){
         weapon = null;
@@ -94,7 +94,7 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
             switch (eventData.button){
                 case PointerEventData.InputButton.Left:
                     // Debug.Log("right");
-                    inventory.DropWeapon(weapon);
+                    inventory.DropWeapon(weapon, (int)weapon.weaponCategory);
                     break;
                 case PointerEventData.InputButton.Right:
                     // Debug.Log("left");
@@ -125,16 +125,9 @@ public class WeaponSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
             // }
 
             int weaponIndex = (int)weapon.weaponCategory;
-            switch (weaponIndex){
-                case 5:
-                    playerInventory.EnableLMBInputGuide(activateAbilityString);
-                    break;
-                case < 5:
-                    playerInventory.EnableLMBInputGuide(dropWeaponString);
-                    if (weaponIndex > 1) playerInventory.EnableRMBInputGuide(null);
-                    else playerInventory.EnableRMBInputGuide(unloadWeaponString);
-                    break;
-            }
+            playerInventory.EnableLMBInputGuide(dropWeaponString);
+            if (weaponIndex > 1) playerInventory.EnableRMBInputGuide(null);
+            else playerInventory.EnableRMBInputGuide(unloadWeaponString);
         }
     }
     public void OnPointerExit(PointerEventData eventData) { playerInventory.DisableInputGuide(); }

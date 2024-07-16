@@ -13,22 +13,22 @@ public class ItemDatabase : MonoBehaviour
     // public List<Weapon_Buff> buffList = new List<Weapon_Buff>();
     
     [Header("Weapons")]
-    public List<Weapon> weaponsList = new List<Weapon>();
-    public List<GameObject> weaponPrefabs = new List<GameObject>();
-    public List<GameObject> weaponPickups = new List<GameObject>();
+    // public List<Weapon> weaponsList = new List<Weapon>();
+    public List<GameObject> weaponPrefabsList = new List<GameObject>();
+    public List<GameObject> weaponPickupsList = new List<GameObject>();
+
+    public GameObject GetWeaponByType(WeaponType type) => weaponPrefabsList.Find(x => x.GetComponent<ITypeWeapon>().getWeaponType == type);
+    public GameObject GetWeaponPickupByType(WeaponType type) => weaponPickupsList.Find(x => x.GetComponent<ITypeWeapon>().getWeaponType == type);
 
     [Header("Items")]
     public List<Item> itemList = new List<Item>();
     public List<GameObject> itemPickupsList = new List<GameObject>();
 
-    public Item GetItemByType(ItemType type) => itemList.Find(x => x.itemType == type);
-
-    void Start(){
-        foreach (Weapon weapon in weaponsList){
-            weapon.weaponId = weaponsList.IndexOf(weapon);
-        }
+    public Item GetItemByType(ItemType type){
+        return itemList.Find(x => x.itemType == type);
     }
-    
+    public GameObject GetItemPickupByType(ItemType type) => itemPickupsList.Find(x => x.GetComponent<PickUpItem>().itemType == type);
+
     void Awake(){
         instance = this;
     }
