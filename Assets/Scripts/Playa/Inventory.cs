@@ -50,7 +50,7 @@ public class Inventory : MonoBehaviour
         // PickUpWeapon puwp = weaponToAdd.GetComponent<PickUpWeapon>();
         // Weapon weapon = puwp.GetWeapon();
         if (weaponInventory[index] != null) DropWeapon(weaponInventory[index], index);
-        GameObject weaponToAdd = Instantiate(db.GetWeaponByType(weapon.weaponType), weaponSlots[index].position, Quaternion.identity);
+        GameObject weaponToAdd = Instantiate(db.GetWeaponByType(weapon), weaponSlots[index].position, Quaternion.identity);
         weaponToAdd.transform.SetParent(weaponSlots[index]);
         weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = amount;
 
@@ -93,7 +93,7 @@ public class Inventory : MonoBehaviour
 
     public void DropWeapon(Weapon weapon, int index){
         if (weapon.weaponCategory != WeaponCategory.ability){
-            GameObject weaponToDrop = db.GetWeaponPickupByType(weapon.weaponType);
+            GameObject weaponToDrop = db.GetWeaponPickupByType(weapon);
             IWeaponAmount wa = weaponObjects[index].GetComponent<IWeaponAmount>();
             weaponToDrop.GetComponent<IWeaponAmount>().WeaponAmount = wa.WeaponAmount;
             // if (equippedWeapon.TryGetComponent(out IWeaponUpgrade upgrade)){
@@ -161,7 +161,7 @@ public class Inventory : MonoBehaviour
     }
     public void AddAbilityWeapon(Weapon ability){
         int abilityIndex = (int)WeaponCategory.ability;
-        GameObject weaponToAdd = Instantiate(db.GetWeaponByType(ability.weaponType), weaponSlots[abilityIndex].position, Quaternion.identity);
+        GameObject weaponToAdd = Instantiate(db.GetWeaponByType(ability), weaponSlots[abilityIndex].position, Quaternion.identity);
         weaponToAdd.transform.SetParent(weaponSlots[abilityIndex]);
         // weaponSlots[abilityIndex].gameObject.SetActive(false);
         weaponSwitch.SelectNewWeapon(weaponSwitch.SelectedWeapon);
@@ -330,17 +330,16 @@ public class Inventory : MonoBehaviour
         ItemType.item_glue => glue_amount,
         _ => 0,
     };
-    public int GetItemAmountLimit(ItemCategory itemCategory){
-        switch (itemCategory){
-            case ItemCategory.ammo: return MAX_AMMO_AMOUNT_LIMIT;
-            case ItemCategory.glue: return MAX_GLUE_AMOUNT_LIMIT;
-            case ItemCategory.material: return MAX_MATERIAL_AMOUNT_LIMIT;
-            default: return 0;
-        }
-    }
+    public int GetItemAmountLimit(ItemCategory itemCategory) => itemCategory switch
+    {
+        ItemCategory.ammo => MAX_AMMO_AMOUNT_LIMIT,
+        ItemCategory.glue => MAX_GLUE_AMOUNT_LIMIT,
+        ItemCategory.material => MAX_MATERIAL_AMOUNT_LIMIT,
+        _ => 0,
+    };
 
     #endregion
-    
+
     void Awake()
     {
         if (instance != null)

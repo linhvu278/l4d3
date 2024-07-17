@@ -1,10 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
-public class Gadget_AmmoBox : MonoBehaviour, IPrimaryInput, IWeaponAmount, ITypeWeapon
+public class Gadget_AmmoBox : MonoBehaviour, IPrimaryInput, IWeaponAmount, IGetWeapon
 {
     [SerializeField] private Weapon_Gadget ammoBox;
-    [HideInInspector] public WeaponType getWeaponType => ammoBox.weaponType;
+    [HideInInspector] public Weapon getWeapon => ammoBox;
     private int ammoboxAmount;
     [SerializeField] private GameObject ammoBoxObject;
     private float useTime;

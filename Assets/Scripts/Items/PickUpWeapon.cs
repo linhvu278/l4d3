@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class PickUpWeapon : MonoBehaviour, IInteractable, IWeaponAmount, ITypeWeapon//, IOutline
+public class PickUpWeapon : MonoBehaviour, IInteractable, IWeaponAmount, IGetWeapon//, IOutline
 {
     [SerializeField] private Weapon weapon;
     // public int WeaponId { get => weapon.weaponId; }
     [SerializeField] private int weaponAmount;
     // public Weapon Weapon => weapon;
     // public WeaponType weaponType;
-    public WeaponType getWeaponType => weapon.weaponType;
+    public Weapon getWeapon => weapon;
 
     private GameObject playa;
     private Inventory inventory;

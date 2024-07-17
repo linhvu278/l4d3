@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Throwable : MonoBehaviour, IPrimaryInput, IWeaponAmount, ITypeWeapon
+public class Throwable : MonoBehaviour, IPrimaryInput, IWeaponAmount, IGetWeapon
 {
     [SerializeField] protected Weapon_Throwable throwable;
-    [HideInInspector] public WeaponType getWeaponType => throwable.weaponType;
+    [HideInInspector] public Weapon getWeapon => throwable;
     private int throwAmount;
 
     private bool canThrow;

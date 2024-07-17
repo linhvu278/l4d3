@@ -2,10 +2,10 @@ using System.Collections;
 // using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount, ITypeWeapon
+public class Health : MonoBehaviour, IPrimaryInput, IWeaponAmount, IGetWeapon
 {
     [SerializeField] private Weapon_Health health;
-    [HideInInspector] public WeaponType getWeaponType => health.weaponType;
+    [HideInInspector] public Weapon getWeapon => health;
     private int healthAmount;
     private bool canHealWhileMoving;
     private float healTime, healAmount;

@@ -17,8 +17,8 @@ public class ItemDatabase : MonoBehaviour
     public List<GameObject> weaponPrefabsList = new List<GameObject>();
     public List<GameObject> weaponPickupsList = new List<GameObject>();
 
-    public GameObject GetWeaponByType(WeaponType type) => weaponPrefabsList.Find(x => x.GetComponent<ITypeWeapon>().getWeaponType == type);
-    public GameObject GetWeaponPickupByType(WeaponType type) => weaponPickupsList.Find(x => x.GetComponent<ITypeWeapon>().getWeaponType == type);
+    public GameObject GetWeaponByType(Weapon weapon) => weaponPrefabsList.Find(x => x.GetComponent<IGetWeapon>().getWeapon == weapon);
+    public GameObject GetWeaponPickupByType(Weapon weapon) => weaponPickupsList.Find(x => x.GetComponent<IGetWeapon>().getWeapon == weapon);
 
     [Header("Items")]
     public List<Item> itemList = new List<Item>();
