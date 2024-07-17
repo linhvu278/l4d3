@@ -6,7 +6,8 @@ public class MouseMovement : MonoBehaviour
     float mouseX;
     float mouseY;
 
-    public bool CanLook { get; set; }
+    private bool canLook;
+    public bool CanLook { get => canLook; set => canLook = value; }
 
     Transform cam;
     float xRotation = 0f;
@@ -24,7 +25,7 @@ public class MouseMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        CanLook = true;
+        canLook = true;
     }
 
     // Update is called once per frame
@@ -33,7 +34,7 @@ public class MouseMovement : MonoBehaviour
         // mouseX = GetComponent<InputManager>().mouseValueX * mouseSens * Time.deltaTime;
         // mouseY = GetComponent<InputManager>().mouseValueY * mouseSens * Time.deltaTime;
 
-        if (CanLook){
+        if (canLook){
             //rotate player
             transform.Rotate(Vector3.up, mouseX);
 

@@ -170,7 +170,7 @@ public class PlayerInventory : MonoBehaviour
         Cursor.lockState = isInventoryOpen ? CursorLockMode.Confined : Cursor.lockState = CursorLockMode.Locked;
         input.P_Movement_CanMove(!isInventoryOpen);
         input.P_Movement_CanJump(!isInventoryOpen);
-        m_Movement.CanLook = !isInventoryOpen;
+        input.M_Movement_CanLook(!isInventoryOpen);
         input.M_Input_CanAttack1(!isInventoryOpen);
         input.M_Input_CanAttack2(!isInventoryOpen);
         ClearCraftingItems();
