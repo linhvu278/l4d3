@@ -1,10 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
-public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, IUnloadWeapon, /*IRepairWeapon, */IWeaponUpgrade, IWeaponAmount, ITypeWeapon
+public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, IUnloadWeapon, /*IRepairWeapon, */IWeaponUpgrade, IWeaponAmount, IGetWeapon
 {
     [SerializeField] private Weapon_Gun gun; // where the gun gets its stats from
-    [HideInInspector] public WeaponType getWeaponType => gun.weaponType;
+    [HideInInspector] public Weapon getWeapon => gun;
 
     // [SerializeField] private Transform gunUpgrades;
     [SerializeField] private GameObject sightUpgrade, barrelUpgrade, laserUpgrade;
@@ -67,13 +67,13 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
 
             RaycastHit hit;
             // 
-            // shotgun types
+            // shotgun
             // 
             if (gun.ammoType == ItemType.item_ammo_12g){
                 for (int i = 0; i < 12; i++){
-                    if (Physics.Raycast(cam.position, GetShootingDirection(), out hit , range)){
+                    if (Physics.Raycast(cam.position, shootingDirection, out hit , range)){
                         if (hit.collider.tag == "Enemy"){
-                            hit.collider.GetComponent<IDamage>().TakeDamage(GetGunDamage());
+                            hit.collider.GetComponent<IDamage>().TakeDamage(gunDamage);
                         }
                     }
                     Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
@@ -82,12 +82,26 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
                     Destroy(impact, 10f);
                 }
             // 
-            // non-shotgun types
+            // magnum
+            // 
+            } else if (gun.ammoType == ItemType.item_ammo_magnum){
+                RaycastHit[] hits = Physics.RaycastAll(cam.position, shootingDirection, range);
+                for (int i = 0; i < hits.Length; i++){
+                    if (hits[i].collider.tag == "Enemy"){
+                        hits[i].collider.GetComponent<IDamage>().TakeDamage(gunDamage);
+                    }
+                    Quaternion impactRotation = Quaternion.LookRotation(hits[i].normal);
+                    GameObject impact = Instantiate(hitEffect, hits[i].point, impactRotation);
+                    impact.transform.parent = hits[i].transform;
+                    Destroy(impact, 10f);
+                }
+            // 
+            // others
             // 
             } else {
-                if (Physics.Raycast(cam.position, GetShootingDirection(), out hit, range)){
+                if (Physics.Raycast(cam.position, shootingDirection, out hit, range)){
                     if (hit.collider.tag == "Enemy"){
-                        hit.collider.GetComponent<IDamage>().TakeDamage(GetGunDamage());
+                        hit.collider.GetComponent<IDamage>().TakeDamage(gunDamage);
                     }
                     Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
                     GameObject impact = Instantiate(hitEffect, hit.point, impactRotation);
@@ -188,27 +202,31 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         inaccuracyMove = p_Movement.IsMoving || !p_Movement.IsGrounded ? 10f/(gun.inaccuracy+1) : 1f;
         // inaccuracyJump = !p_Movement.IsGrounded ? 2.4f : 1f;
         // inaccuracyNormal = isLaserUpgraded ? Mathf.Round(gun.inaccuracy / 1.25f * 1000.0f) / 1000.0f : gun.inaccuracy;
-        inaccuracyAim = isAiming ? 0.2f : 1f;
+        inaccuracyAim = isAiming ? 0.125f : 1f;
 
         // float inaccuracyMoveJump = inaccuracyMove + inaccuracyJump;
 
         if (gun.ammoType == ItemType.item_ammo_12g) return gun.inaccuracy; // shotguns are unaffected when moving
         else return gun.inaccuracy * inaccuracyAim * /*inaccuracyJump * */inaccuracyMove * GetAccuracyModifier();
     }
-    
-    Vector3 GetShootingDirection(){
-        Vector3 targetPos = cam.position + cam.forward * range;
-        targetPos = new Vector3(
-            targetPos.x + Random.Range(-Inaccuracy(), Inaccuracy()),
-            targetPos.y + Random.Range(-Inaccuracy(), Inaccuracy()),
-            targetPos.z + Random.Range(-Inaccuracy(), Inaccuracy())
-        );
-        Vector3 direction = targetPos - cam.position;
-        return direction.normalized;
+
+    private Vector3 shootingDirection
+    {
+        get
+        {
+            Vector3 targetPos = cam.position + cam.forward * range;
+            targetPos = new Vector3(
+                targetPos.x + Random.Range(-Inaccuracy(), Inaccuracy()),
+                targetPos.y + Random.Range(-Inaccuracy(), Inaccuracy()),
+                targetPos.z + Random.Range(-Inaccuracy(), Inaccuracy())
+            );
+            Vector3 direction = targetPos - cam.position;
+            return direction.normalized;
+        }
     }
 
     #endregion
-    
+
     #region unloading ammo
 
     public void Unload(){
@@ -222,10 +240,15 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
 
     #endregion
 
-    private float GetGunDamage(){
-        dmgModifier = gun.ammoType == ItemType.item_ammo_12g ? 1.25f : 1.15f; //pistols & smgs get higher damage multiplier
-        return isBarrelUpgraded ? gun.damage * dmgModifier : gun.damage;
+    private float gunDamage
+    {
+        get
+        {
+            dmgModifier = gun.ammoType == ItemType.item_ammo_12g ? 1.25f : 1.15f; //pistols & smgs get higher damage multiplier
+            return isBarrelUpgraded ? gun.damage * dmgModifier : gun.damage;
+        }
     }
+
     private float GetAccuracyModifier(){
         accModifier = isLaserUpgraded ? 0.8f : 1f;
         return accModifier;
@@ -272,15 +295,15 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     }
     
     private IEnumerator Burst(){
-        if (burstFireCoroutine == null){
+        // if (isShooting){
             Shoot();
             yield return new WaitForSeconds(1/fireRate);
             Shoot();
             yield return new WaitForSeconds(1/fireRate);
             Shoot();
-            // yield return new WaitForSeconds(3/fireRate);
+            yield return new WaitForSeconds(2/fireRate);
             // yield break;
-        }
+        // }
     }
     // IEnumerator BurstFire(){
     //     StartCoroutine(Burst());
@@ -314,7 +337,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
                     break;
             }
         }
-        if (maxAmmo == 0) emptyClipSound.Play();
+        if (ammo == 0 && maxAmmo == 0) emptyClipSound.Play();
         // if (/*durability <= 0 || */ammo == 0 && maxAmmo == 0 && !isEquiping) emptyClipSound.Play();
     }
     private void StopShooting(){
