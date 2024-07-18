@@ -127,7 +127,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Utility"",
+                    ""name"": ""Gadget"",
                     ""type"": ""Button"",
                     ""id"": ""890cb5d8-c74b-42fc-b528-bfaac9961e7a"",
                     ""expectedControlType"": ""Button"",
@@ -341,7 +341,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Utility"",
+                    ""action"": ""Gadget"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -479,7 +479,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Playa_Secondary = m_Playa.FindAction("Secondary", throwIfNotFound: true);
         m_Playa_Throwable = m_Playa.FindAction("Throwable", throwIfNotFound: true);
         m_Playa_Health = m_Playa.FindAction("Health", throwIfNotFound: true);
-        m_Playa_Utility = m_Playa.FindAction("Utility", throwIfNotFound: true);
+        m_Playa_Gadget = m_Playa.FindAction("Gadget", throwIfNotFound: true);
         m_Playa_Attack1 = m_Playa.FindAction("Attack1", throwIfNotFound: true);
         m_Playa_Attack2 = m_Playa.FindAction("Attack2", throwIfNotFound: true);
         m_Playa_Kick = m_Playa.FindAction("Kick", throwIfNotFound: true);
@@ -559,7 +559,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Playa_Secondary;
     private readonly InputAction m_Playa_Throwable;
     private readonly InputAction m_Playa_Health;
-    private readonly InputAction m_Playa_Utility;
+    private readonly InputAction m_Playa_Gadget;
     private readonly InputAction m_Playa_Attack1;
     private readonly InputAction m_Playa_Attack2;
     private readonly InputAction m_Playa_Kick;
@@ -581,7 +581,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         public InputAction @Secondary => m_Wrapper.m_Playa_Secondary;
         public InputAction @Throwable => m_Wrapper.m_Playa_Throwable;
         public InputAction @Health => m_Wrapper.m_Playa_Health;
-        public InputAction @Utility => m_Wrapper.m_Playa_Utility;
+        public InputAction @Gadget => m_Wrapper.m_Playa_Gadget;
         public InputAction @Attack1 => m_Wrapper.m_Playa_Attack1;
         public InputAction @Attack2 => m_Wrapper.m_Playa_Attack2;
         public InputAction @Kick => m_Wrapper.m_Playa_Kick;
@@ -630,9 +630,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Health.started -= m_Wrapper.m_PlayaActionsCallbackInterface.OnHealth;
                 @Health.performed -= m_Wrapper.m_PlayaActionsCallbackInterface.OnHealth;
                 @Health.canceled -= m_Wrapper.m_PlayaActionsCallbackInterface.OnHealth;
-                @Utility.started -= m_Wrapper.m_PlayaActionsCallbackInterface.OnUtility;
-                @Utility.performed -= m_Wrapper.m_PlayaActionsCallbackInterface.OnUtility;
-                @Utility.canceled -= m_Wrapper.m_PlayaActionsCallbackInterface.OnUtility;
+                @Gadget.started -= m_Wrapper.m_PlayaActionsCallbackInterface.OnGadget;
+                @Gadget.performed -= m_Wrapper.m_PlayaActionsCallbackInterface.OnGadget;
+                @Gadget.canceled -= m_Wrapper.m_PlayaActionsCallbackInterface.OnGadget;
                 @Attack1.started -= m_Wrapper.m_PlayaActionsCallbackInterface.OnAttack1;
                 @Attack1.performed -= m_Wrapper.m_PlayaActionsCallbackInterface.OnAttack1;
                 @Attack1.canceled -= m_Wrapper.m_PlayaActionsCallbackInterface.OnAttack1;
@@ -688,9 +688,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Health.started += instance.OnHealth;
                 @Health.performed += instance.OnHealth;
                 @Health.canceled += instance.OnHealth;
-                @Utility.started += instance.OnUtility;
-                @Utility.performed += instance.OnUtility;
-                @Utility.canceled += instance.OnUtility;
+                @Gadget.started += instance.OnGadget;
+                @Gadget.performed += instance.OnGadget;
+                @Gadget.canceled += instance.OnGadget;
                 @Attack1.started += instance.OnAttack1;
                 @Attack1.performed += instance.OnAttack1;
                 @Attack1.canceled += instance.OnAttack1;
@@ -759,7 +759,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnSecondary(InputAction.CallbackContext context);
         void OnThrowable(InputAction.CallbackContext context);
         void OnHealth(InputAction.CallbackContext context);
-        void OnUtility(InputAction.CallbackContext context);
+        void OnGadget(InputAction.CallbackContext context);
         void OnAttack1(InputAction.CallbackContext context);
         void OnAttack2(InputAction.CallbackContext context);
         void OnKick(InputAction.CallbackContext context);

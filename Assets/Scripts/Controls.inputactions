@@ -105,7 +105,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Utility",
+                    "name": "Gadget",
                     "type": "Button",
                     "id": "890cb5d8-c74b-42fc-b528-bfaac9961e7a",
                     "expectedControlType": "Button",
@@ -319,7 +319,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Utility",
+                    "action": "Gadget",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
