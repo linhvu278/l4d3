@@ -9,10 +9,10 @@ public class Throwable : MonoBehaviour, IPrimaryInput, IWeaponAmount, IGetWeapon
     private int throwAmount;
 
     private bool canThrow;
-    private float throwForce = 20f;
-    private float throwUpwardForce = 420f;
+    private float throwForce = 16f;
+    // private float throwUpwardForce = 420f;
 
-    Animator animator;
+    // Animator animator;
     Inventory inventory;
     Transform cam;
     IEnumerator Equip(float deployTime){
@@ -56,7 +56,7 @@ public class Throwable : MonoBehaviour, IPrimaryInput, IWeaponAmount, IGetWeapon
 
     void Start(){
         inventory = Inventory.instance;
-        animator = GetComponent<Animator>();
+        // animator = GetComponent<Animator>();
         cam = Camera.main.transform;
     }
 }
