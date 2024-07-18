@@ -9,6 +9,7 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
     GameObject playa;
     Inventory inv;
     ProgressBar progressBar;
+    PlayerOverlay overlay;
     InputManager input;
     BoxCollider bc;
 
@@ -97,6 +98,8 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
         if (inv.GetItemAmount(ItemType.item_glue) >= UNLOCK_VALUE){
             progressBar.SetProgressBar(OpenCrateString, OPEN_DURATION);
             openCoroutine = StartCoroutine(OpenCrate());
+        } else {
+            overlay.EnableWarningText("Not enough glue");
         }
     }
     public void OnInteractEnd(){ CancelOpenCrate(); }
@@ -104,6 +107,7 @@ public class PickUpInsideCrateSpawner : MonoBehaviour, IInteractable, IUnlock
     void Start(){
         db = ItemDatabase.instance;
         progressBar = ProgressBar.instance;
+        overlay = PlayerOverlay.instance;
         playa = GameObject.FindGameObjectWithTag("Player");
         input = playa.GetComponent<InputManager>();
         inv = playa.GetComponent<Inventory>();
