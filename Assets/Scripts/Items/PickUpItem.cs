@@ -3,8 +3,8 @@ using UnityEngine;
 public class PickUpItem : MonoBehaviour, IInteractable//, IOutline
 {
     [SerializeField] private Item item;
-    public ItemType itemType;
-    // public Item Item => item;
+    // public ItemType itemType;
+    public Item Item => item;
     [SerializeField] AudioClip pickupSound;
     [SerializeField] private int itemAmount;
     public int ItemAmount { get => itemAmount; set => itemAmount = value; }
@@ -82,7 +82,6 @@ public class PickUpItem : MonoBehaviour, IInteractable//, IOutline
     void Start(){
         playa = GameObject.FindGameObjectWithTag("Player");
         inventory = playa.GetComponent<Inventory>();
-        itemType = item.itemType;
         // outline = GetComponent<Outline>();
 
         SetItemRotation();
@@ -117,7 +116,7 @@ public class PickUpItem : MonoBehaviour, IInteractable//, IOutline
     }
     public void OnInteractStart() { ItemPickUp(); }
     public void OnInteractEnd() {}
-    public string InteractText() => "Press E to pick up " + item.itemName;
+    public string InteractText() => string.Format("Press E to pick up {0} ({1})", item.itemName, itemAmount);
     // public void EnableOutline() { outline.OutlineWidth = 10f; }
     // public void DisableOutline() { outline.OutlineWidth = 0f; }
 }
