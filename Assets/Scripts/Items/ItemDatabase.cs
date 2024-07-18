@@ -17,8 +17,8 @@ public class ItemDatabase : MonoBehaviour
     public List<GameObject> weaponPrefabsList = new List<GameObject>();
     public List<GameObject> weaponPickupsList = new List<GameObject>();
 
-    public GameObject GetWeaponByType(Weapon weapon) => weaponPrefabsList.Find(x => x.GetComponent<IGetWeapon>().getWeapon == weapon);
-    public GameObject GetWeaponPickupByType(Weapon weapon) => weaponPickupsList.Find(x => x.GetComponent<IGetWeapon>().getWeapon == weapon);
+    public GameObject GetWeapon(Weapon weapon) => weaponPrefabsList.Find(x => x.GetComponent<IGetWeapon>().getWeapon == weapon);
+    public GameObject GetWeaponPickup(Weapon weapon) => weaponPickupsList.Find(x => x.GetComponent<IGetWeapon>().getWeapon == weapon);
 
     [Header("Items")]
     public List<Item> itemList = new List<Item>();
@@ -27,7 +27,7 @@ public class ItemDatabase : MonoBehaviour
     public Item GetItemByType(ItemType type){
         return itemList.Find(x => x.itemType == type);
     }
-    public GameObject GetItemPickupByType(ItemType type) => itemPickupsList.Find(x => x.GetComponent<PickUpItem>().itemType == type);
+    public GameObject GetItemPickup(Item item) => itemPickupsList.Find(x => x.GetComponent<PickUpItem>().Item == item);
 
     void Awake(){
         instance = this;
