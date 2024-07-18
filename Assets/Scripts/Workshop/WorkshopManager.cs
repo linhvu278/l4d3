@@ -10,7 +10,7 @@ public class WorkshopManager : MonoBehaviour, IInteractable
         playerInventory = PlayerInventory.instance;
     }
 
-    public void OnInteractStart(){ playerInventory.ToggleInventory(true); }
+    public void OnInteractStart(){ playerInventory.ToggleWorkshopOverlay(); }
     public void OnInteractEnd(){}
     public string InteractText() => "Press E to open workshop screen";
 }

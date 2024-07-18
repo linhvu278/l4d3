@@ -51,11 +51,11 @@ public class InventoryMenu : MonoBehaviour
         dropAllButton.gameObject.SetActive(false);
         addCraftingItemButton.gameObject.SetActive(false);
 
-        equipButton.gameObject.SetActive(isWeaponAlreadyEquipped && !playerInventory.IsWorkshopOpen);
+        // equipButton.gameObject.SetActive(isWeaponAlreadyEquipped && !playerInventory.IsWorkshopOpen);
         dropButton.gameObject.SetActive(true);
         unloadButton.gameObject.SetActive(isWeaponAGun && gun.WeaponAmount > 0);
         // repairButton.gameObject.SetActive(playerInventory.isWorkshopOpen && repair.CanRepair);
-        upgradeButton.gameObject.SetActive(playerInventory.IsWorkshopOpen);
+        // upgradeButton.gameObject.SetActive(playerInventory.IsWorkshopOpen);
     }
 
     #endregion
@@ -76,7 +76,7 @@ public class InventoryMenu : MonoBehaviour
         drop1Button.gameObject.SetActive(itemAmount > 1);
         drop25Button.gameObject.SetActive(itemAmount > 25);
         
-        addCraftingItemButton.gameObject.SetActive(item.itemCategory == ItemCategory.material && playerInventory.secondCraftingItem == null);
+        // addCraftingItemButton.gameObject.SetActive(item.itemCategory == ItemCategory.material && playerInventory.secondCraftingItem == null);
     }
 
     #endregion
@@ -123,7 +123,7 @@ public class InventoryMenu : MonoBehaviour
             upgradeLaserButton.gameObject.SetActive(!weaponToUpgrade.UpgradeAccuracy);
             upgradeSightButton.gameObject.SetActive(!weaponToUpgrade.UpgradeRange);
         } else {
-            playerInventory.EnableInventoryStatusText("No upgrade required");
+            // playerInventory.EnableInventoryStatusText("No upgrade required");
             ExitMenu();
         }
     }

@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
+// using UnityEngine.InputSystem;
 using TMPro;
 using UnityEngine.EventSystems;
 
@@ -14,6 +14,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     [SerializeField] Transform inventoryMenu;
 
     private Item item;
+    public Item _item;
     Inventory inventory;
     PlayerInventory playerInventory;
 
@@ -65,21 +66,26 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     public void OnPointerClick(PointerEventData eventData){
         // if (item != null){
         if (itemButton.enabled == true){
+            // 
+            // left mouse click
+            // 
             if (eventData.button == PointerEventData.InputButton.Left){
                 // Debug.Log("left");
                 switch (item.itemCategory){
                     case ItemCategory.ammo:
-                        inventory.DropItem(item, 25);
-                        if (item == null) playerInventory.DisableInputGuide();
+                        if (inventory.GetItemAmount(item.itemType) > 25) inventory.DropItem(item, 25);
+                        else inventory.DropItem(item, inventory.GetItemAmount(item.itemType));
+                        // if (item == null) playerInventory.DisableInputGuide();
                         break;
                     case ItemCategory.material:
                         inventory.DropItem(item, 1);
                         if (item == null) playerInventory.DisableInputGuide();
                         break;
                     case ItemCategory.glue:
-                        inventory.DropItem(item, 25);
-                        if (item == null) playerInventory.DisableInputGuide();
-                        playerInventory.EnableCraftButton();
+                        if (inventory.GetItemAmount(item.itemType) > 25) inventory.DropItem(item, 25);
+                        else inventory.DropItem(item, inventory.GetItemAmount(item.itemType));
+                        // if (item == null) playerInventory.DisableInputGuide();
+                        // playerInventory.EnableCraftButton();
                         // playerInventory.EnableUpgradeButton();
                         break;
                     // case ItemCategory.upgrade:
@@ -89,6 +95,9 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                     //     break;
                 }
             }
+            // 
+            // right mouse click
+            // 
             else if (eventData.button == PointerEventData.InputButton.Right){
                 // Debug.Log("right");
                 switch (item.itemCategory){
@@ -99,12 +108,12 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                     case ItemCategory.material:
                         playerInventory.AddCraftingItem(item);
                         playerInventory.DisableInputGuide();
-                        itemButton.enabled = false;
+                        // itemButton.enabled = false;
                         break;
                     case ItemCategory.glue:
                         inventory.DropItem(item, inventory.GetItemAmount(item.itemType));
                         playerInventory.DisableInputGuide();
-                        playerInventory.EnableCraftButton();
+                        // playerInventory.EnableCraftButton();
                         // playerInventory.EnableUpgradeButton();
                         break;
                     // case ItemCategory.upgrade:
@@ -120,13 +129,24 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         if (itemButton.enabled == true){
             switch (item.itemCategory){
                 case ItemCategory.ammo:
-                    playerInventory.EnableInputGuide(drop25String, dropAllString);
+                    if (inventory.GetItemAmount(item.itemType) > 25){
+                        playerInventory.EnableLMBInputGuide(drop25String);
+                        playerInventory.EnableRMBInputGuide(dropAllString);
+                    } else {
+                        playerInventory.EnableLMBInputGuide(dropAllString);
+                    }
                     break;
                 case ItemCategory.material:
-                    playerInventory.EnableInputGuide(drop1String, craftString);
+                    playerInventory.EnableLMBInputGuide(drop1String);
+                    playerInventory.EnableRMBInputGuide(craftString);
                     break;
                 case ItemCategory.glue:
-                    playerInventory.EnableInputGuide(drop25String, dropAllString);
+                    if (inventory.GetItemAmount(item.itemType) > 25){
+                        playerInventory.EnableLMBInputGuide(drop25String);
+                        playerInventory.EnableRMBInputGuide(dropAllString);
+                    } else {
+                        playerInventory.EnableLMBInputGuide(dropAllString);
+                    }
                     break;
                 // case ItemCategory.upgrade:
                 //     if (playerInventory.IsWorkshopOpen) playerInventory.EnableInputGuide(craftString, drop1String);
