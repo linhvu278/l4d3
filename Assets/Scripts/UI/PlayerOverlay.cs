@@ -15,37 +15,21 @@ public class PlayerOverlay : MonoBehaviour
     [SerializeField] TextMeshProUGUI interactText, warningText;
     private const float warningTextDisplayTimer = 3f;
     private float warningTextCounter;
-    private bool isWarningTextOn;
+    // private bool isWarningTextOn;
     // Outline outline;
 
     private List<Image> overlayIconList = new List<Image>();
     [SerializeField] Image staminaBuffIcon, healthBuffIcon;
 
-    void Awake()
-    {
-        if (instance != null)
-        {
-            Debug.LogWarning("More than one instances of PlayerOverlay found.");
-            return;
-        }
-        instance = this;
+    public void EnableWarningText(string value){
+        if (warningTextCounter == 0) warningTextCounter = warningTextDisplayTimer;
+        warningText.text = value;
+        warningText.enabled = true;
     }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        cam = Camera.main.transform;
-        interactRange = GameObject.FindGameObjectWithTag("Player").GetComponent<InputManager>().InteractRange;
-
-        interactText = interactOverlay.Find("InteractText").GetComponent<TextMeshProUGUI>();
-        warningText = transform.Find("WarningText").GetComponent<TextMeshProUGUI>();
+    void DisableWarningText(){
         warningText.enabled = false;
-        warningTextCounter = 0;
-
-        interactOverlay.gameObject.SetActive(false);
-        selection = null;
-        // outline = null;
     }
+    // public void ToggleOverlayIcon(){}
 
     // Update is called once per frame
     void Update()
@@ -64,7 +48,7 @@ public class PlayerOverlay : MonoBehaviour
         }
         interactOverlay.gameObject.SetActive(raycast_hit);
 
-        if (isWarningTextOn){
+        if (warningText.enabled){
             warningTextCounter -= Time.deltaTime;
             if (warningTextCounter < 0) {
                 warningTextCounter = 0;
@@ -73,35 +57,28 @@ public class PlayerOverlay : MonoBehaviour
         }
     }
 
-    void SetOverlay(Transform obj){ // NEEDS REWORK
-        // if (obj.TryGetComponent(out PickUpWeapon pickUpWeapon)) WeaponPickupOverlay(pickUpWeapon);
-        // if (obj.TryGetComponent(out PickUpItem pickUpItem)) ItemPickupOverlay(pickUpItem);
-        // if (obj.TryGetComponent(out EnemySpawner enemySpawner)) EnemySpawnerOverlay(enemySpawner);
-        // if (obj.TryGetComponent(out AmmoBoxObject ammoBoxObject)) AmmoBoxOverlay(ammoBoxObject);
-    }
-    // void WeaponPickupOverlay(PickUpWeapon pickUpWeapon){
-    //     // add more info about weapon here later
-    //     Weapon weapon = pickUpWeapon.Weapon;
-    //     interactText.text = "Press E to pick up " + weapon.weaponName;
-    // }
-    // void ItemPickupOverlay(PickUpItem pickUpItem){
-    //     interactText.text = "Press E to pick up " + pickUpItem.Item.itemName + " (" + pickUpItem.ItemAmount + ")";
-    // }
-    // void EnemySpawnerOverlay(EnemySpawner enemySpawner){
-    //     interactText.text = "Press E to spawn an enemy.";
-    // }
-    // void AmmoBoxOverlay(AmmoBoxObject ammoBox){
-    //     interactText.text = "Refills left: " + ammoBox.RefillAmount;
-    // }
-    public void EnableWarningText(string value){
-        if (warningTextCounter == 0) warningTextCounter = warningTextDisplayTimer;
-        warningText.text = value;
-        warningText.enabled = true;
-        isWarningTextOn = true;
-    }
-    void DisableWarningText(){
+    // Start is called before the first frame update
+    void Start()
+    {
+        cam = Camera.main.transform;
+        interactRange = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInteraction>().InteractRange;
+
+        interactText = interactOverlay.Find("InteractText").GetComponent<TextMeshProUGUI>();
+        warningText = transform.Find("WarningText").GetComponent<TextMeshProUGUI>();
         warningText.enabled = false;
-        isWarningTextOn = false;
+        warningTextCounter = 0;
+
+        interactOverlay.gameObject.SetActive(false);
+        selection = null;
+        // outline = null;
     }
-    // public void ToggleOverlayIcon(){}
+    void Awake()
+    {
+        if (instance != null)
+        {
+            Debug.LogWarning("More than one instances of PlayerOverlay found.");
+            return;
+        }
+        instance = this;
+    }
 }
