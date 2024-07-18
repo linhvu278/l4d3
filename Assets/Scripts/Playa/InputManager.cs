@@ -3,8 +3,9 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
-    PlayerMovement playerMovement;
-    MouseMovement mouseMovement;
+    PlayerMovement p_Movement;
+    MouseMovement m_Movement;
+    PlayerInteraction p_Interaction;
     WeaponSwitch weaponSwitch;
     // Inventory inventory;
     // GameObject currentWeapon;
@@ -25,18 +26,13 @@ public class InputManager : MonoBehaviour
     // public bool CanJump { get; set; }
     // public bool CanLook { get; set; }
     // public bool CanSprint { get; set; }
-    public bool P_Movement_CanJump(bool value) => playerMovement.CanJump = value;
-    public bool P_Movement_CanMove(bool value) => playerMovement.CanMove = value;
-    public bool P_Movement_CanSprint(bool value) => playerMovement.CanSprint = value;
-    public bool M_Movement_CanLook(bool value) => mouseMovement.CanLook = value;
+    public bool P_Movement_CanJump(bool value) => p_Movement.CanJump = value;
+    public bool P_Movement_CanMove(bool value) => p_Movement.CanMove = value;
+    public bool P_Movement_CanSprint(bool value) => p_Movement.CanSprint = value;
+    public bool M_Movement_CanLook(bool value) => m_Movement.CanLook = value;
     public bool M_Input_CanAttack1(bool value) => inventorySlots[weaponSwitch.SelectedWeapon].CanAttack1 = value;
     public bool M_Input_CanAttack2(bool value) => inventorySlots[weaponSwitch.SelectedWeapon].CanAttack2 = value;
-
-    // interaction
-    RaycastHit hit;
-    Transform cam;
-    private const float INTERACT_RANGE = 2f;
-    public float InteractRange => INTERACT_RANGE;
+    public bool K_Input_CanInteract(bool value) => p_Interaction.CanInteract = value;
 
     // weapon slots
     private const int index_w_primary = (int)WeaponCategory.primary,
@@ -48,30 +44,26 @@ public class InputManager : MonoBehaviour
 
     public void OnPlayerMovement(InputAction.CallbackContext value){
         horizontalValue = value.ReadValue<Vector2>();
-        playerMovement.ReceiveInput(horizontalValue);
+        p_Movement.ReceiveInput(horizontalValue);
     }
     public void OnMouseMovement(InputAction.CallbackContext value){
         mouseValueX = value.ReadValue<Vector2>().x;
         mouseValueY = value.ReadValue<Vector2>().y;
-        mouseMovement.ReceiveInput(mouseValueX, mouseValueY);
+        m_Movement.ReceiveInput(mouseValueX, mouseValueY);
     }
     public void OnJump(InputAction.CallbackContext value){
-        if (value.performed) playerMovement.Jump();
+        if (value.performed) p_Movement.Jump();
     }
     public void OnSprint(InputAction.CallbackContext value){
         if (value.started) GetComponent<PlayerMovement>().StartSprint();
-        else if (value.canceled) playerMovement.StopSprint();
+        else if (value.canceled) p_Movement.StopSprint();
     }
     public void OnCrouch(InputAction.CallbackContext value){
-        if (value.started) playerMovement.Crouch();
+        if (value.started) p_Movement.Crouch();
     }
     public void OnInteract(InputAction.CallbackContext value){
-        if (Physics.Raycast(cam.position, cam.forward, out hit, INTERACT_RANGE)){
-            if (hit.collider.TryGetComponent(out IInteractable interactable)){
-                if (value.started) interactable.OnInteractStart();
-                else if (value.canceled) interactable.OnInteractEnd();
-            }
-        }
+        if (value.started) p_Interaction.Interact(true);
+        else if (value.canceled) p_Interaction.Interact(false);
     }
     public void OnAttack1(InputAction.CallbackContext value){
         if (value.performed) inventorySlots[weaponSwitch.SelectedWeapon].StartAttack1();
@@ -91,9 +83,9 @@ public class InputManager : MonoBehaviour
         //     else if (value.canceled) sc.OnSecondaryEnd();
         // }
     }
-    // public void OnAttack3(InputAction.CallbackContext value){
-    //     middleMouseValue = value.ReadValue<float>();
-    // }
+    public void OnAttack3(InputAction.CallbackContext value){
+        middleMouseValue = value.ReadValue<float>();
+    }
     public void OnReload(InputAction.CallbackContext value){
         if (value.performed) inventorySlots[weaponSwitch.SelectedWeapon].StartReload();
         // currentWeapon = inventory.weaponObjects[weaponSwitch.SelectedWeapon];
@@ -128,14 +120,13 @@ public class InputManager : MonoBehaviour
     }
     
     void Awake(){
-        playerMovement = GetComponent<PlayerMovement>();
-        mouseMovement = GetComponent<MouseMovement>();
+        p_Movement = GetComponent<PlayerMovement>();
+        m_Movement = GetComponent<MouseMovement>();
+        p_Interaction = GetComponent<PlayerInteraction>();
         weaponSwitch = GetComponent<WeaponSwitch>();
         // inventory = GetComponent<Inventory>();
 
         weaponHolder = weaponSwitch.WeaponHolder;
         inventorySlots = weaponHolder.GetComponentsInChildren<Inv_slot>();
-
-        cam = Camera.main.transform;
     }
 }
