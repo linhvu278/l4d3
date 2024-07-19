@@ -78,8 +78,9 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                         // if (item == null) playerInventory.DisableInputGuide();
                         break;
                     case ItemCategory.material:
-                        inventory.DropItem(item, 1);
-                        if (item == null) playerInventory.DisableInputGuide();
+                        playerInventory.AddCraftingItem(item);
+                        playerInventory.DisableInputGuide();
+                        // itemButton.enabled = false;
                         break;
                     case ItemCategory.glue:
                         if (inventory.GetItemAmount(item.itemType) > 25) inventory.DropItem(item, 25);
@@ -106,9 +107,8 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                         playerInventory.DisableInputGuide();
                         break;
                     case ItemCategory.material:
-                        playerInventory.AddCraftingItem(item);
-                        playerInventory.DisableInputGuide();
-                        // itemButton.enabled = false;
+                        inventory.DropItem(item, 1);
+                        if (item == null) playerInventory.DisableInputGuide();
                         break;
                     case ItemCategory.glue:
                         inventory.DropItem(item, inventory.GetItemAmount(item.itemType));
@@ -137,8 +137,8 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                     }
                     break;
                 case ItemCategory.material:
-                    playerInventory.EnableLMBInputGuide(drop1String);
-                    playerInventory.EnableRMBInputGuide(craftString);
+                    playerInventory.EnableLMBInputGuide(craftString);
+                    playerInventory.EnableRMBInputGuide(drop1String);
                     break;
                 case ItemCategory.glue:
                     if (inventory.GetItemAmount(item.itemType) > 25){
