@@ -13,6 +13,7 @@ public class Inventory : MonoBehaviour
     private PlayerInventory playerInventory;
     private WeaponSwitch weaponSwitch;
     private PlayerOverlay playerOverlay;
+    private Transform cam;
     // private CombineItems combineItems;
 
     public delegate void OnItemChanged();
@@ -23,15 +24,21 @@ public class Inventory : MonoBehaviour
     // public Item craftingItem1, craftingItem2;
     // public Weapon craftedWeapon { get; set; }
 
-    [SerializeField] Transform weaponHolder, itemParent;
+    [SerializeField] private Transform weaponHolder, itemParent;
+
+    [Header("Weapons")]
     public Weapon[] weaponInventory; // stores the references of weapons
     private Transform[] weaponSlots; // stores the transforms containing the weapons
     public GameObject[] weaponObjects; // stores the player's weapons
-    public List<Item> itemInventory = new List<Item>(); // stores the references of items
+
+    [Header("Equipments")]
+    public List<Item> itemInventory = new List<Item>(); // stores scriptable objects of items
+    public List<int> itemInventoryAmounts = new List<int>();
+
     private int MAX_ITEM_AMOUNT_LIMIT;
     private const int MAX_AMMO_AMOUNT_LIMIT = 360,
-                      MAX_GLUE_AMOUNT_LIMIT = 999,
-                      MAX_MATERIAL_AMOUNT_LIMIT = 3;
+                      MAX_GLUE_AMOUNT_LIMIT = 1000,
+                      MAX_MATERIAL_AMOUNT_LIMIT = 4;
     
     // [SerializeField] GameObject inventoryOverlay;
     // [SerializeField] Transform loadoutParent;
@@ -40,9 +47,9 @@ public class Inventory : MonoBehaviour
     // ItemSlot[] itemSlots;
     // bool isInventoryOpen;
 
-    private int ammo_762_amount, ammo_556_amount, ammo_12g_amount, ammo_45acp_amount, ammo_9mm_amount, ammo_magnum_amount,
-                material_alcohol_amount, material_cloth_amount, material_electronics_amount, material_gunpowder_amount, material_herbs_amount, material_metal_amount,
-                glue_amount;
+    // private int ammo_762_amount, ammo_556_amount, ammo_12g_amount, ammo_45acp_amount, ammo_9mm_amount, ammo_magnum_amount,
+    //             material_alcohol_amount, material_cloth_amount, material_electronics_amount, material_gunpowder_amount, material_herbs_amount, material_metal_amount,
+    //             glue_amount;
 
     #region Add weapons
 
@@ -50,7 +57,7 @@ public class Inventory : MonoBehaviour
         // PickUpWeapon puwp = weaponToAdd.GetComponent<PickUpWeapon>();
         // Weapon weapon = puwp.GetWeapon();
         if (weaponInventory[index] != null) DropWeapon(weaponInventory[index], index);
-        GameObject weaponToAdd = Instantiate(db.GetWeaponByType(weapon), weaponSlots[index].position, Quaternion.identity);
+        GameObject weaponToAdd = Instantiate(db.GetWeapon(weapon), weaponSlots[index].position, Quaternion.identity);
         weaponToAdd.transform.SetParent(weaponSlots[index]);
         weaponToAdd.GetComponent<IWeaponAmount>().WeaponAmount = amount;
 
@@ -93,7 +100,7 @@ public class Inventory : MonoBehaviour
 
     public void DropWeapon(Weapon weapon, int index){
         if (weapon.weaponCategory != WeaponCategory.ability){
-            GameObject weaponToDrop = db.GetWeaponPickupByType(weapon);
+            GameObject weaponToDrop = db.GetWeaponPickup(weapon);
             IWeaponAmount wa = weaponObjects[index].GetComponent<IWeaponAmount>();
             weaponToDrop.GetComponent<IWeaponAmount>().WeaponAmount = wa.WeaponAmount;
             // if (equippedWeapon.TryGetComponent(out IWeaponUpgrade upgrade)){
@@ -103,9 +110,11 @@ public class Inventory : MonoBehaviour
             //     ws.UpgradeRange = upgrade.UpgradeRange;
             // }
 
-            Vector3 camPos = Camera.main.transform.position;
-            Vector3 dropPosition = new Vector3(camPos.x, camPos.y - 0.5f, camPos.z);
-            Instantiate(weaponToDrop, dropPosition, Quaternion.identity);
+            // Vector3 camPos = Camera.main.transform.position;
+            // Vector3 dropPosition = new Vector3(camPos.x, camPos.y - 0.5f, camPos.z);
+            // Instantiate(weaponToDrop, dropPosition, Quaternion.identity);
+            Instantiate(weaponToDrop, cam.position, cam.rotation);
+            weaponToDrop.GetComponent<Rigidbody>().AddForce(cam.forward * 2.5f, ForceMode.Force);
             RemoveWeapon(weapon, index);
         }
 
@@ -161,7 +170,7 @@ public class Inventory : MonoBehaviour
     }
     public void AddAbilityWeapon(Weapon ability){
         int abilityIndex = (int)WeaponCategory.ability;
-        GameObject weaponToAdd = Instantiate(db.GetWeaponByType(ability), weaponSlots[abilityIndex].position, Quaternion.identity);
+        GameObject weaponToAdd = Instantiate(db.GetWeapon(ability), weaponSlots[abilityIndex].position, Quaternion.identity);
         weaponToAdd.transform.SetParent(weaponSlots[abilityIndex]);
         // weaponSlots[abilityIndex].gameObject.SetActive(false);
         weaponSwitch.SelectNewWeapon(weaponSwitch.SelectedWeapon);
@@ -200,7 +209,8 @@ public class Inventory : MonoBehaviour
         } else {
             if (itemInventory.Count < MAX_ITEM_AMOUNT_LIMIT){
                 itemInventory.Add(item);
-                SetItemAmount(item.itemType, itemAmount);
+                itemInventoryAmounts.Add(itemAmount);
+                // SetItemAmount(item, itemAmount);
                 if (itemAmount > GetItemAmountLimit(item.itemCategory)){
                     int itemAmountToDrop = itemAmount - GetItemAmountLimit(item.itemCategory);
                     DropItem(item, itemAmountToDrop);
@@ -222,16 +232,18 @@ public class Inventory : MonoBehaviour
     #region Remove items
 
     public void DropItem(Item item, int itemAmount){
-        GameObject itemToDrop = db.GetItemPickupByType(item.itemType);
+        GameObject itemToDrop = db.GetItemPickup(item);
         itemToDrop.GetComponent<PickUpItem>().ItemAmount = itemAmount;
         
-        Vector3 camPos = Camera.main.transform.position;
-        Vector3 dropPosition = Vector3.forward;
-        Instantiate(itemToDrop, dropPosition, Quaternion.identity);
-        if (GetItemAmount(item.itemType) > 0) SetItemAmount(item.itemType, -itemAmount);
+        // Vector3 camPos = Camera.main.transform.position;
+        // Vector3 dropPosition = Vector3.forward;
+        Instantiate(itemToDrop, transform.position, transform.rotation);
+        itemToDrop.GetComponent<Rigidbody>().AddForce(cam.forward * 2.5f, ForceMode.Force);
+        SetItemAmount(item.itemType, -itemAmount);
     }
-    public void RemoveItem(ItemType itemType){
-        Item itemToRemove = itemInventory.Find(x => x.itemType == itemType);
+    public void RemoveItem(Item item){
+        Item itemToRemove = itemInventory.Find(x => x == item);
+        itemInventoryAmounts.Remove(itemInventory.IndexOf(itemToRemove));
         itemInventory.Remove(itemToRemove);
 
         if (onItemChangedCallback != null) onItemChangedCallback.Invoke();
@@ -242,94 +254,91 @@ public class Inventory : MonoBehaviour
     #region Item amount
     
     public void SetItemAmount(ItemType itemType, int itemAmount){
-        switch (itemType){
-            case ItemType.item_ammo_762:
-                ammo_762_amount += itemAmount;
-                if (ammo_762_amount <= 0) RemoveItem(itemType);
-                break;
-            case ItemType.item_ammo_556:
-                ammo_556_amount += itemAmount;
-                if (ammo_556_amount <= 0) RemoveItem(itemType);
-                break;
-            case ItemType.item_ammo_12g:
-                ammo_12g_amount += itemAmount;
-                if (ammo_12g_amount <= 0) RemoveItem(itemType);
-                break;
-            case ItemType.item_ammo_45acp:
-                ammo_45acp_amount += itemAmount;
-                if (ammo_45acp_amount <= 0) RemoveItem(itemType);
-                break;
-            case ItemType.item_ammo_9mm:
-                ammo_9mm_amount += itemAmount;
-                if (ammo_9mm_amount <= 0) RemoveItem(itemType);
-                break;
-            case ItemType.item_ammo_magnum:
-                ammo_magnum_amount += itemAmount;
-                if (ammo_magnum_amount <= 0) RemoveItem(itemType);
-                break;
-            case ItemType.item_material_alcohol:
-                material_alcohol_amount += itemAmount;
-                if (material_alcohol_amount <= 0) RemoveItem(itemType);
-                break;
-            // case ItemType.item_material_chemicals:
-            //     material_chemicals_amount += itemAmount;
-            //     if (material_chemicals_amount <= 0) RemoveItem(itemType);
-            //     break;
-            case ItemType.item_material_cloth:
-                material_cloth_amount += itemAmount;
-                if (material_cloth_amount <= 0) RemoveItem(itemType);
-                break;
-            case ItemType.item_material_electronics:
-                material_electronics_amount += itemAmount;
-                if (material_electronics_amount <= 0) RemoveItem(itemType);
-                break;
-            // case ItemType.item_material_glass:
-            //     material_glass_amount += itemAmount;
-            //     if (material_glass_amount <= 0) RemoveItem(itemType);
-            //     break;
-            case ItemType.item_material_gunpowder:
-                material_gunpowder_amount += itemAmount;
-                if (material_gunpowder_amount <= 0) RemoveItem(itemType);
-                break;
-            case ItemType.item_material_herbs:
-                material_herbs_amount += itemAmount;
-                if (material_herbs_amount <= 0) RemoveItem(itemType);
-                break;
-            case ItemType.item_material_metal:
-                material_metal_amount += itemAmount;
-                if (material_metal_amount <= 0) RemoveItem(itemType);
-                break;
-            // case ItemType.item_material_sugar:
-            //     material_sugar_amount += itemAmount;
-            //     if (material_sugar_amount <= 0) RemoveItem(itemType);
-            //     break;
-            case ItemType.item_glue:
-                glue_amount += itemAmount;
-                if (glue_amount <= 0) RemoveItem(itemType);
-                break;
-        }
+        Item itemToFind = itemInventory.Find(x => x.itemType == itemType);
+        itemInventoryAmounts[itemInventory.IndexOf(itemToFind)] += itemAmount;
+        if (itemInventoryAmounts[itemInventory.IndexOf(itemToFind)] == 0) RemoveItem(itemToFind);
+        // switch (itemType)
+        // {
+        //     case ItemType.item_ammo_762:
+        //         ammo_762_amount += itemAmount;
+        //         if (ammo_762_amount == 0) RemoveItem(itemType);
+        //         break;
+        //     case ItemType.item_ammo_556:
+        //         ammo_556_amount += itemAmount;
+        //         if (ammo_556_amount == 0) RemoveItem(itemType);
+        //         break;
+        //     case ItemType.item_ammo_12g:
+        //         ammo_12g_amount += itemAmount;
+        //         if (ammo_12g_amount == 0) RemoveItem(itemType);
+        //         break;
+        //     case ItemType.item_ammo_45acp:
+        //         ammo_45acp_amount += itemAmount;
+        //         if (ammo_45acp_amount == 0) RemoveItem(itemType);
+        //         break;
+        //     case ItemType.item_ammo_9mm:
+        //         ammo_9mm_amount += itemAmount;
+        //         if (ammo_9mm_amount == 0) RemoveItem(itemType);
+        //         break;
+        //     case ItemType.item_ammo_magnum:
+        //         ammo_magnum_amount += itemAmount;
+        //         if (ammo_magnum_amount == 0) RemoveItem(itemType);
+        //         break;
+        //     case ItemType.item_material_alcohol:
+        //         material_alcohol_amount += itemAmount;
+        //         if (material_alcohol_amount == 0) RemoveItem(itemType);
+        //         break;
+        //     case ItemType.item_material_cloth:
+        //         material_cloth_amount += itemAmount;
+        //         if (material_cloth_amount == 0) RemoveItem(itemType);
+        //         break;
+        //     case ItemType.item_material_electronics:
+        //         material_electronics_amount += itemAmount;
+        //         if (material_electronics_amount == 0) RemoveItem(itemType);
+        //         break;
+        //     case ItemType.item_material_gunpowder:
+        //         material_gunpowder_amount += itemAmount;
+        //         if (material_gunpowder_amount == 0) RemoveItem(itemType);
+        //         break;
+        //     case ItemType.item_material_herbs:
+        //         material_herbs_amount += itemAmount;
+        //         if (material_herbs_amount == 0) RemoveItem(itemType);
+        //         break;
+        //     case ItemType.item_material_metal:
+        //         material_metal_amount += itemAmount;
+        //         if (material_metal_amount == 0) RemoveItem(itemType);
+        //         break;
+        //     case ItemType.item_glue:
+        //         glue_amount += itemAmount;
+        //         if (glue_amount == 0) RemoveItem(itemType);
+        //         break;
+        //     default:
+        //         break;
+        // }
         onItemChangedCallback?.Invoke();
     }
-    public int GetItemAmount(ItemType itemType) => itemType switch
+    public int GetItemAmount(ItemType itemType)// => itemType switch
     {
-        ItemType.item_ammo_762 => ammo_762_amount,
-        ItemType.item_ammo_556 => ammo_556_amount,
-        ItemType.item_ammo_12g => ammo_12g_amount,
-        ItemType.item_ammo_45acp => ammo_45acp_amount,
-        ItemType.item_ammo_9mm => ammo_9mm_amount,
-        ItemType.item_ammo_magnum => ammo_magnum_amount,
-        ItemType.item_material_alcohol => material_alcohol_amount,
-        // ItemType.item_material_chemicals => material_chemicals_amount,
-        ItemType.item_material_cloth => material_cloth_amount,
-        ItemType.item_material_electronics => material_electronics_amount,
-        ItemType.item_material_gunpowder => material_gunpowder_amount,
-        // ItemType.item_material_glass => material_glass_amount,
-        ItemType.item_material_herbs => material_herbs_amount,
-        ItemType.item_material_metal => material_metal_amount,
-        // ItemType.item_material_sugar => material_sugar_amount,
-        ItemType.item_glue => glue_amount,
-        _ => 0,
-    };
+        Item itemToFind = itemInventory.Find(x => x.itemType == itemType);
+        if (itemToFind) return itemInventoryAmounts[itemInventory.IndexOf(itemToFind)];
+        else return 0;
+        // ItemType.item_ammo_762 => ammo_762_amount,
+        // ItemType.item_ammo_556 => ammo_556_amount,
+        // ItemType.item_ammo_12g => ammo_12g_amount,
+        // ItemType.item_ammo_45acp => ammo_45acp_amount,
+        // ItemType.item_ammo_9mm => ammo_9mm_amount,
+        // ItemType.item_ammo_magnum => ammo_magnum_amount,
+        // ItemType.item_material_alcohol => material_alcohol_amount,
+        // // ItemType.item_material_chemicals => material_chemicals_amount,
+        // ItemType.item_material_cloth => material_cloth_amount,
+        // ItemType.item_material_electronics => material_electronics_amount,
+        // ItemType.item_material_gunpowder => material_gunpowder_amount,
+        // // ItemType.item_material_glass => material_glass_amount,
+        // ItemType.item_material_herbs => material_herbs_amount,
+        // ItemType.item_material_metal => material_metal_amount,
+        // // ItemType.item_material_sugar => material_sugar_amount,
+        // ItemType.item_glue => glue_amount,
+        // _ => 0,
+    }
     public int GetItemAmountLimit(ItemCategory itemCategory) => itemCategory switch
     {
         ItemCategory.ammo => MAX_AMMO_AMOUNT_LIMIT,
@@ -366,6 +375,7 @@ public class Inventory : MonoBehaviour
         playerInventory = PlayerInventory.instance;
         weaponSwitch = WeaponSwitch.instance;
         playerOverlay = PlayerOverlay.instance;
+        cam = Camera.main.transform;
         // combineItems = CombineItems.instance;
         
 
