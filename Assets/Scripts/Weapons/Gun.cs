@@ -232,7 +232,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     public void Unload(){
         if (CanUnload){
             Item itemToAdd = db.GetItemByType(GetItemType());
-            if (!inventory.AddItem(itemToAdd, ammo)) inventory.DropItem(itemToAdd, ammo);
+            inventory.AddItem(itemToAdd, ammo);
             ammo = 0;
             loadoutUI.GetHUDAmmo(ammo, weaponCategory);
         }
@@ -505,7 +505,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     }
     void Update(){
         AimDownSight(isAiming);
-        crosshair.SetGap((int)(Inaccuracy() * 8.88f), true);
+        crosshair.SetGap((int)(Inaccuracy() * 7.5f), true);
         // if (autoFireCoroutine != null && durability == 0) StopCoroutine(autoFireCoroutine);
         // inaccuracy = Inaccuracy();
         // Debug.Log(inaccuracy); // for testing purposes
