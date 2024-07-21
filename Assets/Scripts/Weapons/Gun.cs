@@ -202,7 +202,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         inaccuracyMove = p_Movement.IsMoving || !p_Movement.IsGrounded ? 10f/(gun.inaccuracy+1) : 1f;
         // inaccuracyJump = !p_Movement.IsGrounded ? 2.4f : 1f;
         // inaccuracyNormal = isLaserUpgraded ? Mathf.Round(gun.inaccuracy / 1.25f * 1000.0f) / 1000.0f : gun.inaccuracy;
-        inaccuracyAim = isAiming ? 0.125f : 1f;
+        inaccuracyAim = isAiming ? 0.1333f : 1f;
 
         // float inaccuracyMoveJump = inaccuracyMove + inaccuracyJump;
 
@@ -301,7 +301,9 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
             Shoot();
             yield return new WaitForSeconds(1/fireRate);
             Shoot();
+            CanShoot = false;
             yield return new WaitForSeconds(2/fireRate);
+            CanShoot = true;
             // yield break;
         // }
     }
@@ -346,6 +348,8 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     }
     private void Aiming(){
         if (CanAim) isAiming = !isAiming;
+        p_Movement.CanSprint = !isAiming;
+        p_Movement.IsAiming = isAiming;
         range = isAiming && isSightUpgraded ? gun.range * scopeRangeMultiplier : gun.range;
         // Debug.Log(range);
     }
@@ -473,8 +477,6 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         // id = gun.weaponID;
         cam = Camera.main.transform;
         animator = gameObject.GetComponent<Animator>();
-        // playa = GameObject.FindGameObjectWithTag("Player");
-        // p_Movement = playa.GetComponent<PlayerMovement>();
         db = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemDatabase>();
         
         parentTransform = transform.parent;
@@ -505,7 +507,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
     }
     void Update(){
         AimDownSight(isAiming);
-        crosshair.SetGap((int)(Inaccuracy() * 7.5f), true);
+        crosshair.SetGap((int)(Inaccuracy() * 8.88f), true);
         // if (autoFireCoroutine != null && durability == 0) StopCoroutine(autoFireCoroutine);
         // inaccuracy = Inaccuracy();
         // Debug.Log(inaccuracy); // for testing purposes

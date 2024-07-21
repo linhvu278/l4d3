@@ -55,7 +55,7 @@ public class InputManager : MonoBehaviour
         if (value.performed) p_Movement.Jump();
     }
     public void OnSprint(InputAction.CallbackContext value){
-        if (value.started) GetComponent<PlayerMovement>().StartSprint();
+        if (value.started) p_Movement.StartSprint();
         else if (value.canceled) p_Movement.StopSprint();
     }
     public void OnCrouch(InputAction.CallbackContext value){

@@ -10,9 +10,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] CharacterController controller;
 
     private float currentSpeed;
-    private const float NORMAL_SPEED = 5f;
-    private const float SPRINT_SPEED = 10f;
-    private const float CROUCH_SPEED = 2f;
+    private const float normalSpeed = 5f;
+    private const float sprintSpeedMultiplier = 1.55f;
+    private const float crouchSpeedMultiplier = 0.45f;
 
     // [SerializeField] Text staminaText;
     private float stamina;
@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
     private const float GROUND_HEIGHT = 0.1f;
 
     [SerializeField] float jumpHeight;
-    private bool isJumping, isSprinting, isCrouching;
+    private bool isJumping, isSprinting, isCrouching, isAiming;
     private bool canMove, canJump, canSprint;
 
     // [SerializeField] Transform cam;
@@ -38,20 +38,25 @@ public class PlayerMovement : MonoBehaviour
     public void Crouch() => isCrouching = !isCrouching;
 
     public bool IsGrounded => isGrounded;
-    public bool IsSprinting => isSprinting;
+    // public bool IsSprinting => isSprinting;
     // public bool IsJumping => isJumping;
     public bool IsMoving => movementInput != Vector2.zero;
+    public bool IsAiming { get => isAiming; set => isAiming = value; }
     public bool CanMove { get; set; }
     public bool CanSprint { get; set; }
     public bool CanJump { get; set; }
+
+    public float SprintSpeedMultiplier(bool value) => value ? sprintSpeedMultiplier : 1f;
+    public float CrouchSpeedMultiplier(bool value) => value ? crouchSpeedMultiplier : 1f;
 
     void Update(){
         stamina = playerManager.Stamina;
         canMove = CanMove;
         canJump = CanJump && isGrounded && stamina >= JUMP_STAMINA;
-        canSprint = CanSprint && canMove && isGrounded && stamina > 0;
+        canSprint = CanSprint && canMove && isGrounded && movementInput.y > 0 && stamina > 0;
 
         // player movement
+        currentSpeed = normalSpeed * SprintSpeedMultiplier(isSprinting) * CrouchSpeedMultiplier(isCrouching || isAiming);
         if (canMove){
             Vector3 movement = transform.right * movementInput.x + transform.forward * movementInput.y;
             controller.Move(movement * currentSpeed * Time.deltaTime);
@@ -77,12 +82,12 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // player sprinting
-        if (isSprinting && canSprint && movementInput.y > 0){
-            currentSpeed = SPRINT_SPEED;
+        if (isSprinting && canSprint){
+            // currentSpeed = sprintSpeedMultiplier;
             playerManager.StaminaDrain(SPRINT_STAMINA * Time.deltaTime);
         } else {
             StopSprint();
-            currentSpeed = NORMAL_SPEED;
+            // currentSpeed = normalSpeed;
             playerManager.StaminaRegen();
         }
 
