@@ -131,4 +131,3 @@ MonoBehaviour:
   pickupSound: {fileID: 8300000, guid: 149c7727cbf80234d91f0ad69506e6dd, type: 3}
   itemAmount: 0
   destroyItemOnPickUp: 1
-  light: {fileID: 0}

@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 2553231784413531020}
   - component: {fileID: 7301998093622945317}
   m_Layer: 10
-  m_Name: prefab_buff_ed
+  m_Name: prefab_ability_buffstamina
   m_TagString: Buff
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa7a2651095e42b4ab069470d3da8c1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buff: {fileID: 11400000, guid: fbca362bc46666042adb1d2491c2c78e, type: 2}
+  buff: {fileID: 11400000, guid: e2f9937f43e455743a0ab3db59017025, type: 2}
   buffSound: {fileID: 2553231784413531020}
 --- !u!82 &2553231784413531020
 AudioSource:
