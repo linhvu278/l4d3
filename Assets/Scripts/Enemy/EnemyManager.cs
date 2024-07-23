@@ -22,13 +22,13 @@ public class EnemyManager : MonoBehaviour, IDamage, IFire
     public void TakeDamage(float damage){
         // Instantiate(hitEffect, hitPos, Quaternion.LookRotation(hitNormal));
         health -= damage;
-        if (health <= 0) Die();
     }
     void Die(){
         statTrak.AddKill();
         Destroy(gameObject);
     }
     void Update(){
+        if (health <= 0) Die();
         if (isOnFire) TakeDamage(fireDamage * Time.deltaTime);
     }
     void Start(){
