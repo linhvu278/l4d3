@@ -77,7 +77,7 @@ public class PlayerInventory : MonoBehaviour
         if (craftedWeapon != null){
             craftWeaponButton.gameObject.SetActive(true);
             newCraftingCost = isWorkshopOpen ? craftedWeapon.craftingCost / 4 : craftedWeapon.craftingCost;
-            craftButtonText.text = string.Format("Craft {0} - {1} glue)", craftedWeapon.weaponName, newCraftingCost);
+            craftButtonText.text = string.Format("Craft {0} - {1} glue", craftedWeapon.weaponName, newCraftingCost);
             // craftWeaponButton.enabled = inventory.GetItemAmount(ItemType.item_glue) >= newCraftingCost;
             // EnableCraftButton();
             // craftWeaponButton.enabled = inventory.GetItemAmount(ItemType.item_glue) >= newCraftingCost;
@@ -99,7 +99,9 @@ public class PlayerInventory : MonoBehaviour
             inventory.SetItemAmount(secondCraftingItem.itemType, -1);
             inventory.SetItemAmount(ItemType.item_glue, -newCraftingCost);
             // ClearCraftingItems();
-            ToggleInventory();
+            input.M_Input_CanAttack1(!isInventoryOpen);
+            input.M_Input_CanAttack2(!isInventoryOpen);
+            // ToggleInventory();
         } else {
             EnableInventoryStatusText("Not enough glue");
         }
