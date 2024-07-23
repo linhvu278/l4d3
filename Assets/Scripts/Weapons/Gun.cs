@@ -123,7 +123,7 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         if (ammo == clipAmmo || maxAmmo == 0) yield return null;
 
         else if (ammo < clipAmmo && maxAmmo > 0){
-            isAiming = false;
+            if (isAiming) Aiming();
             isShooting = false;
             isReloading = true;
             animator.SetBool("isReloading", isReloading);
@@ -347,11 +347,13 @@ public class Gun : MonoBehaviour, IPrimaryInput, ISecondaryInput, IReloadInput, 
         // if (burstFireCoroutine != null) StopCoroutine(burstFireCoroutine);
     }
     private void Aiming(){
-        if (CanAim) isAiming = !isAiming;
-        p_Movement.CanSprint = !isAiming;
-        p_Movement.IsAiming = isAiming;
-        range = isAiming && isSightUpgraded ? gun.range * scopeRangeMultiplier : gun.range;
-        // Debug.Log(range);
+        if (CanAim){
+            isAiming = !isAiming;
+            p_Movement.CanSprint = !isAiming;
+            p_Movement.IsAiming = isAiming;
+            // range = isAiming && isSightUpgraded ? gun.range * scopeRangeMultiplier : gun.range;
+            // Debug.Log(range);
+        }
     }
     public void UpgradeSight(bool value){
         isSightUpgraded = value;
